@@ -20,7 +20,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -94,12 +93,12 @@ public class LoginController {
 			
 			switch (answer.get("Type")){
 			
-			case "0": fxml_url += "StudentMenuBar.fxml"; break;
-			case "1": fxml_url += "ParentMenuBar.fxml"; break;
-			case "2": fxml_url += "SecretaryMenuBar.fxml"; break;
-			case "3": fxml_url += "TeacherMenuBar.fxml"; break;
-			case "4": fxml_url += "PrincipalMenuBar.fxml"; break;
-			case "5": fxml_url += "SystemManegerMenuBar.fxml"; break;
+			case "Student": fxml_url += "StudentMenuBar.fxml"; break;
+			case "Parent": fxml_url += "ParentMenuBar.fxml"; break;
+			case "Secretary": fxml_url += "SecretaryMenuBar.fxml"; break;
+			case "Teacher": fxml_url += "TeacherMenuBar.fxml"; break;
+			case "Principal": fxml_url += "PrincipalMenuBar.fxml"; break;
+			case "SystemManager": fxml_url += "SystemManegerMenuBar.fxml"; break;
 			}
 			
 			
