@@ -93,23 +93,24 @@ public class MainServer extends AbstractServer
 	
 	
 	
-		String query = "use "+school+ ";" + "select Name,Password,Type from users where ID='" + id + "' AND Password='"+password+"';";
+		String query = "use "+school+ ";" + "select Name, Type, isLogin from users where ID='" + id + "' AND Password='"+password+"';";
 		
 		try {
 			stmt = DBConn.createStatement();
 			ResultSet result = stmt.executeQuery(query);
 			if(result.next()){
-				if(password.equals(result.getString(2))){
+				if(!result.getBoolean(3)){
 					serverMsg.put("Valid", "true");
-					serverMsg.put("Type", result.getString(3));
+					serverMsg.put("Type", result.getString(2));
 					serverMsg.put("Name", result.getString(1));
+					
 				}else{
 					serverMsg.put("Valid", "false");
-					serverMsg.put("ErrMsg", "Password is incorrect.");
+					serverMsg.put("ErrMsg", "User allready loged in.");
 				}
 			}else{
 				serverMsg.put("Valid", "false");
-				serverMsg.put("ErrMsg", "User does not exist.");
+				serverMsg.put("ErrMsg", "Password or ID is incorrect.");
 			}
 			client.sendToClient(serverMsg);
 		} catch (Exception e) {
