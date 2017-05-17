@@ -24,7 +24,7 @@ public class LoginController {
 		((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 		
 		
-		Main.
+	
 		
 		
 		URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
