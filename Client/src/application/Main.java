@@ -37,7 +37,7 @@ public class Main extends Application{
 	}
 	
 	public void openMain(){
-		URL menuBarUrl = getClass().getResource("/FXML/menuBar.fxml");
+		URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
 	    URL welcomePaneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
 	    MenuBar bar;
 	    AnchorPane pane;
