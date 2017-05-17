@@ -56,14 +56,14 @@ public class LoginController {
 		
 		
 		
-		
-		Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
+		if(Main.client == null)
+			Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
 		
 			
 		msg.put("msgType", "Login");
-		msg.put("ID", id.getText());
-		msg.put("Password", password.getText());
-		msg.put("School", school.getText());
+		msg.put("id", id.getText());
+		msg.put("passwrd", password.getText());
+		msg.put("schoolId", school.getText());
 		
 		Main.client.sendMessageToServer(msg);
 		
@@ -73,15 +73,13 @@ public class LoginController {
 		
 		synchronized (msgT){
 			msgT.wait();
-			this.wait();
 		}
 		
 		HashMap<String, String> answer = (HashMap<String, String>)Main.client.getMessage();
 		
 		
 		if (answer.get("Valid").equals("true")){
-		
-		
+			((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 			URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
 		    URL welcomePaneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
 		    MenuBar bar;
@@ -113,8 +111,7 @@ public class LoginController {
 		    primaryStage.setTitle("Academic system for high school");
 		    primaryStage.setResizable(false);
 		    primaryStage.show();
-	 }
-		else
+		}else
 			server_msg.setText((String)answer.get("ErrMsg"));
 			
 		
