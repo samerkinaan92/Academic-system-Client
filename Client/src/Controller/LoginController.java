@@ -1,51 +1,31 @@
-package application;
-	
+package Controller;
+
 import java.io.IOException;
 import java.net.URL;
 
-import javafx.application.Application;
+import application.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
-import javafx.stage.Stage;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+import javafx.scene.input.InputEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.Stage;
 
-
-public class Main extends Application{
+public class LoginController {
 	
-	// Creating a static client to pass to the controller
-	public static ClientConnection client;
-	
-	
-	// Creating a static root to pass to the controller
 	private static BorderPane root = new BorderPane();
-
-	/**
-	 * Just a root getter for the controller to use
-	 */
-	public static BorderPane getRoot() {
-		return root;
-	}
 	
+	public void OnLogin(ActionEvent e){
 	
-	@Override
-	public void start(Stage stage) throws Exception { // Show login screen on start.
+		((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 		
-		 
-	    Parent root = FXMLLoader.load(getClass().getResource("/FXML/Login.fxml"));
-	    
-	    Scene scene = new Scene(root);
-	    
-	    stage.setTitle("Login");
-	    stage.setScene(scene);
-	     
-	    stage.show();
-	    }
+		
 	
-	public void openMain(){
+		
 		
 		URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
 	    URL welcomePaneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
@@ -58,9 +38,9 @@ public class Main extends Application{
 
 		    root.setTop(bar);
 		    root.setCenter(pane);
-		} catch (IOException e) {
+		} catch (IOException ex) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			ex.printStackTrace();
 		}
 	    
 	 
@@ -79,8 +59,5 @@ public class Main extends Application{
 	    primaryStage.setResizable(false);
 	    primaryStage.show();
 	}
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
+
 }
