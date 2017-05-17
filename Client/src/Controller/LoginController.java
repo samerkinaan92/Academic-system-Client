@@ -6,11 +6,13 @@ import java.util.HashMap;
 
 import application.ClientConnection;
 import application.Main;
+import application.MessageThread;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -37,17 +39,19 @@ public class LoginController {
 	 @FXML
 	 private TextField port;
 	 
+	 @FXML
+	 private Label server_msg;
+
+	 
 	 private HashMap <String, String> msg = new HashMap <String,String>();
 	 
-	 private String qr;
 	
 	
+	 private static BorderPane root = new BorderPane();
 	
-	private static BorderPane root = new BorderPane();
+	 public void OnLogin(ActionEvent e) throws InterruptedException{
 	
-	public void OnLogin(ActionEvent e){
-	
-		((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
+		//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 		
 		
 		
@@ -55,53 +59,67 @@ public class LoginController {
 		
 		Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
 		
-		qr = "SELECT Role FROM Users WHERE ID = '" + id.getText() + "' AND IsLogin = 0 AND Password = '" + password.getText() +"'";
-		
+			
 		msg.put("msgType", "Login");
 		msg.put("ID", id.getText());
 		msg.put("Password", password.getText());
 		msg.put("School", school.getText());
 		
-		
 		Main.client.sendMessageToServer(msg);
 		
-		Main.client.msg
+		MessageThread msgT = new MessageThread(Main.client);
 		
+		msgT.start();
 		
-	
-		
-		
-		URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
-	    URL welcomePaneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
-	    MenuBar bar;
-	    AnchorPane pane;
-		try {
-			bar = FXMLLoader.load(menuBarUrl);
-			pane = FXMLLoader.load(welcomePaneUrl);
-			// constructing our scene using the static root
-
-		    root.setTop(bar);
-		    root.setCenter(pane);
-		} catch (IOException ex) {
-			// TODO Auto-generated catch block
-			ex.printStackTrace();
+		synchronized (msgT){
+			msgT.wait();
+			this.wait();
 		}
-	    
-	 
-	    
-	    Scene scene = new Scene(root, 640, 480);
-	    scene
-	      .getStylesheets()
-	      .add(getClass()
-	      .getResource("/FXML/application.css")
-	      .toExternalForm());
-	    
-	    Stage primaryStage = new Stage();
-	    primaryStage.setScene(scene);
-	    primaryStage.getIcons().add(new Image("/school_icon.png"));
-	    primaryStage.setTitle("Academic system for high school");
-	    primaryStage.setResizable(false);
-	    primaryStage.show();
-	}
+		
+		HashMap<String, String> answer = (HashMap<String, String>)Main.client.getMessage();
+		
+		
+		if (answer.get("Valid").equals("true")){
+		
+		
+			URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
+		    URL welcomePaneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
+		    MenuBar bar;
+		    AnchorPane pane;
+			try {
+				bar = FXMLLoader.load(menuBarUrl);
+				pane = FXMLLoader.load(welcomePaneUrl);
+				// constructing our scene using the static root
+	
+			    root.setTop(bar);
+			    root.setCenter(pane);
+			} catch (IOException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			}
+		    
+		 
+		    
+		    Scene scene = new Scene(root, 640, 480);
+		    scene
+		      .getStylesheets()
+		      .add(getClass()
+		      .getResource("/FXML/application.css")
+		      .toExternalForm());
+		    
+		    Stage primaryStage = new Stage();
+		    primaryStage.setScene(scene);
+		    primaryStage.getIcons().add(new Image("/school_icon.png"));
+		    primaryStage.setTitle("Academic system for high school");
+		    primaryStage.setResizable(false);
+		    primaryStage.show();
+	 }
+		else
+			server_msg.setText((String)answer.get("ErrMsg"));
+			
+		
+	 }
+	
+		 
 
 }
