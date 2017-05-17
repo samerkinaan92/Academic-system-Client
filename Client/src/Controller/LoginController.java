@@ -2,6 +2,7 @@ package Controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
 import application.ClientConnection;
 import application.Main;
@@ -22,7 +23,7 @@ import javafx.stage.Stage;
 public class LoginController {
 	
 	 @FXML
-	 private TextField user_name;
+	 private TextField id;
 
 	 @FXML
 	 private PasswordField password;
@@ -35,6 +36,10 @@ public class LoginController {
 
 	 @FXML
 	 private TextField port;
+	 
+	 private HashMap <String, String> msg = new HashMap <String,String>();
+	 
+	 private String qr;
 	
 	
 	
@@ -48,8 +53,19 @@ public class LoginController {
 		
 		
 		
-		Main.client = new ClientConnection("localhost", 5555);
-		Main.client.sendMessageToServer("s");
+		Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
+		
+		qr = "SELECT Role FROM Users WHERE ID = '" + id.getText() + "' AND IsLogin = 0 AND Password = '" + password.getText() +"'";
+		
+		msg.put("msgType", "Login");
+		msg.put("ID", id.getText());
+		msg.put("Password", password.getText());
+		msg.put("School", school.getText());
+		
+		
+		Main.client.sendMessageToServer(msg);
+		
+		Main.client.msg
 		
 		
 	

@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 
-<StackPane prefWidth="231.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.111" fx:controller="Controller.LoginController">
+<StackPane prefWidth="231.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
   <children>
     <StackPane>
       <children>
@@ -19,13 +19,13 @@
           <children>
             <GridPane>
               <children>
-                <Label alignment="CENTER" text="Username:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label fx:id="id" alignment="CENTER" text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <Label alignment="CENTER" text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
-                <TextField fx:id="user_name" promptText="&quot;User Name&quot;" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <TextField fx:id="id" promptText="User ID" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <PasswordField fx:id="password" promptText="*****" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                        <Label alignment="CENTER" contentDisplay="CENTER" text="School" GridPane.rowIndex="2" />
-                        <Label text="IP" GridPane.rowIndex="3" />
-                        <Label text="Port" GridPane.rowIndex="4" />
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="School:" GridPane.rowIndex="2" />
+                        <Label text="IP:" GridPane.rowIndex="3" />
+                        <Label text="Port:" GridPane.rowIndex="4" />
                         <TextField fx:id="school" promptText="&quot;School Name&quot;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="ip" promptText="&quot;0.0.0.0&quot;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="port" promptText="&quot;5555&quot;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
