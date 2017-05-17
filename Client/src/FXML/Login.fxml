@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefWidth="231.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+<StackPane prefHeight="215.0" prefWidth="231.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
   <children>
     <StackPane>
       <children>
@@ -20,7 +20,7 @@
           <children>
             <GridPane>
               <children>
-                <Label fx:id="id" alignment="CENTER" text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <Label alignment="CENTER" text="ID:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <Label alignment="CENTER" text="Password:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                 <TextField fx:id="id" promptText="User ID" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <PasswordField fx:id="password" promptText="*****" GridPane.columnIndex="1" GridPane.rowIndex="1" />
