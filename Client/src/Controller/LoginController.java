@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+
 import java.net.URL;
 import java.util.HashMap;
 
@@ -17,10 +18,12 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.input.InputEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
+
+
 
 public class LoginController {
 	
@@ -41,6 +44,8 @@ public class LoginController {
 	 
 	 @FXML
 	 private Label server_msg;
+	 
+
 
 	 
 	 private HashMap <String, String> msg = new HashMap <String,String>();
@@ -49,7 +54,8 @@ public class LoginController {
 	
 	 private static BorderPane root = new BorderPane();
 	
-	 public void OnLogin(ActionEvent e) throws InterruptedException{
+	 @SuppressWarnings("unchecked")
+	public void OnLogin(ActionEvent e) throws InterruptedException{
 	
 		//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 		
@@ -75,12 +81,29 @@ public class LoginController {
 			msgT.wait();
 		}
 		
-		HashMap<String, String> answer = (HashMap<String, String>)Main.client.getMessage();
+		
+		
+		HashMap <String, String> answer = (HashMap <String, String>)Main.client.getMessage();
 		
 		
 		if (answer.get("Valid").equals("true")){
+			
 			((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
-			URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
+			String fxml_url = "/FXML/";
+			
+			
+			switch (answer.get("Type")){
+			
+			case "0": fxml_url += "StudentMenuBar.fxml"; break;
+			case "1": fxml_url += "ParentMenuBar.fxml"; break;
+			case "2": fxml_url += "SecretaryMenuBar.fxml"; break;
+			case "3": fxml_url += "TeacherMenuBar.fxml"; break;
+			case "4": fxml_url += "PrincipalMenuBar.fxml"; break;
+			case "5": fxml_url += "SystemManegerMenuBar.fxml"; break;
+			}
+			
+			
+			URL menuBarUrl = getClass().getResource(fxml_url);
 		    URL welcomePaneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
 		    MenuBar bar;
 		    AnchorPane pane;
@@ -89,8 +112,8 @@ public class LoginController {
 				pane = FXMLLoader.load(welcomePaneUrl);
 				// constructing our scene using the static root
 	
-			    Main.getRoot().setTop(bar);
-			    Main.getRoot().setCenter(pane);
+			    root.setTop(bar);
+			    root.setCenter(pane);
 			} catch (IOException ex) {
 				// TODO Auto-generated catch block
 				ex.printStackTrace();
@@ -99,11 +122,7 @@ public class LoginController {
 		 
 		    
 		    Scene scene = new Scene(root, 640, 480);
-		    scene
-		      .getStylesheets()
-		      .add(getClass()
-		      .getResource("/FXML/application.css")
-		      .toExternalForm());
+		    scene.getStylesheets().add(getClass().getResource("/FXML/application.css").toExternalForm());
 		    
 		    Stage primaryStage = new Stage();
 		    primaryStage.setScene(scene);

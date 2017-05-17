@@ -21,15 +21,16 @@ public class Main extends Application{
 	
 	
 	// Creating a static root to pass to the controller
-	private static BorderPane root = new BorderPane();
+	//private static BorderPane root = new BorderPane();
 
 	/**
 	 * Just a root getter for the controller to use
 	 */
+	/*
 	public static BorderPane getRoot() {
 		return root;
 	}
-	
+	*/
 	
 	@Override
 	public void start(Stage stage) throws Exception { // Show login screen on start.
