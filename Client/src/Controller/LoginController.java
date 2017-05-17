@@ -91,8 +91,8 @@ public class LoginController {
 				pane = FXMLLoader.load(welcomePaneUrl);
 				// constructing our scene using the static root
 	
-			    root.setTop(bar);
-			    root.setCenter(pane);
+			    Main.getRoot().setTop(bar);
+			    Main.getRoot().setCenter(pane);
 			} catch (IOException ex) {
 				// TODO Auto-generated catch block
 				ex.printStackTrace();

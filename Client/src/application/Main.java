@@ -35,16 +35,16 @@ public class Main extends Application{
 	public void start(Stage stage) throws Exception { // Show login screen on start.
 		
 		 
-	    Parent root = FXMLLoader.load(getClass().getResource("/FXML/Login.fxml"));
+		Parent login = FXMLLoader.load(getClass().getResource("/FXML/Login.fxml"));
 	    
-	    Scene scene = new Scene(root);
+	    Scene scene = new Scene(login);
 	    
 	    stage.setTitle("Login");
 	    stage.setScene(scene);
 	     
 	    stage.show();
 	    }
-	
+	/*
 	public void openMain(){
 		
 		URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
@@ -79,6 +79,7 @@ public class Main extends Application{
 	    primaryStage.setResizable(false);
 	    primaryStage.show();
 	}
+	*/
 	
 	public static void main(String[] args) {
 		launch(args);
