@@ -2,13 +2,18 @@ package Controller;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
+import application.ClientConnection;
 import application.Main;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.layout.AnchorPane;
@@ -17,11 +22,50 @@ import javafx.stage.Stage;
 
 public class LoginController {
 	
+	 @FXML
+	 private TextField id;
+
+	 @FXML
+	 private PasswordField password;
+
+	 @FXML
+	 private TextField school;
+
+	 @FXML
+	 private TextField ip;
+
+	 @FXML
+	 private TextField port;
+	 
+	 private HashMap <String, String> msg = new HashMap <String,String>();
+	 
+	 private String qr;
+	
+	
+	
 	private static BorderPane root = new BorderPane();
 	
 	public void OnLogin(ActionEvent e){
 	
 		((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
+		
+		
+		
+		
+		
+		Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
+		
+		qr = "SELECT Role FROM Users WHERE ID = '" + id.getText() + "' AND IsLogin = 0 AND Password = '" + password.getText() +"'";
+		
+		msg.put("msgType", "Login");
+		msg.put("ID", id.getText());
+		msg.put("Password", password.getText());
+		msg.put("School", school.getText());
+		
+		
+		Main.client.sendMessageToServer(msg);
+		
+		Main.client.msg
 		
 		
 	
