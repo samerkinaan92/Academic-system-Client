@@ -3,12 +3,16 @@ package Controller;
 import java.io.IOException;
 import java.net.URL;
 
+import application.ClientConnection;
 import application.Main;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.input.InputEvent;
 import javafx.scene.layout.AnchorPane;
@@ -17,11 +21,35 @@ import javafx.stage.Stage;
 
 public class LoginController {
 	
+	 @FXML
+	 private TextField user_name;
+
+	 @FXML
+	 private PasswordField password;
+
+	 @FXML
+	 private TextField school;
+
+	 @FXML
+	 private TextField ip;
+
+	 @FXML
+	 private TextField port;
+	
+	
+	
 	private static BorderPane root = new BorderPane();
 	
 	public void OnLogin(ActionEvent e){
 	
 		((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
+		
+		
+		
+		
+		
+		Main.client = new ClientConnection("localhost", 5555);
+		Main.client.sendMessageToServer("s");
 		
 		
 	
