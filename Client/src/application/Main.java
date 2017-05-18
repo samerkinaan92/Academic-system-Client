@@ -69,8 +69,9 @@ public class Main extends Application{
 			try {
 				bar = FXMLLoader.load(menuBarUrl);
 				pane = FXMLLoader.load(welcomePaneUrl);
-				// constructing our scene using the static root
-	
+				
+				
+				// constructing our scene using the static root	
 			    root.setTop(bar);
 			    root.setCenter(pane);
 			} catch (IOException ex) {
@@ -88,7 +89,7 @@ public class Main extends Application{
 		    primaryStage.getIcons().add(new Image("/school_icon.png"));
 		    primaryStage.setTitle("Academic system for high school");
 		    primaryStage.setResizable(false);
-		    primaryStage.show();
+		    primaryStage.show(); 
 	}
 	
 	

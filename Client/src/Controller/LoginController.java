@@ -1,8 +1,5 @@
 package Controller;
 
-import java.io.IOException;
-
-import java.net.URL;
 import java.util.HashMap;
 
 import application.ClientConnection;
@@ -10,17 +7,10 @@ import application.Main;
 import application.MessageThread;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
 
 
 
@@ -49,9 +39,6 @@ public class LoginController {
 	 
 	 private HashMap <String, String> msg = new HashMap <String,String>();
 	 
-	
-	
-	 private static BorderPane root = new BorderPane();
 	
 	 @SuppressWarnings("unchecked")
 	public void OnLogin(ActionEvent e) throws InterruptedException{
@@ -91,8 +78,6 @@ public class LoginController {
 			Main.openMain(answer.get("Type"));
 		}else
 			server_msg.setText((String)answer.get("ErrMsg"));
-			
-		
 	 }
 	
 		 
