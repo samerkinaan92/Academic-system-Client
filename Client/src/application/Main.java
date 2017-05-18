@@ -21,16 +21,16 @@ public class Main extends Application{
 	
 	
 	// Creating a static root to pass to the controller
-	//private static BorderPane root = new BorderPane();
+	private static BorderPane root = new BorderPane();
 
 	/**
 	 * Just a root getter for the controller to use
 	 */
-	/*
+	
 	public static BorderPane getRoot() {
 		return root;
 	}
-	*/
+	
 	
 	@Override
 	public void start(Stage stage) throws Exception { // Show login screen on start.
@@ -45,42 +45,52 @@ public class Main extends Application{
 	     
 	    stage.show();
 	    }
-	/*
-	public void openMain(){
+	
+	public static void openMain(String type){
 		
-		URL menuBarUrl = getClass().getResource("/FXML/StudentMenuBar.fxml");
-	    URL welcomePaneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
-	    MenuBar bar;
-	    AnchorPane pane;
-		try {
-			bar = FXMLLoader.load(menuBarUrl);
-			pane = FXMLLoader.load(welcomePaneUrl);
-			// constructing our scene using the static root
-
-		    root.setTop(bar);
-		    root.setCenter(pane);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	    
-	 
-	    
-	    Scene scene = new Scene(root, 640, 480);
-	    scene
-	      .getStylesheets()
-	      .add(getClass()
-	      .getResource("/FXML/application.css")
-	      .toExternalForm());
-	    
-	    Stage primaryStage = new Stage();
-	    primaryStage.setScene(scene);
-	    primaryStage.getIcons().add(new Image("/school_icon.png"));
-	    primaryStage.setTitle("Academic system for high school");
-	    primaryStage.setResizable(false);
-	    primaryStage.show();
+		String fxml_url = "/FXML/";
+			
+			
+			switch (type){
+			
+			case "Student": fxml_url += "StudentMenuBar.fxml"; break;
+			case "Parent": fxml_url += "ParentMenuBar.fxml"; break;
+			case "Secretary": fxml_url += "SecretaryMenuBar.fxml"; break;
+			case "Teacher": fxml_url += "TeacherMenuBar.fxml"; break;
+			case "Principal": fxml_url += "PrincipalMenuBar.fxml"; break;
+			case "SystemManager": fxml_url += "SystemManegerMenuBar.fxml"; break;
+			}
+			
+			
+			URL menuBarUrl = Main.class.getResource(fxml_url);
+		    URL welcomePaneUrl =  Main.class.getResource("/FXML/WelcomeScreen.fxml");
+		    MenuBar bar;
+		    AnchorPane pane;
+			try {
+				bar = FXMLLoader.load(menuBarUrl);
+				pane = FXMLLoader.load(welcomePaneUrl);
+				// constructing our scene using the static root
+	
+			    root.setTop(bar);
+			    root.setCenter(pane);
+			} catch (IOException ex) {
+				// TODO Auto-generated catch block
+				ex.printStackTrace();
+			}
+		    
+		 
+		    
+		    Scene scene = new Scene(root, 640, 480);
+		    scene.getStylesheets().add(Main.class.getResource("/FXML/application.css").toExternalForm());
+		    
+		    Stage primaryStage = new Stage();
+		    primaryStage.setScene(scene);
+		    primaryStage.getIcons().add(new Image("/school_icon.png"));
+		    primaryStage.setTitle("Academic system for high school");
+		    primaryStage.setResizable(false);
+		    primaryStage.show();
 	}
-	*/
+	
 	
 	public static void main(String[] args) {
 		launch(args);
