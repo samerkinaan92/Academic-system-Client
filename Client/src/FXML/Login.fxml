@@ -29,9 +29,9 @@
                         <Label alignment="CENTER" contentDisplay="CENTER" text="School:" GridPane.rowIndex="2" />
                         <Label text="IP:" GridPane.rowIndex="3" />
                         <Label text="Port:" GridPane.rowIndex="4" />
-                        <TextField fx:id="school" promptText="&quot;School Name&quot;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                        <TextField fx:id="ip" promptText="&quot;0.0.0.0&quot;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <TextField fx:id="port" promptText="&quot;5555&quot;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <TextField fx:id="school" promptText="School Name" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="ip" promptText="Server IP" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <TextField fx:id="port" promptText="Server Port" GridPane.columnIndex="1" GridPane.rowIndex="4" />
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="109.0" />
@@ -47,7 +47,7 @@
             </GridPane>
                   <Pane prefHeight="25.0" prefWidth="211.0">
                      <children>
-                        <Label fx:id="server_msg" alignment="CENTER" contentDisplay="CENTER" layoutY="-4.0" opacity="0.5" prefHeight="25.0" prefWidth="211.0" textAlignment="CENTER" textFill="RED">
+                        <Label fx:id="guiMeg" alignment="CENTER" contentDisplay="CENTER" layoutY="-4.0" opacity="0.5" prefHeight="25.0" prefWidth="211.0" textAlignment="CENTER" textFill="RED">
                            <font>
                               <Font name="System Bold" size="12.0" />
                            </font>
