@@ -52,13 +52,6 @@ public class LoginController {
 	
 	 @SuppressWarnings("unchecked")
 	 public void OnLogin(ActionEvent e) throws InterruptedException{
-		 
-		// Close login after 3 tries.
-		 
-		if (++NumOfLogin == 3){
-			JOptionPane.showMessageDialog(null, "Please contact system manager", "Error" , JOptionPane.ERROR_MESSAGE);
-			System.exit(0);
-		}
 		
 		// Establish connection to server.
 		
@@ -137,5 +130,12 @@ public class LoginController {
 		    primaryStage.show();
 		}else if (answer != null)
 			guiMeg.setText((String)answer.get("ErrMsg"));
+		
+		// Close login after 3 tries.
+		 
+		if (++NumOfLogin == 3){
+			JOptionPane.showMessageDialog(null, "Please contact system manager", "Error" , JOptionPane.ERROR_MESSAGE);
+			System.exit(0);
+		}
 	}
 }
