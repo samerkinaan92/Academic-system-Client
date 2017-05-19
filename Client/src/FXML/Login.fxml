@@ -5,14 +5,16 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.SepiaTone?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="215.0" prefWidth="231.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+<StackPane prefHeight="236.0" prefWidth="231.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
   <children>
     <StackPane>
       <children>
@@ -30,11 +32,6 @@
                         <TextField fx:id="school" promptText="&quot;School Name&quot;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField fx:id="ip" promptText="&quot;0.0.0.0&quot;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                         <TextField fx:id="port" promptText="&quot;5555&quot;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-                        <Label fx:id="server_msg" prefHeight="98.0" prefWidth="181.0" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="5">
-                           <font>
-                              <Font name="System Bold" size="12.0" />
-                           </font>
-                        </Label>
               </children>
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" maxWidth="148.0" minWidth="10.0" prefWidth="109.0" />
@@ -46,13 +43,24 @@
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
             </GridPane>
-            <StackPane prefHeight="-1.0" prefWidth="-1.0">
-              <children>
-                <Button fx:id="loginButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#OnLogin" text="Login" StackPane.alignment="CENTER" />
-              </children>
+                  <Pane prefHeight="25.0" prefWidth="211.0">
+                     <children>
+                        <Label fx:id="server_msg" alignment="CENTER" contentDisplay="CENTER" layoutY="-4.0" opacity="0.5" prefHeight="25.0" prefWidth="211.0" textAlignment="CENTER" textFill="RED">
+                           <font>
+                              <Font name="System Bold" size="12.0" />
+                           </font>
+                           <effect>
+                              <SepiaTone level="0.35" />
+                           </effect>
+                        </Label>
+                     </children>
+                  </Pane>
+            <StackPane prefHeight="38.0" prefWidth="211.0">
+                     <children>
+                <Button fx:id="loginButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#OnLogin" text="Login" />
+                     </children>
             </StackPane>
           </children>
         </VBox>
