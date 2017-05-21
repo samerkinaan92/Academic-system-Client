@@ -3,18 +3,22 @@ package Controller;
 import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
 import application.ClientConnection;
 import application.Main;
 import application.MessageThread;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.PasswordField;
@@ -24,16 +28,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-public class LoginController {
+public class LoginController implements Initializable {
+	
+	 @FXML
+	 private ComboBox<String> school;
 	
 	 @FXML
 	 private TextField id;
 
 	 @FXML
 	 private PasswordField password;
-
-	 @FXML
-	 private TextField school;
 
 	 @FXML
 	 private TextField ip;
@@ -45,6 +49,8 @@ public class LoginController {
 	 private Label guiMeg;
 	 
 	 private int NumOfLogin = -1;
+	 
+	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
 	 
 	 private HashMap <String, String> answer = null;
 	 private HashMap <String, String> msgServer = new HashMap <String,String>();
@@ -64,11 +70,11 @@ public class LoginController {
 		
 		// Send message to server with an new thread & wait for answer. 
 		
-		if (!id.getText().isEmpty() && !password.getText().isEmpty() && !school.getText().isEmpty()){
+		if (!id.getText().isEmpty() && !password.getText().isEmpty() && !school.getSelectionModel().getSelectedItem().toString().isEmpty()){
 			msgServer.put("msgType", "Login");
 			msgServer.put("id", id.getText());
 			msgServer.put("passwrd", password.getText());
-			msgServer.put("schoolId", school.getText());
+			msgServer.put("schoolId", school.getSelectionModel().getSelectedItem().toString());
 			
 			try{
 			Main.client.sendMessageToServer(msgServer);
@@ -137,5 +143,10 @@ public class LoginController {
 			JOptionPane.showMessageDialog(null, "Please contact system manager", "Error" , JOptionPane.ERROR_MESSAGE);
 			System.exit(0);
 		}
+	}
+
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		school.setItems(options);
 	}
 }

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+
+<MenuBar xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PrincipalMenuBarController">
+   <menus>
+      <Menu mnemonicParsing="false" text="Navigation">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#previous" text="Previous" />
+            <MenuItem mnemonicParsing="false" onAction="#main_menu" text="Main Menu" />
+            <MenuItem mnemonicParsing="false" onAction="#quit" text="Quit" />
+        </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="Manage Changes">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#ApproveTeacherAssignment" text="Approve Teacher Assignment" />
+            <MenuItem mnemonicParsing="false" onAction="#ApproveStudentChange" text="Approve Student Change" />
+        </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="View">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#ViewSystemData" text="System Data" />
+            <MenuItem mnemonicParsing="false" onAction="#ViewStatisticalReport" text="Statistical Report" />
+        </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="Connection">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" />
+        </items>
+      </Menu>
+   </menus>
+</MenuBar>
