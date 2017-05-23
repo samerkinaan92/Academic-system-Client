@@ -1,6 +1,11 @@
 package Controller;
 
+import java.io.IOException;
+
+import application.Main;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
 
 
 public class SystemManegerMenuBarController {
@@ -29,8 +34,9 @@ public class SystemManegerMenuBarController {
 		
 	/** Private Actions */
 	
-	public void define(ActionEvent e){
-		
+	public void define(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SystemManagerDefineCourses.fxml"));;
+		Main.getRoot().setCenter(pane);
 	}
 	
 	/** Private Actions */
