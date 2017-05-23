@@ -3,6 +3,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import Entity.User;
 import application.ClientConnection;
 import application.Main;
 import application.MessageThread;
@@ -78,9 +79,9 @@ public class LoginController implements Initializable {
 			
 		// Process answer from server.
 		
-		if (answer != null && answer.get("Valid").equals("true")){
-			
+		if (answer != null && answer.get("Valid").equals("true")){	
 			((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
+			Main.user = new User(id.getText(), answer.get("name"));
 			Main.openMain(answer.get("Type"));
 		}else
 			guiMeg.setText((String)answer.get("ErrMsg"));

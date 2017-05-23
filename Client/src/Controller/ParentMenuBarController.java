@@ -1,5 +1,6 @@
 package Controller;
 
+import application.Main;
 import javafx.event.ActionEvent;
 
 public class ParentMenuBarController {
@@ -19,7 +20,7 @@ public class ParentMenuBarController {
 	}
 
 	public void logout(ActionEvent e){
-	
+		Main.logOut();
 	}
 	
 	/** Common Actions */

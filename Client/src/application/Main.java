@@ -2,7 +2,9 @@ package application;
 	
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 
+import Entity.User;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -15,15 +17,17 @@ import javafx.scene.layout.BorderPane;
 
 public class Main extends Application{
 	
-	// Creating a static client to pass to the controller
+	// Creating a static client to pass to the controllers
 	public static ClientConnection client;
 	
+	// Creating a static client to pass to the controllers
+	public static User user;
 	
-	// Creating a static root to pass to the controller
+	// Creating a static root to pass to the controllers
 	private static BorderPane root = new BorderPane();
 
 	/**
-	 * Just a root getter for the controller to use
+	 * Just a root getter for the controllers to use
 	 */
 	
 	public static BorderPane getRoot() {
@@ -90,6 +94,29 @@ public class Main extends Application{
 		    primaryStage.show(); 
 	}
 	
+	public static int logOut(){
+		HashMap<String, String> msg = new HashMap<>();
+		msg.put("msgType", "update");
+		msg.put("query", "UPDATE users SET isLogin = 0 WHERE id = '" + user.getID() + "';");
+		
+		try{
+		Main.client.sendMessageToServer(msg);
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+			
+		MessageThread msgT = new MessageThread(Main.client);
+		msgT.start();
+		synchronized (msgT){
+			try {
+				msgT.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		int answer = (int)Main.client.getMessage();
+		return answer;
+	}
 	
 	public static void main(String[] args) {
 		launch(args);
