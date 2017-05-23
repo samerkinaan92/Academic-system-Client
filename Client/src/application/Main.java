@@ -13,7 +13,6 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
-
 public class Main extends Application{
 	
 	// Creating a static client to pass to the controller
@@ -35,14 +34,13 @@ public class Main extends Application{
 	@Override
 	public void start(Stage stage) throws Exception { // Show login screen on start.
 		
-		 
 		Parent login = FXMLLoader.load(getClass().getResource("/FXML/Login.fxml"));
+		stage.getIcons().add(new Image("/user-login-icon-14.png"));
 	    
 	    Scene scene = new Scene(login);
 	    
 	    stage.setTitle("Login");
 	    stage.setScene(scene);
-	     
 	    stage.show();
 	    }
 	

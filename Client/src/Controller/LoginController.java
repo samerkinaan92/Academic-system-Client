@@ -1,20 +1,26 @@
 package Controller;
-
+import java.net.URL;
 import java.util.HashMap;
+import java.util.ResourceBundle;
 
 import application.ClientConnection;
 import application.Main;
 import application.MessageThread;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-
-
-public class LoginController {
+public class LoginController implements Initializable {
+	
+	 @FXML
+	 private ComboBox<String> school;
 	
 	 @FXML
 	 private TextField id;
@@ -23,63 +29,65 @@ public class LoginController {
 	 private PasswordField password;
 
 	 @FXML
-	 private TextField school;
-
-	 @FXML
 	 private TextField ip;
 
 	 @FXML
 	 private TextField port;
 	 
 	 @FXML
-	 private Label server_msg;
+	 private Label guiMeg;
 	 
-
-
 	 
-	 private HashMap <String, String> msg = new HashMap <String,String>();
-	 
-	
+	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
+	 private HashMap <String, String> answer = null;
+	 private HashMap <String, String> msgServer = new HashMap <String,String>();
 	 @SuppressWarnings("unchecked")
-	public void OnLogin(ActionEvent e) throws InterruptedException{
-	
-		//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
+	 public void OnLogin(ActionEvent e) throws InterruptedException{
 		
-		
-		
+		// Establish connection to server.
 		
 		if(Main.client == null)
-			Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
+			if (!ip.getText().isEmpty() && !port.getText().isEmpty())
+				Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
+			else
+				guiMeg.setText("Connection to server failed!");
+	
 		
+		// Send message to server with an new thread & wait for answer. 
+		
+		if (!id.getText().isEmpty() && !password.getText().isEmpty() && !school.getSelectionModel().getSelectedItem().toString().isEmpty()){
+			msgServer.put("msgType", "Login");
+			msgServer.put("id", id.getText());
+			msgServer.put("passwrd", password.getText());
+			msgServer.put("schoolId", school.getSelectionModel().getSelectedItem().toString());
 			
-		msg.put("msgType", "Login");
-		msg.put("id", id.getText());
-		msg.put("passwrd", password.getText());
-		msg.put("schoolId", school.getText());
-		
-		Main.client.sendMessageToServer(msg);
-		
-		MessageThread msgT = new MessageThread(Main.client);
-		
-		msgT.start();
-		
-		synchronized (msgT){
-			msgT.wait();
+			try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				guiMeg.setText("Server fatal error!");
+			}
+			
+			MessageThread msgT = new MessageThread(Main.client);
+			msgT.start();
+			synchronized (msgT){msgT.wait();}
+			answer = (HashMap <String, String>)Main.client.getMessage();
 		}
+		else if (Main.client != null)
+			guiMeg.setText("Please fill al fields..");
+			
+		// Process answer from server.
 		
-		
-		
-		HashMap <String, String> answer = (HashMap <String, String>)Main.client.getMessage();
-		
-		
-		if (answer.get("Valid").equals("true")){
+		if (answer != null && answer.get("Valid").equals("true")){
 			
 			((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 			Main.openMain(answer.get("Type"));
 		}else
-			server_msg.setText((String)answer.get("ErrMsg"));
+			guiMeg.setText((String)answer.get("ErrMsg"));
 	 }
-	
-		 
 
+	@Override
+	public void initialize(URL arg0, ResourceBundle arg1) {
+		school.setItems(options);
+	}
 }
