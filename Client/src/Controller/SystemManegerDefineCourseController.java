@@ -1,10 +1,13 @@
 package Controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
+
+import javax.swing.JOptionPane;
 
 import application.Main;
 import application.MessageThread;
@@ -12,10 +15,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.AnchorPane;
 
 public class SystemManegerDefineCourseController implements Initializable {
 	
@@ -89,7 +94,7 @@ public class SystemManegerDefineCourseController implements Initializable {
     	preCourseList.setItems(FXCollections.observableArrayList(PreList));	
     }
     
-    public void submitCourse(ActionEvent e){
+    public void submitCourse(ActionEvent e) throws IOException{
     	
     	boolean err = false;
     	
@@ -114,9 +119,9 @@ public class SystemManegerDefineCourseController implements Initializable {
     		return;
     	
     	String msg = "Insert INTO course (CourseID, Name, TUID, weeklyHours)";
-    	String values = " VALUES (" + Integer.parseInt(courseId.getText()) + ", " + courseName.getText() + ", " + 
-    			Integer.parseInt(teachingUnit.getSelectionModel().getSelectedItem().toString()) + ", " + 
-    			Integer.parseInt(weaklyHours.getSelectionModel().getSelectedItem().toString()) + ")";
+    	String values = " VALUES (" + Integer.parseInt(courseId.getText()) + ", '" + courseName.getText() + "', '" + 
+    			teachingUnit.getSelectionModel().getSelectedItem().toString() + "', " + 
+    			weaklyHours.getSelectionModel().getSelectedItem().toString() + ")";
     	
     	msgServer = new HashMap <String,String>();
     	msgServer.put("msgType", "insert");
@@ -137,7 +142,10 @@ public class SystemManegerDefineCourseController implements Initializable {
 		}}
     	
 		
+    	int numOfChanges = (int)Main.client.getMessage();
     	
+    	JOptionPane.showMessageDialog(null, numOfChanges + " Changes were made");
+    	clearScreen();
     	
     }
     
@@ -152,6 +160,11 @@ public class SystemManegerDefineCourseController implements Initializable {
 		weaklyHours.setItems(boxHours);
 		teachingUnit.setItems(boxUnit);
 		
+	}
+	
+	private void clearScreen() throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SystemManagerDefineCourses.fxml"));;
+		Main.getRoot().setCenter(pane);
 	}
 	
 	@SuppressWarnings("unchecked")
