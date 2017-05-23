@@ -1,6 +1,11 @@
 package Controller;
 
+import java.io.IOException;
+
+import application.Main;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
 
 public class PrincipalMenuBarController {
 	
@@ -30,10 +35,12 @@ public class PrincipalMenuBarController {
 
 	/** Private Actions */
 	
-	public void ViewSystemData(ActionEvent e){
+	public void ViewSystemData(ActionEvent e) throws IOException{
 		
-	}
+	AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/PRCPL_ViewSystemData.fxml"));;
+	Main.getRoot().setCenter(pane);
 	
+	}
 	public void ViewStatisticalReport(ActionEvent e){
 		
 	}
