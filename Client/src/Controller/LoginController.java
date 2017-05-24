@@ -17,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
 	
@@ -38,30 +39,22 @@ public class LoginController implements Initializable {
 	 @FXML
 	 private Label guiMeg;
 	 
+	 
 	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
 	 private HashMap <String, String> answer = null;
 	 private HashMap <String, String> msgServer = new HashMap <String,String>();
+	 
 	 
 	 @SuppressWarnings("unchecked")
 	 public void OnLogin(ActionEvent e) throws InterruptedException{
 		
 		// Establish connection to server.
-		 
-		 try{
-			 Integer.parseInt(port.getText());
-		 }
-		 catch(Exception number){
-			 guiMeg.setText("Port/IP not valid!");
-			 return;
-		 }
 		
 		if(Main.client == null)
 			if (!ip.getText().isEmpty() && !port.getText().isEmpty())
 				Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
-			else{
+			else
 				guiMeg.setText("Connection to server failed!");
-				return;
-			}
 	
 		
 		// Send message to server with an new thread & wait for answer. 
@@ -84,19 +77,20 @@ public class LoginController implements Initializable {
 			synchronized (msgT){msgT.wait();}
 			answer = (HashMap <String, String>)Main.client.getMessage();
 		}
-		else if (Main.client != null){
+		else if (Main.client != null)
 			guiMeg.setText("Please fill al fields..");
-			return;
-		}
 			
 		// Process answer from server.
 		
 		if (answer != null && answer.get("Valid").equals("true")){	
-			((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
+			
+			Stage Curstage = (Stage) id.getScene().getWindow();
+			Curstage.close();
+		    
+			//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 			Main.user = new User(id.getText(), answer.get("name"));
 			Main.openMain(answer.get("Type"));
-		}
-		else
+		}else
 			guiMeg.setText((String)answer.get("ErrMsg"));
 	 }
 

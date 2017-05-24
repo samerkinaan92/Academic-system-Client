@@ -60,7 +60,7 @@ public class Main extends Application{
 			case "Secretary": fxml_url += "SecretaryMenuBar.fxml"; break;
 			case "Teacher": fxml_url += "TeacherMenuBar.fxml"; break;
 			case "Principal": fxml_url += "PrincipalMenuBar.fxml"; break;
-			case "System Manager": fxml_url += "SystemManegerMenuBar.fxml"; break;
+			case "SystemManager": fxml_url += "SystemManegerMenuBar.fxml"; break;
 			}
 			
 			
@@ -115,6 +115,8 @@ public class Main extends Application{
 			}
 		}
 		int answer = (int)Main.client.getMessage();
+		Main.client = null;
+		Main.root = new BorderPane(); 
 		return answer;
 	}
 	
