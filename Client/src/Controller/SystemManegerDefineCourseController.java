@@ -144,6 +144,36 @@ public class SystemManegerDefineCourseController implements Initializable {
 		
     	int numOfChanges = (int)Main.client.getMessage();
     	
+    	
+    	for (int i = 0; i < PreList.size(); i++){
+    	
+	    	msg = "Insert INTO PreRequests (CourseID, preReqCourseID)";
+	    	values = " VALUES (" + Integer.parseInt(courseId.getText()) + ", " + 
+	    	PreList.get(i).substring(PreList.get(i).indexOf('(') + 1, PreList.get(i).indexOf(')')) + ")";
+	    	
+	    	
+	    	msgServer = new HashMap <String,String>();
+	    	msgServer.put("msgType", "insert");
+			msgServer.put("query", msg + values);
+	    	
+	    	try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					System.out.println("Server fatal error!");
+				}
+			msgT = new MessageThread(Main.client);
+			msgT.start();
+			synchronized (msgT){try {
+				msgT.wait();
+			} catch (InterruptedException exp) {
+				exp.printStackTrace();
+			}}
+    	}
+    	
+    	
+    	numOfChanges += (int)Main.client.getMessage();
+    	
     	JOptionPane.showMessageDialog(null, numOfChanges + " Changes were made");
     	clearScreen();
     	
