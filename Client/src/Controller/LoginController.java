@@ -17,6 +17,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 
 public class LoginController implements Initializable {
 	
@@ -42,6 +43,8 @@ public class LoginController implements Initializable {
 	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
 	 private HashMap <String, String> answer = null;
 	 private HashMap <String, String> msgServer = new HashMap <String,String>();
+	 
+	 
 	 @SuppressWarnings("unchecked")
 	 public void OnLogin(ActionEvent e) throws InterruptedException{
 		
@@ -80,7 +83,11 @@ public class LoginController implements Initializable {
 		// Process answer from server.
 		
 		if (answer != null && answer.get("Valid").equals("true")){	
-			((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
+			
+			Stage Curstage = (Stage) id.getScene().getWindow();
+			Curstage.close();
+		    
+			//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 			Main.user = new User(id.getText(), answer.get("name"));
 			Main.openMain(answer.get("Type"));
 		}else

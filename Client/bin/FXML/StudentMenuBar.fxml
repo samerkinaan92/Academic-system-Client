@@ -4,13 +4,12 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.StudentMenuBarController">
+<MenuBar fx:id="bar" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.StudentMenuBarController">
    <menus>
-      <Menu mnemonicParsing="false" text="Navigation">
+      <Menu mnemonicParsing="false" text="File">
         <items>
-          <MenuItem mnemonicParsing="false" onAction="#previous" text="Previous" />
-            <MenuItem mnemonicParsing="false" onAction="#main_menu" text="Main Menu" />
-            <MenuItem mnemonicParsing="false" onAction="#quit" text="Quit" />
+            <MenuItem mnemonicParsing="false" onAction="#message" text="Message" />
+            <MenuItem mnemonicParsing="false" onAction="#exit" text="Exit" />
         </items>
       </Menu>
       <Menu mnemonicParsing="false" text="View">

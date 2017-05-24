@@ -115,6 +115,8 @@ public class Main extends Application{
 			}
 		}
 		int answer = (int)Main.client.getMessage();
+		Main.client = null;
+		Main.root = new BorderPane(); 
 		return answer;
 	}
 	
