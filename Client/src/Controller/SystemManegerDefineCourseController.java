@@ -18,12 +18,25 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 
 public class SystemManegerDefineCourseController implements Initializable {
 	
+	
+	@FXML
+    private Label nameErr;
+
+    @FXML
+    private Label idErr;
+
+    @FXML
+    private Label hoursErr;
+
+    @FXML
+    private Label unitErr;
 	
     @FXML
     private ListView<String> courseList;
@@ -98,25 +111,57 @@ public class SystemManegerDefineCourseController implements Initializable {
     	
     	boolean err = false;
     	
-    	courseId.setStyle("-fx-control-inner-background: white");
-    	courseName.setStyle("-fx-control-inner-background: white");
+    	// Reset Screen errors.
+    	
+    	idErr.setText("");
+    	nameErr.setText("");
+    	hoursErr.setText("");
+    	unitErr.setText("");
+    	
+    	//--------------------------------------------------------------------------------------------------
+    	
+    	// Check for illegal input. //
     	
     	try{
     		Integer.parseInt(courseId.getText());
+    		if (courseId.getText().isEmpty())
+    			throw new Exception();
     	}
     	catch(Exception exp1){
-    		exp1.printStackTrace();
-    		courseId.setStyle("-fx-control-inner-background: red");
+    		idErr.setText("Course Id not valid!");
     		err = true;
     	}
     	
     	if (courseName.getText().isEmpty()){
-    		courseName.setStyle("-fx-control-inner-background: red");
+    		nameErr.setText("Course Name not valid!");
+    		err = true;
+    	}
+    	
+    	if (weaklyHours.getSelectionModel().getSelectedItem() == null){
+    		hoursErr.setText("Weakly Hours not selected!");
+    		err = true;
+    	}
+    	
+    	if (teachingUnit.getSelectionModel().getSelectedItem() == null){
+    		unitErr.setText("Teaching Unit not selected!");
     		err = true;
     	}
     	
     	if (err)
     		return;
+    	//---------------------------------------------------------------------------------------------------------
+    	
+    	// Verify course id in data base.
+    	
+    	if (checkId(courseId.getText())){
+    		idErr.setText("Course ID already exists!");
+    		return;
+    	}
+    	
+    	//--------------------------------------------------------------------------------------------------------------
+    	
+    	
+    	// Update course in data base. 
     	
     	String msg = "Insert INTO course (CourseID, Name, TUID, weeklyHours)";
     	String values = " VALUES (" + Integer.parseInt(courseId.getText()) + ", '" + courseName.getText() + "', '" + 
@@ -144,6 +189,10 @@ public class SystemManegerDefineCourseController implements Initializable {
 		
     	int numOfChanges = (int)Main.client.getMessage();
     	
+    	//------------------------------------------------------------------------------------------------------------
+    	
+    	
+    	// Update Precourses in data base.
     	
     	for (int i = 0; i < PreList.size(); i++){
     	
@@ -171,15 +220,18 @@ public class SystemManegerDefineCourseController implements Initializable {
 			}}
     	}
     	
+    	//--------------------------------------------------------------------------------------------------------------
     	
     	numOfChanges += (int)Main.client.getMessage();
     	
-    	JOptionPane.showMessageDialog(null, numOfChanges + " Changes were made");
-    	clearScreen();
-    	
+    	if (numOfChanges >= 1){
+	    	JOptionPane.showMessageDialog(null,"Course definition successful :)");
+	    	clearScreen();
+    	}
+    	else
+    		JOptionPane.showMessageDialog(null, 
+					  "No changes were made!", "Error", JOptionPane.ERROR_MESSAGE);
     }
-    
-    
     
 
 	@Override
@@ -232,6 +284,15 @@ public class SystemManegerDefineCourseController implements Initializable {
 			temp.add(list.get(i) + " (" + list.get(i+1) + ")");
 		
 		return temp;	
+	}
+	
+	private boolean checkId(String id){
+		
+		for (int i = 1; i < result.size(); i+=2)
+			if (result.get(i).equals(id))
+				return true;
+		return false;
+		
 	}
 	
 	
