@@ -2,6 +2,8 @@ package Controller;
 
 import java.io.IOException;
 
+import javax.swing.JOptionPane;
+
 import application.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +23,7 @@ public class ParentMenuBarController {
 
 	
 	public void logout(ActionEvent e) throws IOException{
-	
+		
 		Stage stage;
 		Scene scene;
 		
@@ -41,7 +43,8 @@ public class ParentMenuBarController {
 		    stage.show();
 		}
 		else
-			System.out.println("Could not logout!");
+			JOptionPane.showMessageDialog(null, 
+					  "Could not logout!", "Error", JOptionPane.ERROR_MESSAGE);
 	}
 	
 
@@ -50,7 +53,8 @@ public class ParentMenuBarController {
 		if (Main.logOut() != 0)
 			System.exit(0);
 		else
-			System.out.println("Could not close program!");
+			JOptionPane.showMessageDialog(null, 
+					  "Could not close program!", "Error", JOptionPane.ERROR_MESSAGE);
 	}
 	
 
