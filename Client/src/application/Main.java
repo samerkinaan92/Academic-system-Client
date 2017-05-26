@@ -6,8 +6,10 @@ import java.util.HashMap;
 
 import Entity.User;
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
@@ -87,6 +89,11 @@ public class Main extends Application{
 		    scene.getStylesheets().add(Main.class.getResource("/FXML/application.css").toExternalForm());
 		    
 		    Stage primaryStage = new Stage();
+		    primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+		          public void handle(WindowEvent we) {
+		              logOut();
+		          }
+		      });
 		    primaryStage.setScene(scene);
 		    primaryStage.getIcons().add(new Image("/school_icon.png"));
 		    primaryStage.setTitle("Academic system for high school");
