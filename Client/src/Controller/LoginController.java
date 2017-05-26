@@ -6,12 +6,10 @@ import java.util.ResourceBundle;
 import Entity.User;
 import application.ClientConnection;
 import application.Main;
-import application.MessageThread;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -72,9 +70,8 @@ public class LoginController implements Initializable {
 				guiMeg.setText("Server fatal error!");
 			}
 			
-			MessageThread msgT = new MessageThread(Main.client);
-			msgT.start();
-			synchronized (msgT){msgT.wait();}
+			
+			synchronized (Main.client){Main.client.wait();}
 			answer = (HashMap <String, String>)Main.client.getMessage();
 		}
 		else if (Main.client != null)
