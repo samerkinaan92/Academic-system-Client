@@ -79,7 +79,6 @@ public class Main extends Application{
 			    root.setTop(bar);
 			    root.setCenter(pane);
 			} catch (IOException ex) {
-				// TODO Auto-generated catch block
 				ex.printStackTrace();
 			}
 		    
@@ -112,11 +111,9 @@ public class Main extends Application{
 			e.printStackTrace();
 		}
 			
-		MessageThread msgT = new MessageThread(Main.client);
-		msgT.start();
-		synchronized (msgT){
+		synchronized (client){
 			try {
-				msgT.wait();
+				client.wait();
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
