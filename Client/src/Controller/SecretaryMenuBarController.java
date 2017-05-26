@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JOptionPane;
 
@@ -12,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class SecretaryMenuBarController {
@@ -71,7 +73,16 @@ public class SecretaryMenuBarController {
 	
 	
 	public void ChangeStudentAssignment(ActionEvent e){
-		
+		String fxml_url = "/FXML/Sec_chng_std_assign.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			// TODO Auto-generated catch block
+			ex.printStackTrace();
+		}
 	}
 	
 	public void ChangeTeacherAssignment(ActionEvent e){
