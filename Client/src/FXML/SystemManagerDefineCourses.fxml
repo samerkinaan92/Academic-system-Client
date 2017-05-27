@@ -24,7 +24,7 @@
       <TextField fx:id="courseName" layoutX="294.0" layoutY="63.0" promptText="&lt;&lt;Course Name&gt;&gt;" />
       <Label fx:id="nameErr" alignment="CENTER" layoutX="224.0" layoutY="44.0" prefHeight="17.0" prefWidth="245.0" textAlignment="CENTER" textFill="RED" />
       <Label fx:id="idErr" alignment="CENTER" layoutX="436.0" layoutY="44.0" prefHeight="17.0" prefWidth="195.0" textAlignment="CENTER" textFill="RED" />
-      <Label fx:id="hoursErr" alignment="CENTER" layoutX="278.0" layoutY="121.0" prefHeight="17.0" prefWidth="245.0" textAlignment="CENTER" textFill="RED" />
+      <Label fx:id="hoursErr" alignment="CENTER" layoutX="234.0" layoutY="121.0" prefHeight="17.0" prefWidth="245.0" textAlignment="CENTER" textFill="RED" />
       <Label fx:id="unitErr" alignment="CENTER" layoutX="406.0" layoutY="121.0" prefHeight="17.0" prefWidth="232.0" textAlignment="CENTER" textFill="RED" />
    </children>
 </AnchorPane>
