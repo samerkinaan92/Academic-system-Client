@@ -47,12 +47,22 @@ public class LoginController implements Initializable {
 	 public void OnLogin(ActionEvent e) throws InterruptedException{
 		
 		// Establish connection to server.
+		 
+		 try{
+			 Integer.parseInt(port.getText());
+		 }
+		 catch(Exception ex){
+			 guiMeg.setText("Port field: input not valid!");
+			 return;
+		 }
 		
 		if(Main.client == null)
 			if (!ip.getText().isEmpty() && !port.getText().isEmpty())
 				Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
-			else
+			else{
 				guiMeg.setText("Connection to server failed!");
+				return;
+			}
 	
 		
 		// Send message to server with an new thread & wait for answer. 
@@ -68,14 +78,17 @@ public class LoginController implements Initializable {
 			}
 			catch(Exception exp){
 				guiMeg.setText("Server fatal error!");
+				return;
 			}
 			
 			
 			synchronized (Main.client){Main.client.wait();}
 			answer = (HashMap <String, String>)Main.client.getMessage();
 		}
-		else if (Main.client != null)
+		else if (Main.client != null){
 			guiMeg.setText("Please fill al fields..");
+			return;
+		}
 			
 		// Process answer from server.
 		
