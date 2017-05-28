@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
-import application.MessageThread;
 
 public class Course extends AcademicActivity {
 
@@ -22,7 +21,6 @@ public class Course extends AcademicActivity {
 		this.weeklyHours = weeklyHours;
 	}
 	
-	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCourses(){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -35,14 +33,11 @@ public class Course extends AcademicActivity {
 			catch(Exception exp){
 				System.out.println("Server fatal error!");
 			}
-		MessageThread msgT = new MessageThread(Main.client);
-		msgT.start();
-		synchronized (msgT){try {
-			msgT.wait();
+		synchronized (Main.client){try {
+			Main.client.wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}}
-		
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		ArrayList<Course> DBcourses = new ArrayList<Course>();
 		
@@ -67,12 +62,10 @@ public class Course extends AcademicActivity {
 			catch(Exception exp){
 				return false;
 			}
-		MessageThread msgT = new MessageThread(Main.client);
-		msgT.start();
-		synchronized (msgT){try {
-			msgT.wait();
-		} catch (InterruptedException exp) {
-			return false;
+    	synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
 		}}
 		
 		return true;
@@ -96,12 +89,10 @@ public class Course extends AcademicActivity {
 				catch(Exception exp){
 					System.out.println("Server fatal error!");
 				}
-	    	MessageThread msgT = new MessageThread(Main.client);
-			msgT.start();
-			synchronized (msgT){try {
-				msgT.wait();
-			} catch (InterruptedException exp) {
-				exp.printStackTrace();
+	    	synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}}
 		}
 		return true;
@@ -119,10 +110,8 @@ public class Course extends AcademicActivity {
 			catch(Exception exp){
 				exp.printStackTrace();;
 			}
-		MessageThread msgT = new MessageThread(Main.client);
-		msgT.start();
-		synchronized (msgT){try {
-			msgT.wait();
+		synchronized (Main.client){try {
+			Main.client.wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}}

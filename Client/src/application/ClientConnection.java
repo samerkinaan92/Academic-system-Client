@@ -5,7 +5,6 @@ package application;
 // license found at www.lloseng.com 
 
 import java.io.*;
-import java.util.ArrayList;
 
 import Communication.*;
 
@@ -96,20 +95,11 @@ final public static int DEFAULT_PORT = 5555;
    */
   public void setMessage(Object message) 
   {
-	  this.message=message;
-	  setAnswerFromServer(true);
-	    
+	  this.message=message;    
   }
 
 
-  public void setAnswerFromServer(boolean answer) {
-	  // TODO Auto-generated method stub
-	  this.answerFromServer=answer;
-  }
 
-  public boolean getAnswerFromServer(){
-	  return this.answerFromServer;
-  }
 
 
 

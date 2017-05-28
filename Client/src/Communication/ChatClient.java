@@ -7,6 +7,8 @@ package Communication;
 import ocsf.client.*;
 import java.io.*;
 
+import application.Main;
+
 /**
  * This class overrides some of the methods defined in the abstract
  * superclass in order to give more functionality to the client.
@@ -56,6 +58,9 @@ public class ChatClient extends AbstractClient
   public void handleMessageFromServer(Object msg)
   {
     clientUI.setMessage(msg);
+    synchronized (Main.client) {
+    	Main.client.notify();
+	}
   }
 
   /**

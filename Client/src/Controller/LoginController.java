@@ -6,12 +6,10 @@ import java.util.ResourceBundle;
 import Entity.User;
 import application.ClientConnection;
 import application.Main;
-import application.MessageThread;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -49,12 +47,22 @@ public class LoginController implements Initializable {
 	 public void OnLogin(ActionEvent e) throws InterruptedException{
 		
 		// Establish connection to server.
+		 
+		 try{
+			 Integer.parseInt(port.getText());
+		 }
+		 catch(Exception ex){
+			 guiMeg.setText("Port field: input not valid!");
+			 return;
+		 }
 		
 		if(Main.client == null)
 			if (!ip.getText().isEmpty() && !port.getText().isEmpty())
 				Main.client = new ClientConnection(ip.getText(), Integer.parseInt(port.getText()));
-			else
+			else{
 				guiMeg.setText("Connection to server failed!");
+				return;
+			}
 	
 		
 		// Send message to server with an new thread & wait for answer. 
@@ -70,15 +78,17 @@ public class LoginController implements Initializable {
 			}
 			catch(Exception exp){
 				guiMeg.setText("Server fatal error!");
+				return;
 			}
 			
-			MessageThread msgT = new MessageThread(Main.client);
-			msgT.start();
-			synchronized (msgT){msgT.wait();}
+			
+			synchronized (Main.client){Main.client.wait();}
 			answer = (HashMap <String, String>)Main.client.getMessage();
 		}
-		else if (Main.client != null)
+		else if (Main.client != null){
 			guiMeg.setText("Please fill al fields..");
+			return;
+		}
 			
 		// Process answer from server.
 		
