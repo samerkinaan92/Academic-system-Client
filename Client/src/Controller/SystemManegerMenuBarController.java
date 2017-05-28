@@ -12,6 +12,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+
+import javafx.scene.layout.AnchorPane;
+
 import javafx.stage.Stage;
 
 
@@ -67,10 +70,12 @@ public class SystemManegerMenuBarController {
 	
 	/** Common Actions */
 		
-	/** Private Actions */
+	/** Private Actions 
+	 * @throws IOException */
 	
-	public void define(ActionEvent e){
-		
+	public void define(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SystemManagerDefineCourses.fxml"));;
+		Main.getRoot().setCenter(pane);
 	}
 	
 	/** Private Actions */
