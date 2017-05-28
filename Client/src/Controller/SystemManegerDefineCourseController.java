@@ -87,6 +87,27 @@ public class SystemManegerDefineCourseController implements Initializable {
 		courseList.setItems(coursesDB);
     }
     
+    public void addPreCourse(ActionEvent e){ // Add Course to PreCourse list.
+    	
+    	for (int i = 0; i < PreList.size(); i++)
+    		if (courseList.getSelectionModel().getSelectedItem().equals(PreList.get(i)))
+    			return;
+    	
+    	PreList.add(courseList.getSelectionModel().getSelectedItem());
+    	Collections.sort(PreList);
+    	preCourseList.setItems(FXCollections.observableArrayList(PreList));
+    }
+    
+    public void removePreCourse(ActionEvent e){ // Remove Course from PreCourse list.
+    	
+    	for (int i = 0; i < PreList.size(); i++)
+    		if (preCourseList.getSelectionModel().getSelectedItem().equals(PreList.get(i)))
+    			PreList.remove(i);
+    	
+    	Collections.sort(PreList);
+    	preCourseList.setItems(FXCollections.observableArrayList(PreList));	
+    }
+
     private ArrayList<String> getList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
     	
 		ArrayList<String> temp = new ArrayList<String>();
@@ -129,83 +150,6 @@ public class SystemManegerDefineCourseController implements Initializable {
     	else
     		JOptionPane.showMessageDialog(null, 
 					  "No changes were made!", "Error", JOptionPane.ERROR_MESSAGE);
-    	
-    	//---------------------------------------------------------------------------------------------------------
-    	/*
-    	// Verify course id in data base.
-    	
-    	if (checkId(courseId.getText())){
-    		idErr.setText("Course ID already exists!");
-    		return;
-    	}
-    	*/
-    	//--------------------------------------------------------------------------------------------------------------
-    	
-    	/*
-    	// Update course in data base. 
-    	
-    	String msg = "Insert INTO course (CourseID, Name, TUID, weeklyHours)";
-    	String values = " VALUES (" + Integer.parseInt(courseId.getText()) + ", '" + courseName.getText() + "', '" + 
-    			teachingUnit.getSelectionModel().getSelectedItem().toString() + "', " + 
-    			weaklyHours.getSelectionModel().getSelectedItem().toString() + ")";
-    	
-    	msgServer = new HashMap <String,String>();
-    	msgServer.put("msgType", "insert");
-		msgServer.put("query", msg + values);
-    	
-    	try{
-			Main.client.sendMessageToServer(msgServer);
-			}
-			catch(Exception exp){
-				System.out.println("Server fatal error!");
-			}
-		MessageThread msgT = new MessageThread(Main.client);
-		msgT.start();
-		synchronized (msgT){try {
-			msgT.wait();
-		} catch (InterruptedException exp) {
-			exp.printStackTrace();
-		}}
-    	
-		*/
-    	
-    	
-    	//------------------------------------------------------------------------------------------------------------
-    	/*
-    	
-    	// Update Precourses in data base.
-    	
-    	for (int i = 0; i < PreList.size(); i++){
-    	
-	    	msg = "Insert INTO PreRequests (CourseID, preReqCourseID)";
-	    	values = " VALUES (" + Integer.parseInt(courseId.getText()) + ", " + 
-	    	PreList.get(i).substring(PreList.get(i).indexOf('(') + 1, PreList.get(i).indexOf(')')) + ")";
-	    	
-	    	
-	    	msgServer = new HashMap <String,String>();
-	    	msgServer.put("msgType", "insert");
-			msgServer.put("query", msg + values);
-	    	
-	    	try{
-				Main.client.sendMessageToServer(msgServer);
-				}
-				catch(Exception exp){
-					System.out.println("Server fatal error!");
-				}
-			msgT = new MessageThread(Main.client);
-			msgT.start();
-			synchronized (msgT){try {
-				msgT.wait();
-			} catch (InterruptedException exp) {
-				exp.printStackTrace();
-			}}
-    	}
-    	*/
-    	//--------------------------------------------------------------------------------------------------------------
-    	
-    //	numOfChanges += (int)Main.client.getMessage();
-    	
-    	
     }
 	
 	private boolean checkIlegalInput(){ // Check for illegal input.
