@@ -135,8 +135,8 @@ public class SystemManegerDefineCourseController implements Initializable {
     	}
     	
     	newCourse = new Course(Integer.parseInt(courseId.getText()), courseName.getText(),
-    			teachingUnit.getSelectionModel().getSelectedItem().toString(), 
-    			Integer.parseInt(weaklyHours.getSelectionModel().getSelectedItem().toString()));
+    			Integer.parseInt(teachingUnit.getSelectionModel().getSelectedItem().toString()), 
+    			weaklyHours.getSelectionModel().getSelectedItem().toString());
     	
     	newCourse.insertCourse();
     	newCourse.updatePreCourses(PreList);
