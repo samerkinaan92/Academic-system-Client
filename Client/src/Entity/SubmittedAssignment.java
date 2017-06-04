@@ -4,6 +4,9 @@ import java.util.Date;
 
 public class SubmittedAssignment extends Assignment {
 
+	public SubmittedAssignment(int Aid, String name, int Cid, java.sql.Date publish, java.sql.Date dead, String path) {
+		super(Aid, name, Cid, publish, dead, path);
+	}
 	private Date submittedDate;
 	private String studentID;
 	

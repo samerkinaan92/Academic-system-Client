@@ -14,7 +14,7 @@ public class Course extends AcademicActivity {
 	private int weeklyHours;
 	
 	
-	public Course(int CourseID, String Name, String TUID, int weeklyHours){
+	public Course(int CourseID, String Name, int weeklyHours, String TUID){
 		this.CourseID = CourseID;
 		this.Name = Name;
 		this.TUID = TUID;
@@ -42,7 +42,7 @@ public class Course extends AcademicActivity {
 		ArrayList<Course> DBcourses = new ArrayList<Course>();
 		
 		for (int i = 0; i < result.size(); i+=4)
-			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), result.get(i+2), Integer.parseInt(result.get(i+3))));
+			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
 		return DBcourses;
 	}
 	
