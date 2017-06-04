@@ -20,7 +20,7 @@
             </AnchorPane>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                <children>
-                  <ListView fx:id="assignmentListView" layoutX="22.0" layoutY="40.0" onMouseClicked="#chooseAssignment" prefHeight="142.0" prefWidth="253.0" />
+                  <ListView fx:id="assignmentListView" layoutX="22.0" layoutY="40.0" prefHeight="142.0" prefWidth="253.0" />
                   <Label layoutX="33.0" layoutY="14.0" prefHeight="17.0" prefWidth="98.0" text="Assignment List" />
                   <TextField fx:id="assignmentSearch" layoutX="127.0" layoutY="10.0" onAction="#AssignmentSearch" prefHeight="25.0" prefWidth="111.0" promptText="&lt;&lt;Search&gt;&gt;" />
                </children>
@@ -29,8 +29,11 @@
       </SplitPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
          <children>
-            <Button layoutX="104.0" layoutY="282.0" mnemonicParsing="false" onAction="#submit" prefHeight="48.0" prefWidth="87.0" text="Submit" />
-            <Button layoutX="86.0" layoutY="174.0" mnemonicParsing="false" onAction="#browse" text="Browse..." />
+            <Button layoutX="105.0" layoutY="309.0" mnemonicParsing="false" onAction="#submit" prefHeight="48.0" prefWidth="87.0" text="Submit" />
+            <Button layoutX="171.0" layoutY="206.0" mnemonicParsing="false" onAction="#browse" text="Browse..." />
+            <Label layoutX="66.0" layoutY="210.0" prefHeight="17.0" prefWidth="62.0" text="Upluad file" />
+            <Label fx:id="filePath" layoutX="48.0" layoutY="262.0" prefHeight="17.0" prefWidth="206.0" />
+            <Label fx:id="guiMsg" layoutX="66.0" layoutY="64.0" prefHeight="85.0" prefWidth="143.0" />
          </children></AnchorPane>
   </items>
 </SplitPane>

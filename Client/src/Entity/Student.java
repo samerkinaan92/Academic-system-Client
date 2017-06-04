@@ -8,7 +8,7 @@ import application.Main;
 
 public class Student extends User {
 
-	private String ID;
+	
 	private String classRoom;
 	private String parentID1;
 	private String parentID2;
@@ -38,7 +38,6 @@ public class Student extends User {
 		
 	}
 	
-	@SuppressWarnings("unchecked")
 	public static ArrayList<Assignment> getAssignments(int courseId){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -58,6 +57,7 @@ public class Student extends User {
 	}
 	
 		
+	@SuppressWarnings("unchecked")
 	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
 		try{
 			Main.client.sendMessageToServer(msgServer);
@@ -79,9 +79,7 @@ public class Student extends User {
 	
 	
 	
-	public String getID() {
-		return ID;
-	}
+	
 	public String getClassRoom() {
 		return classRoom;
 	}
@@ -91,9 +89,7 @@ public class Student extends User {
 	public String getParentID2() {
 		return parentID2;
 	}
-	public void setID(String iD) {
-		ID = iD;
-	}
+	
 	public void setClassRoom(String classRoom) {
 		this.classRoom = classRoom;
 	}
