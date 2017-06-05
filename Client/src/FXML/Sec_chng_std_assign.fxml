@@ -8,7 +8,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="470.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ChangeStudentAssignmentController">
    <children>
       <Label layoutX="14.0" layoutY="14.0" text="Enter student ID:">
@@ -21,13 +20,20 @@
       <Label fx:id="stdNameLbl" layoutX="14.0" layoutY="60.0" text="Student name:" />
       <Label fx:id="ClsLbl" layoutX="306.0" layoutY="60.0" text="Class room:" />
       <Label layoutX="14.0" layoutY="92.0" text="Assigned courses:" />
-      <Button fx:id="newAsnBtn" layoutX="12.0" layoutY="431.0" mnemonicParsing="false" onAction="#AssignNewCourse" text="Assign to a new course" />
-      <TableView fx:id="crsTbl" layoutX="14.0" layoutY="109.0" prefHeight="291.0" prefWidth="255.0">
+      <Button fx:id="newAsnBtn" layoutX="306.0" layoutY="223.0" mnemonicParsing="false" onAction="#AssignNewCourse" text="Assign to a new course" />
+      <TableView fx:id="crsTbl" layoutX="14.0" layoutY="109.0" prefHeight="291.0" prefWidth="210.0">
         <columns>
-          <TableColumn prefWidth="107.0" text="Course name" />
-          <TableColumn prefWidth="73.0" text="course ID" />
-            <TableColumn prefWidth="75.0" text="Remove" />
+          <TableColumn fx:id="nameCln" prefWidth="107.0" text="Course name" />
+          <TableColumn fx:id="idCln" prefWidth="102.0" text="course ID" />
         </columns>
       </TableView>
+      <Label layoutX="306.0" layoutY="153.0" text="Course ID: " />
+      <TextField fx:id="crsIdtxt" layoutX="368.0" layoutY="149.0" />
+      <Button fx:id="removeCrs" layoutX="491.0" layoutY="223.0" mnemonicParsing="false" onAction="#removeCourse" text="Remove from course" />
+      <Label fx:id="errorLbl" layoutX="301.0" layoutY="320.0" prefHeight="35.0" prefWidth="321.0" textAlignment="CENTER" textFill="RED">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

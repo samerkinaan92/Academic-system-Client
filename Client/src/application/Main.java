@@ -106,7 +106,7 @@ public class Main extends Application{
 		msg.put("query", "UPDATE users SET isLogin = 0 WHERE id = '" + user.getID() + "';");
 		
 		try{
-		Main.client.sendMessageToServer(msg);
+		client.sendMessageToServer(msg);
 		}catch(Exception e){
 			e.printStackTrace();
 		}
@@ -118,9 +118,9 @@ public class Main extends Application{
 				e.printStackTrace();
 			}
 		}
-		int answer = (int)Main.client.getMessage();
-		Main.client = null;
-		Main.root = new BorderPane(); 
+		int answer = (int)client.getMessage();
+		client = null;
+		root = new BorderPane(); 
 		return answer;
 	}
 	

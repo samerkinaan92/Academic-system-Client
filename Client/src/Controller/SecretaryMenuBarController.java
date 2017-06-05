@@ -2,7 +2,6 @@ package Controller;
 
 import java.io.IOException;
 import java.net.URL;
-
 import javax.swing.JOptionPane;
 
 import application.Main;
@@ -62,7 +61,7 @@ public class SecretaryMenuBarController {
 	
 
 	public void message(ActionEvent e){
-	
+		
 	}
 	
 	
@@ -80,13 +79,36 @@ public class SecretaryMenuBarController {
 			pane = FXMLLoader.load(paneUrl);
 			Main.getRoot().setCenter(pane);
 		}catch (IOException ex) {
-			// TODO Auto-generated catch block
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
 			ex.printStackTrace();
 		}
 	}
 	
 	public void ChangeTeacherAssignment(ActionEvent e){
-		
+		String fxml_url = "/FXML/SecChangeTeacherPlacement.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
+			ex.printStackTrace();
+		}
 	}
 	
 	public void CreateSemester(ActionEvent e){
