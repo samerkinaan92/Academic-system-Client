@@ -4,7 +4,7 @@ public class NewStudenCoursePlacement {
 
 	private String studentID;
 	private String coureID;
-	
+	private Action action;
 	
 	public String getStudentID() {
 		return studentID;
@@ -18,5 +18,12 @@ public class NewStudenCoursePlacement {
 	public void setCoureID(String coureID) {
 		this.coureID = coureID;
 	}
+	public Action getAction() {
+		return action;
+	}
+	public void setAction(Action action) {
+		this.action = action;
+	}
 
+	
 }

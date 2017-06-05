@@ -33,7 +33,6 @@ public class ClientConnection implements ChatIF
   }
 
 final public static int DEFAULT_PORT = 5555;
-  public volatile boolean answerFromServer;
   //Instance variables **********************************************
   
   /**
