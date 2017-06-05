@@ -11,7 +11,9 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class StudentMenuBarController {
@@ -73,8 +75,9 @@ public class StudentMenuBarController {
 		
 	}
 	
-	public void SubmitAssignments(ActionEvent e){
-		
+	public void SubmitAssignments(ActionEvent e) throws IOException{
+		SplitPane pane = FXMLLoader.load(getClass().getResource("/FXML/StudentSubmitAssignment.fxml"));;
+		Main.getRoot().setCenter(pane);
 	}
 	
 	public void DeleteAssignments(ActionEvent e){
