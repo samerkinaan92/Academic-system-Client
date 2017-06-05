@@ -3,6 +3,7 @@
 
 	import java.awt.Button;
 import java.awt.Label;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -12,6 +13,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
+import javafx.scene.text.Text;
 
 	public class PRCPL_ViewSystemDataController implements Initializable{
 
@@ -25,7 +27,17 @@ import javafx.scene.control.ComboBox;
 	    private Button selectBtn;
 	  
 	    @FXML
-	    void clickSelect(ActionEvent event) {
+	    private Label res;
+	  
+	    @FXML
+	    void clickSelect(ActionEvent event) throws IOException {
+	    	if (dataCB.getValue().equals("Classes Of Teacher")) 
+	    			res.setText("you Chose 1!");
+	    	if (dataCB.getValue().equals("Teachers Of Class")) 
+    			res.setText("you Chose 2!");
+	    	if (dataCB.getValue().equals("Courses Of Teacher")) 
+    			res.setText("you Chose 3!");
+	    	else res.setText("PROBLEM!");
 	    
 	    }
 	    

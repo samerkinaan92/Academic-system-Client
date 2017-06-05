@@ -7,8 +7,9 @@
 
 <AnchorPane prefHeight="565.0" prefWidth="712.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PRCPL_ViewSystemDataController">
    <children>
-      <Label  layoutX="92.0" layoutY="42.0" text="Choose Data:" />
+      <Label layoutX="92.0" layoutY="42.0" text="Choose Data:" />
       <ComboBox fx:id="dataCB" layoutX="180.0" layoutY="38.0" prefHeight="25.0" prefWidth="292.0" />
-      <Button  layoutX="502.0" layoutY="38.0" mnemonicParsing="false" onAction="#clickSelect" text="Select" />
+      <Button layoutX="502.0" layoutY="38.0" mnemonicParsing="false" onAction="#clickSelect" text="Select" />
+      <Label  layoutX="135.0" layoutY="427.0" text="Label" />
    </children>
 </AnchorPane>
