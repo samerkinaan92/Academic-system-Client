@@ -69,41 +69,47 @@ public class ChangeStudentAssignmentController {
     void search(ActionEvent event) {
     	data.clear();
     	String id = stdIdTxt.getText();
-    	HashMap<String, String> msg = new HashMap<>();
-    	msg.put("msgType", "select");
-    	msg.put("query", "SELECT users.Name, Student_Class.ClassName FROM users, Student_Class WHERE users.ID = '" + id + "' AND Student_Class.StudentID = '" + id + "' AND Student_Class.Year = 2017;");
-    	try{
-    		Main.client.sendMessageToServer(msg);
-    		synchronized (Main.client){
-    			Main.client.wait();
-    			ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
-    	    	if(!array.isEmpty()){
-    	    		stdNameLbl.setText("Student name: " + array.get(0));
-    	    		ClsLbl.setText("Class room: " + array.get(1));
-    	    		student = new Student();
-    	    		student.setID(id);
-    	    		student.setName(array.get(1));
-    	    		student.setName(array.get(0));
-    	    		msg.put("query", "SELECT CourseID FROM Course_Student WHERE StudentID = '" + id + "';");
-    	    		Main.client.sendMessageToServer(msg);
-    	    		Main.client.wait();
-    	    		array = (ArrayList<String>) Main.client.getMessage();
-    	    		setCourses(array);
-    	    	}else{
-    	    		student = null;
-    	    		Thread thread = new Thread(new Runnable(){
-    					@Override
-    					public void run() {
-    						JOptionPane.showMessageDialog(null, 
-    								  "Student id was not found!", "NOT FOUND", JOptionPane.ERROR_MESSAGE);		
-    					}
-    				});
-    	    		thread.start();
-    	    	}
-    		}
-    	}catch(Exception e){
-    		student = null;
-    		e.printStackTrace();
+    	
+    	int currSem = getCurrSem();
+    	if(currSem > 0){
+	    	HashMap<String, String> msg = new HashMap<>();
+	    	msg.put("msgType", "select");
+	    	msg.put("query", "SELECT users.Name, Student_Class.ClassName FROM users, Student_Class WHERE users.ID = '" + id + "' AND Student_Class.StudentID = '" + id + "' AND Student_Class.Year = '" + currSem + "';");
+	    	try{
+	    		Main.client.sendMessageToServer(msg);
+	    		synchronized (Main.client){
+	    			Main.client.wait();
+	    			ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
+	    	    	if(!array.isEmpty()){
+	    	    		stdNameLbl.setText("Student name: " + array.get(0));
+	    	    		ClsLbl.setText("Class room: " + array.get(1));
+	    	    		student = new Student();
+	    	    		student.setID(id);
+	    	    		student.setName(array.get(1));
+	    	    		student.setName(array.get(0));
+	    	    		msg.put("query", "SELECT CourseID FROM Course_Student WHERE StudentID = '" + id + "';");
+	    	    		Main.client.sendMessageToServer(msg);
+	    	    		Main.client.wait();
+	    	    		array = (ArrayList<String>) Main.client.getMessage();
+	    	    		setCourses(array);
+	    	    	}else{
+	    	    		student = null;
+	    	    		Thread thread = new Thread(new Runnable(){
+	    					@Override
+	    					public void run() {
+	    						JOptionPane.showMessageDialog(null, 
+	    								  "Student id was not found!", "NOT FOUND", JOptionPane.ERROR_MESSAGE);		
+	    					}
+	    				});
+	    	    		thread.start();
+	    	    	}
+	    		}
+	    	}catch(Exception e){
+	    		student = null;
+	    		e.printStackTrace();
+	    	}
+    	}else{
+    		errorLbl.setText("Connection error!");
     	}
     	
     }
@@ -210,6 +216,26 @@ public class ChangeStudentAssignmentController {
 		}
     }
     
+    private int getCurrSem(){
+    	int result = -1;
+    	HashMap<String, String> msg = new HashMap<>();
+    	msg.put("msgType", "select");
+    	msg.put("query", "SELECT semesterId FROM Semester WHERE isCurr = '1';");
+    	
+    	Main.client.sendMessageToServer(msg);
+		synchronized (Main.client){
+			try {
+			Main.client.wait();
+			ArrayList<String> serverMsg = (ArrayList<String>) Main.client.getMessage();
+	    	if(!serverMsg.isEmpty()){
+	    		result = Integer.parseInt(serverMsg.get(0));
+	    	}
+			}catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+    }
     
     private boolean isCourseIdOk(String courseId) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();

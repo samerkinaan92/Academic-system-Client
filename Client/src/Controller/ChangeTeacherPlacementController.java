@@ -163,7 +163,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 					if(!array.isEmpty()){
 						setCourseFields(array);
 						setTeachersTable(array.get(3));
-						msg.put("query", "SELECT * FROM Class_Course WHERE courseID = '" + courseId + "';");
+						msg.put("query", "SELECT * FROM Class_Course WHERE courseID = '" + courseId + "' AND Year = '" + getCurrSem() + "';");
 						Main.client.sendMessageToServer(msg);
 						Main.client.wait();
 						array = (ArrayList<String>) Main.client.getMessage();
@@ -190,6 +190,27 @@ public class ChangeTeacherPlacementController implements Initializable{
 					e.printStackTrace();
 				}
 			}
+	    }
+	    
+	    private int getCurrSem(){
+	    	int result = -1;
+	    	HashMap<String, String> msg = new HashMap<>();
+	    	msg.put("msgType", "select");
+	    	msg.put("query", "SELECT semesterId FROM Semester WHERE isCurr = '1';");
+	    	
+	    	Main.client.sendMessageToServer(msg);
+			synchronized (Main.client){
+				try {
+				Main.client.wait();
+				ArrayList<String> serverMsg = (ArrayList<String>) Main.client.getMessage();
+		    	if(!serverMsg.isEmpty()){
+		    		result = Integer.parseInt(serverMsg.get(0));
+		    	}
+				}catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+			return result;
 	    }
 	    
 	    private void setCourseFields(ArrayList<String> course){
@@ -288,7 +309,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	msg.put("msgType", "select");
 	    	msg.put("query", 
 	    			"select sum(C.WeeklyHours) from Course C  where C.CourseID IN (SELECT CC.CourseID FROM Class_Course CC WHERE CC.teacherID = '" 
-	    					+ teacherId + "');");
+	    					+ teacherId + "' AND Year = '" + getCurrSem() + "');");
 	    	Main.client.sendMessageToServer(msg);
 	    	synchronized (Main.client) {
 				Main.client.wait();
