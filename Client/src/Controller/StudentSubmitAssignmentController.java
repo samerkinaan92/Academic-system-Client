@@ -14,8 +14,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import Entity.Assignment;
 import Entity.Course;
 import Entity.Student;
@@ -25,12 +23,13 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
 
 public class StudentSubmitAssignmentController implements Initializable {
 	
@@ -52,7 +51,6 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  @FXML
 	  private Label guiMsg;
 
-	  
 	  ArrayList<Course> courseArr;
 	  ArrayList<Assignment> assignmentArr;
 	  
@@ -63,7 +61,6 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  
 	  Student student;
 	  File file;
-
 
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
@@ -76,8 +73,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			return temp;	
 		}
 	  
-	  
-	  private ArrayList<String> getAssignmentList(ArrayList<Assignment> assignmentArr){ // Get courses names & ID's for list.
+	  private ArrayList<String> getAssignmentList(ArrayList<Assignment> assignmentArr){ // Get Assignment names & ID's for list.
 	    	
 			ArrayList<String> temp = new ArrayList<String>();
 			for (int i = 0; i < assignmentArr.size(); i++)
@@ -90,7 +86,6 @@ public class StudentSubmitAssignmentController implements Initializable {
 	private int isLate(String id){ // Check if submission is late.
 		  
 		  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-		  
 		  msgServer = new HashMap <String,String>();
 		  msgServer.put("msgType", "select");
 		  msgServer.put("query", "Select * FROM Assignment WHERE Assignment.AssignmentID = " + id);
@@ -115,8 +110,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			}
 
 			Date curDate = new Date();
-
-
+			
 			if (subDate.compareTo(curDate) < 0)
 				return 1;
 			else
@@ -125,22 +119,17 @@ public class StudentSubmitAssignmentController implements Initializable {
 	 	  
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
-	  public void CourseSearch(ActionEvent e){
+	  public void CourseSearch(ActionEvent e){ // Filter course list results.
 		  ArrayList<String> temp = new  ArrayList<String>();
 	    	
 		  for (int i = 0; i < organizedCourseList.size(); i++)
 			  if (organizedCourseList.get(i).toLowerCase().contains(courseSearch.getText().toLowerCase()))
 				  temp.add(organizedCourseList.get(i));
 	    	
-	    	 
 		  courseListView.setItems(FXCollections.observableArrayList(temp));
 	  }
 	 
-	  
-	  
-	 
-
-	  public void AssignmentSearch(ActionEvent e){
+	  public void AssignmentSearch(ActionEvent e){ // Filter assignment list results.
 	  
 		  ArrayList<String> temp = new  ArrayList<String>();
 	    	
@@ -152,13 +141,13 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  assignmentListView.setItems(FXCollections.observableArrayList(temp));
 	  }
 
-	  public void chooseAssignment(ActionEvent e){
+	  public void submit(ActionEvent e){ // Submit file from disk to server. 
 		  
-	  }
-	  
-	  public void submit(ActionEvent e){
-		  
-		  
+		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
+			  guiMsg.setText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  return;
+		  }
+			  
 		  if (file == null){
 			  guiMsg.setText("No file was chosen to upload! Please browse for a file from the computer.");
 			  return;
@@ -225,6 +214,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  }
 		  
 		  String filepath = (String) Main.client.getMessage();
+		  filepath = filepath.replace("\\","\\\\");
 		  String assignmentID = assignmentListView.getSelectionModel().getSelectedItem().toString();
 		  assignmentID = assignmentID.substring(assignmentID.indexOf('(') + 1, assignmentID.indexOf(')'));
 		  
@@ -252,9 +242,16 @@ public class StudentSubmitAssignmentController implements Initializable {
 	    		guiMsg.setText("submission Successful");
 	    	else
 	    		guiMsg.setText("submission Filed: Data base error!");
+	    	
+	    	clearScreen();
 	  }
 	  
-	  public void browse(ActionEvent e){
+	  public void browse(ActionEvent e){ // Open file explorer for upload file.
+		  
+		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
+			  guiMsg.setText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  return;
+		  }
 		  
 		  FileChooser fileChooser = new FileChooser();
           fileChooser.setTitle("Upload File");
@@ -265,8 +262,17 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  guiMsg.setText("Can't upload this file!");
 	  }
 
-	
 	  //-------------------------------------------------------------------------------------------------------------------
+	  
+	  private void clearScreen(){ // Clear & update screen details.
+		  SplitPane pane = null;
+		try {
+			pane = FXMLLoader.load(getClass().getResource("/FXML/StudentSubmitAssignment.fxml"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		};
+			Main.getRoot().setCenter(pane);
+		}
 	  
 	  @Override
 	  public void initialize(URL arg0, ResourceBundle arg1) {
@@ -295,20 +301,6 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    	assignmentListView.setItems(FXCollections.observableArrayList(organizedAssignmentList));
 			    	
 			    }
-			});
-		  /*
-		  assignmentListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
-			    @Override
-			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-			        // Your action here
-			        System.out.println("Selected item: " + newValue);
-			    }
-			});
-		  */
-		  
-			
+			});  
 	  }
-		  
-	  
-	  
 }

@@ -25,7 +25,7 @@ public class Course extends AcademicActivity {
 	public static ArrayList<Course> getCourses(){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select CourseID,Name,TUID,weeklyHours From course");
+		msgServer.put("query", "Select CourseID,CourseName, weeklyHours, TUName From course");
 		
 		try{
 			Main.client.sendMessageToServer(msgServer);
