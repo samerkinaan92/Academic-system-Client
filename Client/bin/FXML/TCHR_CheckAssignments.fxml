@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="458.0" prefWidth="522.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.TCHR_CheckAssignments_CTRL">
+   <children>
+      <Label layoutX="120.0" layoutY="33.0" prefHeight="31.0" prefWidth="321.0" text="Manage Assignments" textAlignment="CENTER" textFill="#ee0606">
+         <font>
+            <Font name="Rockwell Extra Bold" size="24.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="TWO_PASS_BOX" height="18.27" radius="6.4" spread="0.63" width="9.33" />
+         </effect>
+      </Label>
+      <Button fx:id="saveEvaluationBTN" layoutX="309.0" layoutY="411.0" mnemonicParsing="false" onAction="#saveEvaluationForm" prefHeight="32.0" prefWidth="197.0" text="Save Evaluation Form" textAlignment="CENTER" textFill="#db0909">
+         <font>
+            <Font name="Serif Bold" size="18.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
+      <TextArea fx:id="evaluationTextArea" layoutX="29.0" layoutY="189.0" prefHeight="205.0" prefWidth="477.0" />
+      <Label layoutX="29.0" layoutY="159.0" prefHeight="21.0" prefWidth="117.0" text="Enter Evaluation:" />
+      <Label layoutX="29.0" layoutY="417.0" prefHeight="21.0" prefWidth="84.0" text="Final Grade:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TextField fx:id="finalGradeTextField" layoutX="128.0" layoutY="412.0" prefHeight="31.0" prefWidth="54.0" />
+      <Label layoutX="29.0" layoutY="116.0" prefHeight="21.0" prefWidth="134.0" text="Select Assignment:" />
+      <ComboBox fx:id="selectAssignmentComboBox" layoutX="182.0" layoutY="111.0" prefHeight="31.0" prefWidth="197.0" promptText="SELECT ASSIGNMENT" />
+      <Button fx:id="viewEditBTN" layoutX="400.0" layoutY="111.0" mnemonicParsing="false" onAction="#openAssignmentFile" text="VIEW &amp; EDIT" />
+   </children>
+</AnchorPane>

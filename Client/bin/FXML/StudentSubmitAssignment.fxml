@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<SplitPane dividerPositions="0.5" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.StudentSubmitAssignmentController">
+  <items>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" prefHeight="200.0" prefWidth="160.0">
+        <items>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <ListView fx:id="courseListView" layoutX="22.0" layoutY="48.0" prefHeight="142.0" prefWidth="253.0" />
+                  <Label layoutX="34.0" layoutY="21.0" prefHeight="17.0" prefWidth="98.0" text="Course List" />
+                  <TextField fx:id="courseSearch" layoutX="132.0" layoutY="17.0" onAction="#CourseSearch" prefHeight="25.0" prefWidth="111.0" promptText="&lt;&lt;Search&gt;&gt;" />
+               </children>
+            </AnchorPane>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
+               <children>
+                  <ListView fx:id="assignmentListView" layoutX="22.0" layoutY="40.0" prefHeight="142.0" prefWidth="253.0" />
+                  <Label layoutX="33.0" layoutY="14.0" prefHeight="17.0" prefWidth="98.0" text="Assignment List" />
+                  <TextField fx:id="assignmentSearch" layoutX="127.0" layoutY="10.0" onAction="#AssignmentSearch" prefHeight="25.0" prefWidth="111.0" promptText="&lt;&lt;Search&gt;&gt;" />
+               </children>
+            </AnchorPane>
+        </items>
+      </SplitPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="160.0" prefWidth="100.0">
+         <children>
+            <Button layoutX="105.0" layoutY="309.0" mnemonicParsing="false" onAction="#submit" prefHeight="48.0" prefWidth="87.0" text="Submit" />
+            <Button layoutX="171.0" layoutY="206.0" mnemonicParsing="false" onAction="#browse" text="Browse..." />
+            <Label layoutX="66.0" layoutY="210.0" prefHeight="17.0" prefWidth="62.0" text="Upluad file" />
+            <Label fx:id="filePath" layoutX="48.0" layoutY="262.0" prefHeight="17.0" prefWidth="206.0" />
+            <Label fx:id="guiMsg" layoutX="66.0" layoutY="64.0" prefHeight="85.0" prefWidth="143.0" />
+         </children></AnchorPane>
+  </items>
+</SplitPane>
