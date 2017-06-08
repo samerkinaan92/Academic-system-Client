@@ -16,6 +16,7 @@
         <items>
           <MenuItem mnemonicParsing="false" onAction="#ApproveTeacherAssignment" text="Approve Teacher Assignment" />
             <MenuItem mnemonicParsing="false" onAction="#ApproveStudentChange" text="Approve Student Change" />
+            <MenuItem mnemonicParsing="false" onAction="#RemovePerEvent" text="RemoveParentPermissions" />
         </items>
       </Menu>
       <Menu mnemonicParsing="false" text="View">

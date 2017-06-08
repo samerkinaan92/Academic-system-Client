@@ -11,6 +11,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
+import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
@@ -119,8 +120,9 @@ public class SecretaryMenuBarController {
 		
 	}
 	
-	public void AttachCurseToClass(ActionEvent e){
-		
+	public void AttachCurseToClass(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SecretaryCourseToClass.fxml"));;
+		Main.getRoot().setCenter(pane);
 	}
 	
 	

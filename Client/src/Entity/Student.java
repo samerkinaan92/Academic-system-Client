@@ -44,16 +44,12 @@ public class Student extends User {
 		msgServer.put("msgType", "select");
 		msgServer.put("query", "Select * FROM Assignment WHERE Assignment.CourseID = " + courseId);
 		
-
-	
 		ArrayList<String> result = sendMsg(msgServer);
 		ArrayList<Assignment> DBassignment = new ArrayList<Assignment>();
 		
 		for (int i = 0; i < result.size(); i+=6)
 			DBassignment.add(new Assignment(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), Date.valueOf(result.get(i+3)), Date.valueOf((result.get(i+4))), result.get(i+5)));
 		return DBassignment;
-		
-		
 	}
 	
 		
@@ -75,8 +71,6 @@ public class Student extends User {
 			return null;
 		return courseResult;
 	}
-	
-	
 	
 	
 	
