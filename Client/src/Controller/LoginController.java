@@ -98,7 +98,7 @@ public class LoginController implements Initializable {
 			Curstage.close();
 		    
 			//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
-			Main.user = new User(id.getText(), answer.get("name"));
+			Main.user = new User(id.getText(), answer.get("Name"));
 			Main.openMain(answer.get("Type"));
 		}else
 			guiMeg.setText((String)answer.get("ErrMsg"));

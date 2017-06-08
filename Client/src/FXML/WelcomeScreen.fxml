@@ -4,9 +4,9 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.WelcomeController">
    <children>
-      <Text fx:id="welcome" layoutX="270.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome">
+      <Text fx:id="welcomeTxt" layoutX="168.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="305.0">
          <font>
             <Font size="24.0" />
          </font>

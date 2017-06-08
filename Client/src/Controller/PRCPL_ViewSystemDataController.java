@@ -28,12 +28,20 @@ import javafx.scene.text.Text;
 	  
 	    @FXML
 	    private Label res;
+	    
+		@Override
+		public void initialize(URL arg0, ResourceBundle arg1) {
+			// TODO Auto-generated method stub
+			dataCB.setItems(boxDataType);
+		}
 	  
 	    @FXML
 	    void clickSelect(ActionEvent event) throws IOException {
+	    	//if (((dataCB.getSelectionModel().getSelectedItem()).equals("Classes Of Teacher")))
+	    	
 	    	if (dataCB.getValue().equals("Classes Of Teacher")) 
-	    			res.setText("you Chose 1!");
-	    	if (dataCB.getValue().equals("Teachers Of Class")) 
+	    		res.setText("you Chose 1!");
+	    	if (dataCB.getSelectionModel().equals("Teachers Of Class")) 
     			res.setText("you Chose 2!");
 	    	if (dataCB.getValue().equals("Courses Of Teacher")) 
     			res.setText("you Chose 3!");
@@ -48,11 +56,7 @@ import javafx.scene.text.Text;
 	    
 	    private final ObservableList<String> boxDataType = FXCollections.observableArrayList(dataType);
 
-		@Override
-		public void initialize(URL arg0, ResourceBundle arg1) {
-			// TODO Auto-generated method stub
-			dataCB.setItems(boxDataType);
-		}
+	
 	    
 
 	}
