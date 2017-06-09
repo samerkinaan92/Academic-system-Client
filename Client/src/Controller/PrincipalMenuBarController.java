@@ -23,6 +23,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class PrincipalMenuBarController {
@@ -82,7 +83,9 @@ public class PrincipalMenuBarController {
 
 	/** Private Actions */
 	
-	public void ViewSystemData(ActionEvent e){
+	public void ViewSystemData(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/PRCPL_ViewSystemData.fxml"));;
+		Main.getRoot().setCenter(pane);
 		
 	}
 	

@@ -3,7 +3,7 @@ package Entity;
 public class User {
 
 	private String ID;
-	private String Name;
+	private static String Name;
 	
 	public User() {
 	}
@@ -15,7 +15,7 @@ public class User {
 	public String getID() {
 		return ID;
 	}
-	public String getName() {
+	public static String getName() {
 		return Name;
 	}
 	public void setID(String iD) {
