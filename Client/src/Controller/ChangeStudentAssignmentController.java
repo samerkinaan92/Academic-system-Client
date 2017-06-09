@@ -26,8 +26,9 @@ import javafx.scene.paint.Color;
 
 public class ChangeStudentAssignmentController {
 	
-	Student student;
-	NewStudenCoursePlacement newPlacement;
+	private Student student;
+	private int currSem= -1;
+	private NewStudenCoursePlacement newPlacement;
 	private final ObservableList<CourseInfo> data =
 	        FXCollections.observableArrayList();
 
@@ -73,6 +74,7 @@ public class ChangeStudentAssignmentController {
     	int currSem = getCurrSem();
     	if(currSem > 0){
 	    	HashMap<String, String> msg = new HashMap<>();
+	    	// gets the student name, class from DB
 	    	msg.put("msgType", "select");
 	    	msg.put("query", "SELECT users.Name, Student_Class.ClassName FROM users, Student_Class WHERE users.ID = '" + id + "' AND Student_Class.StudentID = '" + id + "' AND Student_Class.Year = '" + currSem + "';");
 	    	try{
@@ -81,18 +83,21 @@ public class ChangeStudentAssignmentController {
 	    			Main.client.wait();
 	    			ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
 	    	    	if(!array.isEmpty()){
+	    	    		//set the fields for student
 	    	    		stdNameLbl.setText("Student name: " + array.get(0));
 	    	    		ClsLbl.setText("Class room: " + array.get(1));
 	    	    		student = new Student();
 	    	    		student.setID(id);
 	    	    		student.setName(array.get(1));
 	    	    		student.setName(array.get(0));
+	    	    		// gets all the course the student is taken this semester
 	    	    		msg.put("query", "SELECT CourseID FROM Course_Student WHERE StudentID = '" + id + "';");
 	    	    		Main.client.sendMessageToServer(msg);
 	    	    		Main.client.wait();
 	    	    		array = (ArrayList<String>) Main.client.getMessage();
 	    	    		setCourses(array);
 	    	    	}else{
+	    	    		// student id was not found
 	    	    		student = null;
 	    	    		Thread thread = new Thread(new Runnable(){
 	    					@Override
@@ -116,11 +121,14 @@ public class ChangeStudentAssignmentController {
     
     @FXML
     void removeCourse(ActionEvent event) {
+    	//checks if student was searched
     	if(student != null){
+    		//gets course id from the textBox
 	    	String courseId  = crsIdtxt.getText();
 	    	try {
 				if(isCourseIdOk(courseId)){
 					if(isSignedToCourse(courseId)){
+						//sends new request to the principal
 						newPlacement = new NewStudenCoursePlacement();
 						newPlacement.setCoureID(courseId);
 						newPlacement.setStudentID(student.getID());
@@ -150,11 +158,15 @@ public class ChangeStudentAssignmentController {
     
     @FXML
     void AssignNewCourse(ActionEvent event) {
+    	//checks if student was searched
     	if(student != null){
+    		//gets course id from the textBox
 	    	String courseId  = crsIdtxt.getText();
 	    	try {
 				if(isCourseIdOk(courseId)){
+					//checks if the course id inserted is valid
 					if(!isSignedToCourse(courseId)){
+						//if the student not signed to the course sends a new request to the principal
 						newPlacement = new NewStudenCoursePlacement();
 						newPlacement.setCoureID(courseId);
 						newPlacement.setStudentID(student.getID());
@@ -182,11 +194,12 @@ public class ChangeStudentAssignmentController {
     	}
     }
     
+    //sends new request to the principal
     private int sendNewAssignment(NewStudenCoursePlacement newPlacement) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	int msgFromServer;
     	
-    	
+    	//insert new request in to DB
     	msg.put("msgType", "insert");
     	msg.put("query", "INSERT INTO NewStudentAssignment (action, StudentID, CourseID ) VALUES ('" + newPlacement.getAction() + "', " + newPlacement.getStudentID() + " , " + newPlacement.getCoureID() + ");");
     	Main.client.sendMessageToServer(msg);
@@ -197,11 +210,12 @@ public class ChangeStudentAssignmentController {
 		return msgFromServer;
     }
     
+    //checks if the student already signed to the course
     private boolean isSignedToCourse(String courseId) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> msgFromServer;
     	
-    	
+    	//checks if student signed for course in DB
     	msg.put("msgType", "select");
     	msg.put("query", "SELECT 1 FROM Course_Student WHERE CourseID = '" + courseId + "' AND StudentID = '" + student.getID() + "';");
     	Main.client.sendMessageToServer(msg);
@@ -216,11 +230,17 @@ public class ChangeStudentAssignmentController {
 		}
     }
     
+    //get the current semester id
     private int getCurrSem(){
-    	int result = -1;
+    	// if the currSem variable is not -1 then no need to get it from the DB
+    	if(currSem != -1){
+    		return currSem;
+    	}
+    	
+    	//gets the current semester id from the DB
     	HashMap<String, String> msg = new HashMap<>();
     	msg.put("msgType", "select");
-    	msg.put("query", "SELECT semesterId FROM Semester WHERE isCurr = '1';");
+    	msg.put("query", "SELECT semesterId FROM Semester WHERE isCurr = 1;");
     	
     	Main.client.sendMessageToServer(msg);
 		synchronized (Main.client){
@@ -228,20 +248,21 @@ public class ChangeStudentAssignmentController {
 			Main.client.wait();
 			ArrayList<String> serverMsg = (ArrayList<String>) Main.client.getMessage();
 	    	if(!serverMsg.isEmpty()){
-	    		result = Integer.parseInt(serverMsg.get(0));
+	    		currSem = Integer.parseInt(serverMsg.get(0));
 	    	}
 			}catch (InterruptedException e) {
 				e.printStackTrace();
 			}
 		}
-		return result;
+		return currSem;
     }
     
+    //checks if the course id in the textbox is valid
     private boolean isCourseIdOk(String courseId) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> msgFromServer;
     	
-    	
+    	//checks if the course exists in the DB
     	msg.put("msgType", "select");
     	msg.put("query", "SELECT 1 FROM Course WHERE CourseID = '" + courseId + "';");
     	Main.client.sendMessageToServer(msg);
@@ -256,13 +277,17 @@ public class ChangeStudentAssignmentController {
 		}
     }
     
+    //set the table items list
     private void setCourses(ArrayList<String> coursesIds) throws InterruptedException{
     	String courseId, courseName;
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> msgFromServer;
     	
+    	//set the columns String from CourseInfo class
     	nameCln.setCellValueFactory(new PropertyValueFactory<CourseInfo, String>("name"));
     	idCln.setCellValueFactory(new PropertyValueFactory<CourseInfo, String>("id"));
+    	
+    	//gets the name of the courses
     	msg.put("msgType", "select");
     	if(!coursesIds.isEmpty()){
     		for(int i = 0; i < coursesIds.size(); i++){
@@ -280,6 +305,7 @@ public class ChangeStudentAssignmentController {
     	}
     }
     
+    //class for courses taken by the student
     public static class CourseInfo{
     	private StringProperty name;
         public void setName(String value) { nameProperty().set(value); }
