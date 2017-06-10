@@ -17,6 +17,7 @@ import java.util.ResourceBundle;
 import Entity.Assignment;
 import Entity.Course;
 import Entity.Student;
+import Entity.SubmittedAssignment;
 import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -63,6 +64,21 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  File file;
 
 	  //-------------------------------------------------------------------------------------------------------------------
+	  
+	  private void removeSubmitted(){
+		  
+		  ArrayList<String> submitted = SubmittedAssignment.getSubmittedAssignments();
+		  
+		  for (int i = 0; i < submitted.size(); i++){
+			  for (int j = 0; j < assignmentArr.size(); j++){
+				  if (submitted.get(i).equals(assignmentArr.get(j).getAssignmentID())){
+					  assignmentArr.remove(j);
+				  }
+			  }
+		  }
+		  
+	  }
+	  
 	  
 	  private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
@@ -152,6 +168,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  guiMsg.setText("No file was chosen to upload! Please browse for a file from the computer.");
 			  return;
 		  }
+		  
 		  // Send file info for server. 
 		  
 		  String filename = assignmentListView.getSelectionModel().getSelectedItem().toString();
@@ -296,6 +313,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    			, courseListView.getSelectionModel().getSelectedItem().toString().indexOf(')')));
 			    				
 			    	assignmentArr = Student.getAssignments(courseID);
+			    	removeSubmitted();
 			    	organizedAssignmentList = getAssignmentList(assignmentArr);
 			    	Collections.sort(organizedAssignmentList);
 			    	assignmentListView.setItems(FXCollections.observableArrayList(organizedAssignmentList));

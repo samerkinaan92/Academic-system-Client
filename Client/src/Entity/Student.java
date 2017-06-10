@@ -47,8 +47,8 @@ public class Student extends User {
 		ArrayList<String> result = sendMsg(msgServer);
 		ArrayList<Assignment> DBassignment = new ArrayList<Assignment>();
 		
-		for (int i = 0; i < result.size(); i+=6)
-			DBassignment.add(new Assignment(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), Date.valueOf(result.get(i+3)), Date.valueOf((result.get(i+4))), result.get(i+5)));
+		for (int i = 0; i < result.size(); i+=7)
+			DBassignment.add(new Assignment(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), Date.valueOf(result.get(i+3)), Date.valueOf((result.get(i+4))), result.get(i+5), Integer.parseInt(result.get(i+6))));
 		return DBassignment;
 	}
 	
