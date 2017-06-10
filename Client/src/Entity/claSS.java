@@ -11,8 +11,9 @@ public class claSS {
 	private int year;
 	
 	
-	public claSS(String name){
+	public claSS(String name, int year){
 		ClassName = name;
+		this.year = year;
 	}
 	
 	
@@ -38,7 +39,7 @@ public class claSS {
 		ArrayList<claSS> DBclasses = new ArrayList<claSS>();
 		
 		for (int i = 0; i < result.size(); i+=2)
-			DBclasses.add(new claSS(result.get(i)));
+			DBclasses.add(new claSS(result.get(i), Integer.parseInt(result.get(i+1))));
 		return DBclasses;
 		
 	}

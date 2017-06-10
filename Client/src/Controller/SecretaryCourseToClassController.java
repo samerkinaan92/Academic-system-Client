@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 import Entity.Course;
+import Entity.Semester;
 import Entity.claSS;
 import application.Main;
 import javafx.collections.FXCollections;
@@ -22,7 +23,7 @@ import javafx.scene.control.ListView;
 public class SecretaryCourseToClassController implements Initializable {
 	
 	@FXML
-	private ComboBox<String> courseChooser;
+	private ComboBox<String> classChooser;
 	
 	@FXML
 	private ListView<String> availableCourses;
@@ -33,12 +34,19 @@ public class SecretaryCourseToClassController implements Initializable {
 	@FXML
     private Label guiMsg;
 	
+	@FXML
+	private ComboBox<String> semesterChooser;
+	
 	
 	ArrayList<claSS> classArr;
 	
 	ArrayList<Course> course;
+	
+	ArrayList<Semester> semesterArr;
 	 
 	ArrayList<String> organizedClassList;
+	
+	ArrayList<String> organizedSemesterList;
 	
 	ArrayList<String> allCourses = null;
 	
@@ -52,6 +60,15 @@ public class SecretaryCourseToClassController implements Initializable {
 	
 	//-------------------------------------------------------------------------------------------------------------
 	
+	private ArrayList<String> getSemesterList(ArrayList<Semester> semsterArr){
+		 
+		 ArrayList<String> temp = new ArrayList<String>();
+			for (int i = 0; i < semsterArr.size(); i++)
+				temp.add(semsterArr.get(i).getYear() + " (" + semsterArr.get(i).getSeason() + ")");
+			
+			return temp;	
+	 }
+	
 	private ArrayList<String> getClassList(ArrayList<claSS> classArr){
 		 
 		 ArrayList<String> temp = new ArrayList<String>();
@@ -61,9 +78,9 @@ public class SecretaryCourseToClassController implements Initializable {
 			return temp;	
 	 }
 	
-	  private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
+	private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
-			ArrayList<String> temp = new ArrayList<String>();
+		ArrayList<String> temp = new ArrayList<String>();
 			for (int i = 0; i < courseArr.size(); i++)
 				temp.add(courseArr.get(i).getName() + " (" + courseArr.get(i).getCourseID() + ")");
 			
@@ -123,10 +140,50 @@ public class SecretaryCourseToClassController implements Initializable {
  	
 	//-------------------------------------------------------------------------------------------------------------
 
+	  
+	  public void chooseSemester(ActionEvent e){
+		  
+		  int id = 0;
+		  
+		  
+		  for (int i = 0; i < semesterArr.size(); i++)
+			  if ((semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")").equals(semesterChooser.getSelectionModel().getSelectedItem())){
+				  id = semesterArr.get(i).getId();
+				  break;
+			  }
+				  
+		  
+		  classArr = claSS.getClasses();
+		  int size = classArr.size()-1;
+		  
+		  while (0 <= size){
+			  if (classArr.get(size).getYear() != id)
+				  classArr.remove(size--);
+			  else
+				  size--;
+		  }
+		  
+		  
+		  if (classArr.size() > 0){
+			  organizedClassList = getClassList(classArr);
+			  Collections.sort(organizedClassList);
+		  }
+		  else{
+			  organizedClassList = new ArrayList<String>();
+			  organizedClassList.add("No Class in Semester!");
+		  }
+		  
+		  classChooser.setItems(FXCollections.observableArrayList(organizedClassList));
+		  classChooser.setDisable(false);
+		  
+		  
+	  }
+	  
+	  
 	
-	public void chooseCourse(ActionEvent e){
+	public void chooseClass(ActionEvent e){
 		
-		String clas = courseChooser.getSelectionModel().getSelectedItem();
+		String clas = classChooser.getSelectionModel().getSelectedItem();
 		
 		course = Course.getCourses();
 		
@@ -195,7 +252,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		}
 			
 		
-		String selected = courseChooser.getSelectionModel().getSelectedItem();
+		String selected = classChooser.getSelectionModel().getSelectedItem();
 		
 		claSS cLass = null;
 		
@@ -253,12 +310,20 @@ public class SecretaryCourseToClassController implements Initializable {
 	
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
+		
+		semesterArr = Semester.getSemesters();
+		
+		organizedSemesterList = getSemesterList(semesterArr);
+		Collections.sort(organizedSemesterList);
+		semesterChooser.setItems(FXCollections.observableArrayList(organizedSemesterList));
+		
+		
+		/*
 		classArr = claSS.getClasses();
 		organizedClassList = getClassList(classArr);
 		Collections.sort(organizedClassList);
-		courseChooser.setItems(FXCollections.observableArrayList(organizedClassList));
-		
+		classChooser.setItems(FXCollections.observableArrayList(organizedClassList));
+		*/
 	}
 
 }
