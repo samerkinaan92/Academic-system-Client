@@ -14,6 +14,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
+import javax.swing.JOptionPane;
+
 import Entity.Assignment;
 import Entity.Course;
 import Entity.Student;
@@ -26,6 +28,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
@@ -51,6 +54,18 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  
 	  @FXML
 	  private Label guiMsg;
+	  
+	  @FXML
+	  private Button submitBtn;
+
+	  @FXML
+	  private Button browseBtn;
+
+	  @FXML
+	  private Label uploadLabel;
+	  
+	  @FXML
+	  private Button downloadBtn;
 
 	  ArrayList<Course> courseArr;
 	  ArrayList<Assignment> assignmentArr;
@@ -65,7 +80,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
-	  private void removeSubmitted(){
+	  private void removeSubmitted(){ // Remove all submitted assignments from list.
 		  
 		  ArrayList<String> submitted = SubmittedAssignment.getSubmittedAssignments();
 		  
@@ -76,9 +91,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 				  }
 			  }
 		  }
-		  
 	  }
-	  
 	  
 	  private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
@@ -99,7 +112,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 		}
 	  
 	  @SuppressWarnings("unchecked")
-	private int isLate(String id){ // Check if submission is late.
+	  private int isLate(String id){ // Check if submission is late.
 		  
 		  SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 		  msgServer = new HashMap <String,String>();
@@ -135,6 +148,13 @@ public class StudentSubmitAssignmentController implements Initializable {
 	 	  
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
+	  public void download(ActionEvent e){
+		  
+		  
+		  
+		  
+	  }
+	  
 	  public void CourseSearch(ActionEvent e){ // Filter course list results.
 		  ArrayList<String> temp = new  ArrayList<String>();
 	    	
@@ -153,7 +173,6 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  if (organizedAssignmentList.get(i).toLowerCase().contains(assignmentSearch.getText().toLowerCase()))
 				  temp.add(organizedAssignmentList.get(i));
 	    	
-	    	 
 		  assignmentListView.setItems(FXCollections.observableArrayList(temp));
 	  }
 
@@ -255,11 +274,14 @@ public class StudentSubmitAssignmentController implements Initializable {
 				ex.printStackTrace();
 			}}
 	    	
-	    	if ((int)Main.client.getMessage() > 0)
-	    		guiMsg.setText("submission Successful");
-	    	else
-	    		guiMsg.setText("submission Filed: Data base error!");
-	    	
+	    	if ((int)Main.client.getMessage() > 0){
+	    		JOptionPane.showMessageDialog(null, "submission Successful");
+	    		
+	    	}
+	    	else{
+	    		JOptionPane.showMessageDialog(null, 
+						  "submission Filed: Data base error!", "Error", JOptionPane.ERROR_MESSAGE);
+	    	}
 	    	clearScreen();
 	  }
 	  
@@ -273,10 +295,12 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  FileChooser fileChooser = new FileChooser();
           fileChooser.setTitle("Upload File");
 		  file = fileChooser.showOpenDialog(courseSearch.getScene().getWindow());
-		  if (file != null)
+		  if (file != null){
 			  filePath.setText(file.getAbsolutePath());
+			  submitBtn.setDisable(false);
+		  }
 		  else
-			  guiMsg.setText("Can't upload this file!");
+			  guiMsg.setText("No file was selected!");
 	  }
 
 	  //-------------------------------------------------------------------------------------------------------------------
@@ -292,14 +316,13 @@ public class StudentSubmitAssignmentController implements Initializable {
 		}
 	  
 	  @Override
-	  public void initialize(URL arg0, ResourceBundle arg1) {
-		  file = null;
+	  public void initialize(URL arg0, ResourceBundle arg1) { // Initialize window.
 		  
+		  file = null;
 		  courseArr = Student.getCourse();
 		  organizedCourseList = getCourseList(courseArr);
 		  Collections.sort(organizedCourseList);
 		  courseListView.setItems(FXCollections.observableArrayList(organizedCourseList));
-		  
 		  
 		  courseListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			    @Override
@@ -318,6 +341,21 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    	Collections.sort(organizedAssignmentList);
 			    	assignmentListView.setItems(FXCollections.observableArrayList(organizedAssignmentList));
 			    	
+			    	submitBtn.setDisable(true);
+			    	uploadLabel.setDisable(true);
+			    	browseBtn.setDisable(true);
+			    	downloadBtn.setDisable(true);
+			    }
+			}); 
+		  
+		  assignmentListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+			    @Override
+			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+			    	
+			    	guiMsg.setText("- Download Assignment,\n- Submit Assignment");
+			    	uploadLabel.setDisable(false);
+			    	browseBtn.setDisable(false);
+			    	downloadBtn.setDisable(false);
 			    }
 			});  
 	  }
