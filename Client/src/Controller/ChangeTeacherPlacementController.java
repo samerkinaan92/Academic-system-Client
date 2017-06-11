@@ -1,6 +1,5 @@
 package Controller;
 
-import java.lang.reflect.Array;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,8 +7,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
-import Controller.ChangeStudentAssignmentController.CourseInfo;
-import Entity.Course;
 import Entity.NewTeacherPlacement;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,6 +26,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 public class ChangeTeacherPlacementController implements Initializable{
 	
 		private NewTeacherPlacement newPlacement;
+		private int currSem= -1;
 		private int weeklyHours;
 		
 		private final ObservableList<Classes> classesData =
@@ -78,8 +76,11 @@ public class ChangeTeacherPlacementController implements Initializable{
 
 	    @FXML
 	    void changeTeacher(ActionEvent event) {
+	    	// gets the selected items
 	    	Teachers teacher = teachersTbl.getSelectionModel().getSelectedItem();
 	    	Classes selClass = classesTbl.getSelectionModel().getSelectedItem();
+	    	
+	    	//checks if the same teacher was picked
 	    	if(teacher.getTeacherId().equals(selClass.getTeacherId())){
 	    		Thread thread = new Thread(new Runnable(){
 					@Override
@@ -90,7 +91,9 @@ public class ChangeTeacherPlacementController implements Initializable{
 				});
 	    		thread.start();
 	    	}else{
+	    		// checks if the chosen teacher to replace have enough hours for the course
 	    		if(Integer.parseInt(teacher.getHoursLeft()) < weeklyHours){
+	    			//if not show an error dialog
 	    			Thread thread = new Thread(new Runnable(){
 						@Override
 						public void run() {
@@ -100,6 +103,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 					});
 		    		thread.start();
 	    		}else{
+	    			//sends a new request to the principal
 	    			newPlacement = new NewTeacherPlacement();
 	    			newPlacement.setCourseID(selClass.getCourseInClassId());
 	    			newPlacement.setCurrTeacherID(selClass.getTeacherId());
@@ -153,6 +157,8 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    void search(ActionEvent event) {
 	    	String courseId = crsIdTxt.getText();
 	    	HashMap<String, String> msg = new HashMap<>();
+	    	
+	    	// gets the course details given an id
 	    	msg.put("msgType", "select");
 	    	msg.put("query", "SELECT * FROM course WHERE CourseID = '" + courseId + "';");
 	    	synchronized (Main.client) {
@@ -161,6 +167,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 					Main.client.wait();
 					ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
 					if(!array.isEmpty()){
+						//course was found
 						setCourseFields(array);
 						setTeachersTable(array.get(3));
 						msg.put("query", "SELECT * FROM Class_Course WHERE courseID = '" + courseId + "' AND Year = '" + getCurrSem() + "';");
@@ -169,6 +176,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 						array = (ArrayList<String>) Main.client.getMessage();
 						setCourseInClasses(array);
 					}else{
+						// curse was not found
 						Thread thread = new Thread(new Runnable(){
 	    					@Override
 	    					public void run() {
@@ -192,11 +200,14 @@ public class ChangeTeacherPlacementController implements Initializable{
 			}
 	    }
 	    
+	    //gets the current semester id
 	    private int getCurrSem(){
-	    	int result = -1;
+	    	if(currSem != -1){
+	    		return currSem;
+	    	}
 	    	HashMap<String, String> msg = new HashMap<>();
 	    	msg.put("msgType", "select");
-	    	msg.put("query", "SELECT semesterId FROM Semester WHERE isCurr = '1';");
+	    	msg.put("query", "SELECT semesterId FROM Semester WHERE isCurr = 1;");
 	    	
 	    	Main.client.sendMessageToServer(msg);
 			synchronized (Main.client){
@@ -204,15 +215,16 @@ public class ChangeTeacherPlacementController implements Initializable{
 				Main.client.wait();
 				ArrayList<String> serverMsg = (ArrayList<String>) Main.client.getMessage();
 		    	if(!serverMsg.isEmpty()){
-		    		result = Integer.parseInt(serverMsg.get(0));
+		    		currSem = Integer.parseInt(serverMsg.get(0));
 		    	}
 				}catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			return result;
+			return currSem;
 	    }
 	    
+	    //sets the course fields
 	    private void setCourseFields(ArrayList<String> course){
 	    	crsNmLbl.setText("Course name: " + course.get(1));
 	    	wklyHourLbl.setText("Teaching unit: " + course.get(3));
@@ -220,6 +232,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	weeklyHours = Integer.parseInt(course.get(2));
 	    }
 	    
+	    //sets all the classes taken the course this semester to the table
 	    private void setCourseInClasses(ArrayList<String> classes) throws InterruptedException{
 	    	HashMap<String, String> msg = new HashMap<>();
 	    	ArrayList<String> msgFromServer;
@@ -237,7 +250,8 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	}
 	    	classesTbl.setItems(classesData);
 	    }
-	
+	    
+	    //sets all the teachers in teaching unit details in the table
 	    private void setTeachersTable(String teachingUnit) throws InterruptedException{
 	    	HashMap<String, String> msg = new HashMap<>();
 	    	ArrayList<String> msgFromServer;
@@ -268,6 +282,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	teachersTbl.setItems(teachersData);
 	    }
 	    
+	    // gets the maximum hours the teacher aloud to work
 	    private int getTeacherMaxHours(String teacherId) throws InterruptedException{
 	    	HashMap<String, String> msg = new HashMap<>();
 	    	ArrayList<String> msgFromServer;
@@ -285,6 +300,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    		return -1;
 	    }
 	    
+	    //gets the teacher name given an id
 	    private String getTeacherName(String id) throws InterruptedException{
 	    	HashMap<String, String> msg = new HashMap<>();
 	    	ArrayList<String> msgFromServer;
@@ -302,6 +318,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    		return null;
 	    }
 	    
+	    //gets the total hours the teacher is working during week
 	    private int getSumHours(String teacherId) throws InterruptedException{
 	    	HashMap<String, String> msg = new HashMap<>();
 	    	ArrayList<String> msgFromServer;
@@ -321,9 +338,11 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    		return -1;   	
 	    }
 	    
+	    //initialize all the data for the gui
 	    @Override
 		public void initialize(URL location, ResourceBundle resources) {
 			changeTchrBtn.setDisable(true);
+			//sets listener for item changed, makes sure that both tables items selected to enable the button
 			classesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			    if (newSelection != null && teachersTbl.getSelectionModel().getSelectedItem() != null) {
 			    	changeTchrBtn.setDisable(false);
@@ -332,6 +351,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 			    }
 			});
 			
+			//sets listener for item changed, makes sure that both tables items selected to enable the button 
 			teachersTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 			    if (newSelection != null && classesTbl.getSelectionModel().getSelectedItem() != null) {
 			    	changeTchrBtn.setDisable(false);
@@ -340,6 +360,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 			    }
 			});
 			
+			//sets the column string from the class
 			clsRomCln.setCellValueFactory(new PropertyValueFactory<Classes, String>("className"));
 	    	tchrNmCln.setCellValueFactory(new PropertyValueFactory<Classes, String>("teacherName"));
 	    	tchrIdCln.setCellValueFactory(new PropertyValueFactory<Classes, String>("teacherId"));
@@ -349,6 +370,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	horsLftTcln.setCellValueFactory(new PropertyValueFactory<Teachers, String>("hoursLeft"));
 		}
 	    
+	    //class for the classes table
 	    public static class Classes{
 	    	private StringProperty className;
 	        public void setClassName(String value) { classNameProperty().set(value); }
@@ -392,7 +414,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    }
 
 
-
+	    //class for the teachers table
 	    public static class Teachers{
 	    	private StringProperty hoursLeft;
 	        public void setHoursLeft(String value) { hoursLeftProperty().set(value); }

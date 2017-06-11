@@ -7,7 +7,7 @@ import application.Main;
 
 public class Course extends AcademicActivity {
 
-//	private int ActivityID;
+
 	private int CourseID;
 	private String Name;
 	private String TUID;
@@ -48,9 +48,9 @@ public class Course extends AcademicActivity {
 	
 	public boolean insertCourse(){ // Insert course to data base.
 		
-		String msg = "Insert INTO course (CourseID, Name, TUID, weeklyHours)";
-    	String values = " VALUES (" + CourseID + ", '" + Name + "', '" + 
-    			TUID + "', " + weeklyHours + ")";
+		String msg = "Insert INTO course (CourseID, CourseName, weeklyHours, TUName)";
+    	String values = " VALUES (" + CourseID + ", '" + Name + "', " + 
+    			 weeklyHours + ", '" + TUID + "')";
     	
     	HashMap <String,String> msgServer = new HashMap <String,String>();
     	msgServer.put("msgType", "insert");
@@ -75,7 +75,7 @@ public class Course extends AcademicActivity {
 		
 		for (int i = 0; i < PreList.size(); i++){
 		
-			String msg = "Insert INTO PreRequests (CourseID, preReqCourseID)";
+			String msg = "Insert INTO pre_courses (CourseID, preCourseID)";
 	    	String values = " VALUES (" + CourseID + ", " + 
 	    	PreList.get(i).substring(PreList.get(i).indexOf('(') + 1, PreList.get(i).indexOf(')')) + ")";
 	    	
@@ -122,6 +122,32 @@ public class Course extends AcademicActivity {
 			if (result.get(i).equals(CourseID))
 				return false;
 		return true;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static String getTU(String coursID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select TUName From course Where CourseID = '" + coursID + "'");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		if (result.size() > 0)
+			return result.get(0);
+		else
+			return null;
 	}
 	
 	

@@ -94,12 +94,43 @@ public class PrincipalMenuBarController {
 	}
 	
 	public void ApproveTeacherAssignment(ActionEvent e){
-		
+		String fxml_url = "/FXML/principal_TeacherExceptionalRequests.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
+			ex.printStackTrace();
+		}
 	}
 	
 	public void ApproveStudentChange(ActionEvent e){
-		
-		
+		String fxml_url = "/FXML/principal_StudExceptionalRequests.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
+			ex.printStackTrace();
+		}
 	}
 	
 

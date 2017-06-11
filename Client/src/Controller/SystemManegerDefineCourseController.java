@@ -9,6 +9,7 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 import Entity.Course;
+import Entity.TeachingUnit;
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -59,8 +60,7 @@ public class SystemManegerDefineCourseController implements Initializable {
     
     //-------------------------------------------------------------------------------------------------------------------
     
-    private final String[] hours = {"1", "2", "3", "4"};
-    private final String[] units = {"Software", "Mathematics", "Physics", "English"};
+    private final String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     
     ArrayList<Course> courseArr;
     
@@ -70,7 +70,6 @@ public class SystemManegerDefineCourseController implements Initializable {
     Course newCourse;
     boolean err;
     
-    private final ObservableList<String> boxUnit = FXCollections.observableArrayList(units);
     private final ObservableList<String> boxHours = FXCollections.observableArrayList(hours);
     private ObservableList<String> coursesDB;
     
@@ -135,8 +134,8 @@ public class SystemManegerDefineCourseController implements Initializable {
     	}
     	
     	newCourse = new Course(Integer.parseInt(courseId.getText()), courseName.getText(),
-    			Integer.parseInt(teachingUnit.getSelectionModel().getSelectedItem().toString()), 
-    			weaklyHours.getSelectionModel().getSelectedItem().toString());
+    			Integer.parseInt(weaklyHours.getSelectionModel().getSelectedItem().toString()),
+    			teachingUnit.getSelectionModel().getSelectedItem().toString());
     	
     	newCourse.insertCourse();
     	newCourse.updatePreCourses(PreList);
@@ -194,7 +193,12 @@ public class SystemManegerDefineCourseController implements Initializable {
 		organizedList = getList(courseArr);
 		Collections.sort(organizedList);
 		courseList.setItems(FXCollections.observableArrayList(organizedList));
-		weaklyHours.setItems(boxHours);
-		teachingUnit.setItems(boxUnit);	
+		ArrayList<String> temp;
+		if ((temp = TeachingUnit.getTeachingUnit()) != null)
+			teachingUnit.setItems(FXCollections.observableArrayList(temp));
+		else
+			teachingUnit.setItems(FXCollections.observableArrayList("No Units"));
+			
+		weaklyHours.setItems(boxHours);	
 	}
 }
