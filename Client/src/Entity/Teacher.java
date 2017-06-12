@@ -10,15 +10,15 @@ public class Teacher extends User {
 	private int maxWorkHours;
 	
 
-	public Teacher(String Name){
-		this.Name = Name;
-
+	public Teacher(String name){
+		this.Name = name;
+	}
 	public Teacher(String name, String id, int hours){
 		super(id, name);
 		maxWorkHours = hours;
 	}
 	
-	
+	/*-------------------------------------  Get Teachers  --------------------------------------*/
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Teacher> getTeachers(){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -35,7 +35,8 @@ public class Teacher extends User {
 			Main.client.wait();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}}
+		}
+		}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		
 		msgServer = new HashMap <String,String>();
@@ -70,6 +71,8 @@ public class Teacher extends User {
 		return DBteachers;
 
 	}
+	
+	/*-------------------------------------  Get Sum of Hours  --------------------------------------*/
 	
 	@SuppressWarnings("unchecked")
 	public static int getSumOfHours(String teacherID){
@@ -127,14 +130,9 @@ public class Teacher extends User {
 		return Name;
 	}*/
 	public void setID(String iD) {
-		ID = iD;
+		super.setID(iD);
 	}
 
-	
-	
-	public int getMaxWorkHours() {
-		return maxWorkHours;
-	}
 
 	public void setMaxWorkHours(int maxWorkHours) {
 		this.maxWorkHours = maxWorkHours;
@@ -151,7 +149,7 @@ public class Teacher extends User {
 			return temp;	
 	 }
 	*/
-	
+	/*
 public static String getTeacherID(String techerName){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -198,13 +196,13 @@ public static ArrayList<Teacher> getTeachersNames(){
 		return DBteachers;
 		
 	}
+*/
 
-
-public static ArrayList<Teacher> getTeachersClass(){
+public static ArrayList<claSS> getTeachersClass(String ID){
 	
 	HashMap <String,String> msgServer = new HashMap <String,String>();
 	msgServer.put("msgType", "select");
-	msgServer.put("query", " select Name from teacher, users where teacher.TeacherID = users.ID;");
+	msgServer.put("query", " select ClassName from class_course where teacherID ="+ID+";");
 	
 	try{
 		Main.client.sendMessageToServer(msgServer);
@@ -219,20 +217,23 @@ public static ArrayList<Teacher> getTeachersClass(){
 	}}
 	@SuppressWarnings("unchecked")
 	ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-	ArrayList<Teacher> DBteachers = new ArrayList<Teacher>();
-	
+	for (int i=0 ; i < result.size() ; i++)
+		System.out.println(result.get(i));
+	ArrayList<claSS> DBclasses = new ArrayList<claSS>();
 	for (int i = 0; i < result.size(); i++)
-		DBteachers.add(new Teacher(result.get(i)));
-	return DBteachers;
+		DBclasses.add(new claSS(result.get(i), Integer.parseInt(result.get(i+1))));
+
+
+	
+	return DBclasses;
 	
 }
 
-//@SuppressWarnings("unchecked")
-public static ArrayList<Teacher> getTeachers(){
+public static ArrayList<String> getTeachersClassAsStringArrList(String ID){
 	
 	HashMap <String,String> msgServer = new HashMap <String,String>();
 	msgServer.put("msgType", "select");
-	msgServer.put("query", "Select * From teacher , ");
+	msgServer.put("query", " select ClassName from class_course where teacherID ="+ID+";");
 	
 	try{
 		Main.client.sendMessageToServer(msgServer);
@@ -247,11 +248,8 @@ public static ArrayList<Teacher> getTeachers(){
 	}}
 	@SuppressWarnings("unchecked")
 	ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-	ArrayList<Teacher> DBteachers = new ArrayList<Teacher>();
-	
-	for (int i = 0; i < result.size(); i++)
-		DBteachers.add(new Teacher(result.get(i)));
-	return DBteachers;
+
+	return result;
 	
 }
 

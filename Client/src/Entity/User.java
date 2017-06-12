@@ -4,9 +4,9 @@ public class User {
 
 	private String ID;
 
-	 public String Name;
+	// public String Name;
 
-	private String Name;
+	protected String Name;
 
 	
 	public User() {

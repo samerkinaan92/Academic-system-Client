@@ -15,6 +15,7 @@
       <Text fx:id="txt" layoutX="92.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="47.99999916553497" />
       <ListView fx:id="firstViewList" layoutX="63.0" layoutY="223.0" prefHeight="200.0" prefWidth="200.0" />
       <Text fx:id="ChooseLabel" layoutX="63.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" />
-      <Button  layoutX="300.0" layoutY="298.0" mnemonicParsing="false" onAction="#ClickChoose" text="&gt;&gt;" />
+      <Button layoutX="310.0" layoutY="298.0" mnemonicParsing="false" onAction="#ClickChoose" text="&gt;&gt;" />
+      <ListView fx:id="secondViewList" layoutX="390.0" layoutY="223.0" prefHeight="200.0" prefWidth="200.0" />
    </children>
 </AnchorPane>
