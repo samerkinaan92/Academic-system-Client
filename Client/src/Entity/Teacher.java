@@ -12,6 +12,7 @@ public class Teacher extends User {
 
 	public Teacher(String Name){
 		this.Name = Name;
+	}
 
 	public Teacher(String name, String id, int hours){
 		super(id, name);
@@ -20,7 +21,7 @@ public class Teacher extends User {
 	
 	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Teacher> getTeachers(){
+	public static ArrayList<Teacher> getTeacherss(){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
 		msgServer.put("query", "Select Name, ID From users WHERE Role = 'Teacher'");
@@ -120,7 +121,7 @@ public class Teacher extends User {
 	}
 	
 
-	public int getMaxWorkHours() {
+	public int getMaxWorkHourss() {
 		return maxWorkHours;
 	}
 	/*public String getName() {
