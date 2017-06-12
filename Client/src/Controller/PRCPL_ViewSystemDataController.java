@@ -165,7 +165,15 @@ import javafx.scene.text.Text;
 	    		handle_Courses_Of_Teacher();
 	    }
 
-    	void handle_Classes_Of_Teacher(){
+    	private void handle_Teachers_Of_Class() {
+			// TODO Auto-generated method stub
+			
+		}
+
+
+
+
+		void handle_Classes_Of_Teacher(){
 //s.substring(s.lastIndexOf(' ') + 1);
 			String techer;
 			String teacherID;
