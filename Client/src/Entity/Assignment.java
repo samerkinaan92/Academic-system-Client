@@ -1,12 +1,7 @@
 package Entity;
 
-import java.io.File;
+
 import java.sql.Date;
-import java.util.ArrayList;
-
-import java.util.HashMap;
-
-import application.Main;
 
 public class Assignment {
 
@@ -16,16 +11,18 @@ public class Assignment {
 	private Date publishDate;
 	private Date deadLine;
 	private String filePath;
+	private int semesterID;
 	
 	
 	
-	public Assignment(int Aid, String name, int Cid, Date publish, Date dead, String path){
+	public Assignment(int Aid, String name, int Cid, Date publish, Date dead, String path, int Sid){
 		assignmentID = Aid;
 		AssignmentName = name;
 		CourseID = Cid;
 		publishDate = publish;
 		deadLine = dead;
-		setFilePath(path);
+		filePath = path;
+		semesterID = Sid;
 	}
 	
 	
@@ -84,6 +81,22 @@ public class Assignment {
 
 	public void setFilePath(String filePath) {
 		this.filePath = filePath;
+	}
+
+
+
+
+
+	public int getSemesterID() {
+		return semesterID;
+	}
+
+
+
+
+
+	public void setSemesterID(int semesterID) {
+		this.semesterID = semesterID;
 	}
 
 
