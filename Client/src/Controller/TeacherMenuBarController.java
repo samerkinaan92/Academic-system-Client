@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JOptionPane;
 
@@ -12,6 +13,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class TeacherMenuBarController {
@@ -74,6 +76,24 @@ public class TeacherMenuBarController {
 	}
 	
 	public void CheckAssignments(ActionEvent e){
+		
+		String fxml_url = "/FXML/TCHR_CheckAssignments.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
+			ex.printStackTrace();
+		}
 		
 	}
 	

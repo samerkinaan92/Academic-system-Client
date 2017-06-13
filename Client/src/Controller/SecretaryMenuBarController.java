@@ -113,9 +113,45 @@ public class SecretaryMenuBarController {
 	
 	public void CreateSemester(ActionEvent e){
 		
+		String fxml_url = "/FXML/SEC_CreateNewSemester.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
+			ex.printStackTrace();
+		}
+		
 	}
 	
 	public void DefineClasses(ActionEvent e){
+		
+		String fxml_url = "/FXML/SEC_DefineClasses.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
+			ex.printStackTrace();
+		}
 		
 	}
 	
