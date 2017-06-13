@@ -2,6 +2,10 @@ package Entity;
 
 
 import java.sql.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import application.Main;
 
 public class Assignment {
 
@@ -23,6 +27,28 @@ public class Assignment {
 		deadLine = dead;
 		filePath = path;
 		semesterID = Sid;
+	}
+	
+	public static byte[] getFile(String path){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "getFile");
+		msgServer.put("filePath", path);
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		byte[] result = (byte[])Main.client.getMessage();
+		
+		return result;
 	}
 	
 	

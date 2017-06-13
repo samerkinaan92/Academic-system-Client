@@ -1,11 +1,14 @@
 package Controller;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -84,6 +87,9 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  
 		  ArrayList<String> submitted = SubmittedAssignment.getSubmittedAssignments();
 		  
+		  if (submitted == null)
+			  return;
+		  
 		  for (int i = 0; i < submitted.size(); i++){
 			  for (int j = 0; j < assignmentArr.size(); j++){
 				  if (submitted.get(i).equals(assignmentArr.get(j).getAssignmentID())){
@@ -150,6 +156,59 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  
 	  public void download(ActionEvent e){
 		  
+		
+		  Assignment ass = null;
+		  String selected = assignmentListView.getSelectionModel().getSelectedItem();
+		 		  
+		  if (selected == null)
+			  return;
+		  
+		  selected = selected.substring(selected.indexOf('(') + 1, selected.indexOf(')'));
+		  
+		  for (int i = 0; i < assignmentArr.size(); i++){
+			  if (assignmentArr.get(i).getAssignmentID() == Integer.parseInt(selected))
+				  ass = assignmentArr.get(i);
+		  }
+		  
+		  if (ass == null)
+			  return;
+		  
+		  String p = ass.getFilePath();
+		  
+		  byte[] file = Assignment.getFile(p);
+		  
+		  
+		  FileChooser fileChooser = new FileChooser();
+          fileChooser.setTitle("Save Assignment");
+          
+          fileChooser.getExtensionFilters().addAll(
+                  new FileChooser.ExtensionFilter("All Files", "*.*"),
+                  new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                  new FileChooser.ExtensionFilter("Word Documents", "*.docx")
+              );
+          
+          File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());
+		  
+          Path savePath = Paths.get(pa.getAbsolutePath());
+		  
+		  
+          FileOutputStream stream;
+          
+         
+			
+          try {
+        	  stream = new FileOutputStream(savePath.toString());
+        	  stream.write(file);
+        	  stream.close();
+        	  JOptionPane.showMessageDialog(null, "Assignment Saved");
+          }
+          catch (IOException ex) {
+        	  ex.printStackTrace();
+        	  JOptionPane.showMessageDialog(null, 
+					  "Download Failed!", "Error", JOptionPane.ERROR_MESSAGE);
+          }
+		  
+		
 		  
 		  
 		  
