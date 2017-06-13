@@ -102,6 +102,59 @@ public class claSS {
 		
 		return (int) Main.client.getMessage();
 	}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Teacher> getTeachersOfClass(String className){
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select teacherID from class_course where ClassName = '"+className+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select TeacherID, MaxWorkHours From teacher");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result2 = (ArrayList<String>)Main.client.getMessage();
+		
+		for (int i = 1; i < result.size(); i+=2)
+			for (int j = 0; j < result2.size(); j+=2)
+				if (result.get(i).equals(result2.get(j))){
+					result.add(i+1, result2.get(j+1));
+					i++;
+					break;
+				}
+		
+		ArrayList<Teacher> DBteachers = new ArrayList<Teacher>();
+		
+		for (int i = 0; i < result.size(); i+=3)
+			DBteachers.add(new Teacher(result.get(i), result.get(i+1), Integer.parseInt(result.get(i+2))));
+		return DBteachers;
+
+	}
 
 	public String getClassName() {
 		return ClassName;
