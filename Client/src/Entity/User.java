@@ -2,9 +2,12 @@ package Entity;
 
 public class User {
 
-	public String ID;
+	private String ID;
 
-	 public String Name;
+	// public String Name;
+
+	protected String Name;
+
 	
 	public User() {
 	}

@@ -41,17 +41,24 @@ import javafx.scene.text.Text;
 	    
 	    @FXML
 	    private ListView<String> firstViewList;
+	    
+	    @FXML
+	    private ListView<String> secondViewList;
 
 	  /* @FXML
 	    private Button ChooseTeacher;
 	    */
-	    ArrayList<Teacher> TeacherArr;
+	    ArrayList<Teacher> TeacherArr = new ArrayList<Teacher>();
 	    
-	    ArrayList<String> organizedTeacherList;
+	    ArrayList<String> organizedTeacherNameList = new ArrayList<String>();
 	    
-	    ArrayList<String> organizedClassList;
+	    ArrayList<String> organizedTeacherIDList = new ArrayList<String>();
 	    
-	    ArrayList<claSS> classArr;
+	    ArrayList<String> organizedFullTeacherList = new ArrayList<String>();
+	   
+	    ArrayList<String> organizedClassList = new ArrayList<String>();
+	    
+	    ArrayList<claSS> classArr = new ArrayList<claSS>();
 	    //-----------------------------------------------------------------------------------------------------------------------------
 
 	    //-----------------------------------------------------------------------------------------------------------------------------
@@ -82,7 +89,7 @@ import javafx.scene.text.Text;
 				
 				return temp;	
 		 }
-		
+		/*
 		private String getTeacherId(ArrayList<Teacher> TeacherArry){
 			 
 			 String temp = new String();
@@ -91,7 +98,7 @@ import javafx.scene.text.Text;
 				
 				return temp;	
 		 }
-		
+		*/
 		//-----------------------------------------------------------------------------------------------------------------------------
 		
 		@Override
@@ -99,14 +106,23 @@ import javafx.scene.text.Text;
 			// TODO Auto-generated method stub
 			dataCB.setItems(boxDataType);
 			
-		
-			TeacherArr = Teacher.getTeachersNames();
-			organizedTeacherList = getTeacherList(TeacherArr);
+			TeacherArr = Teacher.getTeachers();
+			for (int i = 0 ; i  < TeacherArr.size() ; i++)
+			{
+				organizedTeacherNameList.add(TeacherArr.get(i).getName());
+				organizedTeacherIDList.add(TeacherArr.get(i).getID());
+				organizedFullTeacherList.add(organizedTeacherNameList.get(i)+" - "+organizedTeacherIDList.get(i));
+			//	organizedTeacherNameList2
+			//	organizedTeacherIDList2
+			//	organizedFullTeacherList2
+				
+			}	
+				classArr = claSS.getClasses();
+				organizedClassList = getClassList(classArr);
+				Collections.sort(organizedClassList);
+				
 			
-			classArr = claSS.getClasses();
-			organizedClassList = getClassList(classArr);
-			Collections.sort(organizedClassList);
-			
+
 			}  
 		
 	  
@@ -124,7 +140,7 @@ import javafx.scene.text.Text;
 			case "Classes Of Teacher":
 				flag = 1;
 				ChooseLabel.setText("Please Choose Teacher");
-				firstViewList.setItems(FXCollections.observableArrayList(organizedTeacherList)); ;
+				firstViewList.setItems(FXCollections.observableArrayList(organizedFullTeacherList)); ;
 				break;
 			case "Teachers Of Class":
 				flag = 2;
@@ -134,7 +150,7 @@ import javafx.scene.text.Text;
 			case "Courses Of Teacher": 
 				flag = 3;
 				ChooseLabel.setText("Please Choose Teacher");
-				firstViewList.setItems(FXCollections.observableArrayList(organizedTeacherList));;
+				firstViewList.setItems(FXCollections.observableArrayList(organizedTeacherNameList));;
 				break;
 			}
 		    
@@ -149,25 +165,44 @@ import javafx.scene.text.Text;
 	    		handle_Courses_Of_Teacher();
 	    }
 
-    	void handle_Classes_Of_Teacher(){
-
-			String techerName;
-			techerName = firstViewList.getSelectionModel().getSelectedItem();
-			ArrayList<Teacher> TeacherArry = new ArrayList<Teacher>();
-
-			String techerID = Teacher.getTeacherID(techerName);
-			System.out.println(techerID);
-			int id = Integer.parseInt(techerID);
-
+    	private void handle_Teachers_Of_Class() {
+			// TODO Auto-generated method stub
 			
+		}
+
+
+
+
+		void handle_Classes_Of_Teacher(){
+//s.substring(s.lastIndexOf(' ') + 1);
+			String techer;
+			String teacherID;
+			techer = firstViewList.getSelectionModel().getSelectedItem();
+			teacherID = techer.substring((techer.lastIndexOf(' ') + 1));
+			ArrayList<String> classesOfTeacher = new ArrayList<String>();	
+			classesOfTeacher = Teacher.getTeachersClassAsStringArrList(teacherID);
+			secondViewList.setItems(FXCollections.observableArrayList(classesOfTeacher));
+
 			
     	}
     	
-
+    	/*
     	void handle_Teachers_Of_Class(){
-  
+    		String className;
+    		className = firstViewList.getSelectionModel().getSelectedItem();
+    		ArrayList<Teacher> TeachersOfClass = new ArrayList<Teacher>();
+    		ArrayList<String> TeachersOfClassIDString = new ArrayList<String>();
+    		ArrayList<String> TeachersOfClassIDString = new ArrayList<String>();
+    		TeachersOfClass = claSS.getTeachersOfClass(className);
+    		for (int i ; i < TeachersOfClass.size() ; i++)
+    		TeachersOfClassString = TeachersOfClass.get(i).getID()
+    		for (int i=0 ; i < TeachersOfClass.size() ; i++)
+				System.out.println(TeachersOfClassIDString.get(i));
+    		secondViewList.setItems(FXCollections.observableArrayList(TeachersOfClassString));
+    		
+    		
     	}
-    	
+    	*/
     	
     	void handle_Courses_Of_Teacher(){
 
