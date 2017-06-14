@@ -5,10 +5,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,51 +36,73 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
+/**
+ * This is the controller class for: "StudentSubmitAssignment.fxml"
+ * @author Idan Agam
+ * */
+
 public class StudentSubmitAssignmentController implements Initializable {
 	
+	  /** Course list to be displayed on ListView	*/
 	  @FXML
 	  private ListView<String> courseListView;
 
+	  /** Text field to filter course results */
 	  @FXML
 	  private TextField courseSearch;
 
+	  /** Assignment list to be displayed on ListView	*/
 	  @FXML
 	  private ListView<String> assignmentListView;
 
+	  /** Text field to filter assignment results */
 	  @FXML
 	  private TextField assignmentSearch;
 	  
+	  /** Label to display selected file path  */
 	  @FXML
 	  private Label filePath;
 	  
+	  /** Label to display messages to user  */
 	  @FXML
 	  private Label guiMsg;
 	  
+	  /** Button to submit assignment  */
 	  @FXML
 	  private Button submitBtn;
 
+	  /** Button to browse file from local disk  */
 	  @FXML
 	  private Button browseBtn;
 
 	  @FXML
 	  private Label uploadLabel;
 	  
+	  /** Button to download assignment from server  */
 	  @FXML
 	  private Button downloadBtn;
-
-	  ArrayList<Course> courseArr;
-	  ArrayList<Assignment> assignmentArr;
 	  
-	  ArrayList<String> organizedCourseList;
-	  ArrayList<String> organizedAssignmentList;
+	  /** ArrayList of all courses in DB  */
+	  private ArrayList<Course> courseArr;
 	  
-	  HashMap <String,String> msgServer;
+	  /** ArrayList of all assignments in DB  */
+	  private ArrayList<Assignment> assignmentArr;
 	  
-	  Student student;
-	  File file;
+	  /** ArrayList of all courses in DB organized by name & ID (sorted)  */
+	  private ArrayList<String> organizedCourseList;
+	  
+	  /** ArrayList of all assignments in DB organized by name & ID (sorted)  */
+	  private ArrayList<String> organizedAssignmentList;
+	  
+	  /** HashMap for sending messages to server  */
+	  private HashMap <String,String> msgServer;
+	 
+	  /** File to store local assignment info  */
+	  private  File file;
 
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
+	  /** Remove all submitted assignments from list. */
 	  private void removeSubmitted(){ // Remove all submitted assignments from list.
 		  
 		  ArrayList<String> submitted = SubmittedAssignment.getSubmittedAssignments();
@@ -90,15 +110,23 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  if (submitted == null)
 			  return;
 		  
+		  int size = assignmentArr.size();
+		  
 		  for (int i = 0; i < submitted.size(); i++){
-			  for (int j = 0; j < assignmentArr.size(); j++){
-				  if (submitted.get(i).equals(assignmentArr.get(j).getAssignmentID())){
+			  for (int j = 0; j < size; j++){
+				  if (Integer.parseInt(submitted.get(i)) == assignmentArr.get(j).getAssignmentID()){
 					  assignmentArr.remove(j);
 				  }
 			  }
-		  }
+		  }  
 	  }
 	  
+	  
+	  /**
+	   * Get courses names & ID's for list.
+	   * @param courseArr Course array.
+	   * @return Course (ID)
+	   */
 	  private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
 			ArrayList<String> temp = new ArrayList<String>();
@@ -108,6 +136,11 @@ public class StudentSubmitAssignmentController implements Initializable {
 			return temp;	
 		}
 	  
+	  /**
+	   * Get Assignment names & ID's for list.
+	   * @param assignmentArr Assignment array.
+	   * @return Assignment (ID)
+	  */
 	  private ArrayList<String> getAssignmentList(ArrayList<Assignment> assignmentArr){ // Get Assignment names & ID's for list.
 	    	
 			ArrayList<String> temp = new ArrayList<String>();
@@ -117,6 +150,11 @@ public class StudentSubmitAssignmentController implements Initializable {
 			return temp;	
 		}
 	  
+	  /**
+	   * Check if submission is late.
+	   * @param id Submission ID
+	   * @return 1 if late, else 0.
+	   */
 	  @SuppressWarnings("unchecked")
 	  private int isLate(String id){ // Check if submission is late.
 		  
@@ -154,15 +192,18 @@ public class StudentSubmitAssignmentController implements Initializable {
 	 	  
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
-	  public void download(ActionEvent e){
+	  /**
+	   * Download Assignment from server to local disk.
+	   * @param e
+	   */
+	  public void download(ActionEvent e){ //Download Assignment from server.
 		  
-		
 		  Assignment ass = null;
 		  String selected = assignmentListView.getSelectionModel().getSelectedItem();
 		 		  
 		  if (selected == null)
 			  return;
-		  
+		
 		  selected = selected.substring(selected.indexOf('(') + 1, selected.indexOf(')'));
 		  
 		  for (int i = 0; i < assignmentArr.size(); i++){
@@ -174,13 +215,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  return;
 		  
 		  String p = ass.getFilePath();
-		  
 		  byte[] file = Assignment.getFile(p);
-		  
 		  
 		  FileChooser fileChooser = new FileChooser();
           fileChooser.setTitle("Save Assignment");
-          
           fileChooser.getExtensionFilters().addAll(
                   new FileChooser.ExtensionFilter("All Files", "*.*"),
                   new FileChooser.ExtensionFilter("Text Files", "*.txt"),
@@ -188,14 +226,10 @@ public class StudentSubmitAssignmentController implements Initializable {
               );
           
           File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());
-		  
           Path savePath = Paths.get(pa.getAbsolutePath());
-		  
 		  
           FileOutputStream stream;
           
-         
-			
           try {
         	  stream = new FileOutputStream(savePath.toString());
         	  stream.write(file);
@@ -206,14 +240,13 @@ public class StudentSubmitAssignmentController implements Initializable {
         	  ex.printStackTrace();
         	  JOptionPane.showMessageDialog(null, 
 					  "Download Failed!", "Error", JOptionPane.ERROR_MESSAGE);
-          }
-		  
-		
-		  
-		  
-		  
+          } 
 	  }
 	  
+	  /**
+	   * Filter course list results.
+	   * @param e
+	   */
 	  public void CourseSearch(ActionEvent e){ // Filter course list results.
 		  ArrayList<String> temp = new  ArrayList<String>();
 	    	
@@ -224,6 +257,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  courseListView.setItems(FXCollections.observableArrayList(temp));
 	  }
 	 
+	  /**
+	   * Filter assignment list results.
+	   * @param e
+	   */
 	  public void AssignmentSearch(ActionEvent e){ // Filter assignment list results.
 	  
 		  ArrayList<String> temp = new  ArrayList<String>();
@@ -235,6 +272,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  assignmentListView.setItems(FXCollections.observableArrayList(temp));
 	  }
 
+	  /**
+	   * Submit file from disk to server.
+	   * @param e
+	   */
 	  public void submit(ActionEvent e){ // Submit file from disk to server. 
 		  
 		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
@@ -344,6 +385,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 	    	clearScreen();
 	  }
 	  
+	  /**
+	   * Open file explorer for upload file.
+	   * @param e
+	   */
 	  public void browse(ActionEvent e){ // Open file explorer for upload file.
 		  
 		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
@@ -364,6 +409,9 @@ public class StudentSubmitAssignmentController implements Initializable {
 
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
+	  /**
+	   * Clear & update screen details.
+	   */
 	  private void clearScreen(){ // Clear & update screen details.
 		  SplitPane pane = null;
 		try {
