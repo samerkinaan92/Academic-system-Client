@@ -96,8 +96,6 @@ public class LoginController implements Initializable {
 			
 			Stage Curstage = (Stage) id.getScene().getWindow();
 			Curstage.close();
-		    
-			//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 			Main.user = new User(id.getText(), answer.get("Name"));
 			Main.openMain(answer.get("Type"));
 		}else
@@ -106,6 +104,16 @@ public class LoginController implements Initializable {
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		//secretary		id: 176214		pass: 9Jr3d
+		//teacher		id: 211721		pass: 4nSfx
+		//student		id: 419059		pass: lcq7i
+		
+		id.setText("211721");
+		password.setText("4nSfx");
 		school.setItems(options);
+		school.getSelectionModel().selectFirst();
+		ip.setText("localhost");
+		port.setText("1234");
 	}
 }

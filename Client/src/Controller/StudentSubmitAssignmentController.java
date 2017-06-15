@@ -173,12 +173,13 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  if (ass == null)
 			  return;
 		  
-		  String p = ass.getFilePath();
-		  
-		  byte[] file = Assignment.getFile(p);
 		  
 		  
-		  FileChooser fileChooser = new FileChooser();
+		  String p = ass.getFilePath();		// p = path string
+		
+		  byte[] file = Assignment.getFile(p);// file obj
+		  
+		  FileChooser fileChooser = new FileChooser();	// create file chooser
           fileChooser.setTitle("Save Assignment");
           
           fileChooser.getExtensionFilters().addAll(
@@ -187,15 +188,13 @@ public class StudentSubmitAssignmentController implements Initializable {
                   new FileChooser.ExtensionFilter("Word Documents", "*.docx")
               );
           
-          File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());
+          File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());	// open it (returns save path)
 		  
-          Path savePath = Paths.get(pa.getAbsolutePath());
+          Path savePath = Paths.get(pa.getAbsolutePath());	// get save path
 		  
-		  
+
           FileOutputStream stream;
-          
-         
-			
+
           try {
         	  stream = new FileOutputStream(savePath.toString());
         	  stream.write(file);
@@ -207,11 +206,7 @@ public class StudentSubmitAssignmentController implements Initializable {
         	  JOptionPane.showMessageDialog(null, 
 					  "Download Failed!", "Error", JOptionPane.ERROR_MESSAGE);
           }
-		  
-		
-		  
-		  
-		  
+		    
 	  }
 	  
 	  public void CourseSearch(ActionEvent e){ // Filter course list results.
