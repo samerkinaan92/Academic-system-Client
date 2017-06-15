@@ -145,9 +145,6 @@ public class SecretaryMenuBarController {
 		Main.getRoot().setCenter(pane);
 	}
 	
-	public void AttachStudentToClass(ActionEvent e){
-		
-	}
 	
 	
 	/** Private Actions */
