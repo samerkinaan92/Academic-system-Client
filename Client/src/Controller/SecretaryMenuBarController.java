@@ -72,7 +72,7 @@ public class SecretaryMenuBarController {
 	
 	
 	public void ChangeStudentAssignment(ActionEvent e){
-		String fxml_url = "/FXML/Sec_chng_std_assign.fxml";
+		String fxml_url = "/FXML/PickStudent.fxml";
 		URL paneUrl = getClass().getResource(fxml_url);
 		AnchorPane pane;
 		try{

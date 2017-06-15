@@ -107,5 +107,10 @@ public class LoginController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		school.setItems(options);
+		school.getSelectionModel().select("MAT");
+		id.setText("1");
+		password.setText("1");
+		ip.setText("127.0.0.1");
+		port.setText("5555");
 	}
 }

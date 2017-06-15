@@ -46,6 +46,33 @@ public class Course extends AcademicActivity {
 		return DBcourses;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Course> getCourses(String teachingUnit){ // Get list of courses.
+		ArrayList<Course> DBcourses = null;
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select CourseID ,CourseName, weeklyHours, TUName From course where TUName = '" + teachingUnit + "';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.sendMessageToServer(msgServer);
+			Main.client.wait();
+			ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+			DBcourses = new ArrayList<Course>();
+			
+			for (int i = 0; i < result.size(); i+=4)
+				DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		return DBcourses;
+	}
+	
 	public boolean insertCourse(){ // Insert course to data base.
 		
 		String msg = "Insert INTO course (CourseID, CourseName, weeklyHours, TUName)";
@@ -150,8 +177,11 @@ public class Course extends AcademicActivity {
 			return null;
 	}
 	
-	
-	
+	@Override
+	public String toString() {	
+		return getName() + " (" + getCourseID() + ")";
+	}
+
 	public int getCourseID() {
 		return CourseID;
 	}

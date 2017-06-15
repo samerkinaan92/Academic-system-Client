@@ -1,42 +1,52 @@
 package Controller;
 
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.swing.JOptionPane;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import Entity.Action;
+import Entity.Course;
 import Entity.NewStudenCoursePlacement;
 import Entity.Student;
+import Entity.TeachingUnit;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 
-public class ChangeStudentAssignmentController {
+public class ChangeStudentAssignmentController implements Initializable{
 	
 	private Student student;
 	private int currSem= -1;
-	private NewStudenCoursePlacement newPlacement;
 	private final ObservableList<CourseInfo> data =
 	        FXCollections.observableArrayList();
+	
+	@FXML // fx:id="stdIdLbl"
+	private Label stdIdLbl; // Value injected by FXMLLoader
 
 	@FXML // fx:id="stdIdTxt"
     private TextField stdIdTxt; // Value injected by FXMLLoader
 
-    @FXML // fx:id="searchBtn"
-    private Button searchBtn; // Value injected by FXMLLoader
 
     @FXML // fx:id="stdNameLbl"
     private Label stdNameLbl; // Value injected by FXMLLoader
@@ -55,102 +65,49 @@ public class ChangeStudentAssignmentController {
 
     @FXML // fx:id="idCln"
     private TableColumn<CourseInfo, String> idCln; // Value injected by FXMLLoader
-    
-    @FXML // fx:id="crsIdtxt"
-    private TextField crsIdtxt; // Value injected by FXMLLoader
 
     @FXML // fx:id="removeCrs"
     private Button removeCrs; // Value injected by FXMLLoader
     
-    @FXML // fx:id="errorLbl"
-    private Label errorLbl; // Value injected by FXMLLoader
+    @FXML // fx:id="tuChosBox"
+    private ChoiceBox<String> tuChosBox; // Value injected by FXMLLoader
 
+    @FXML // fx:id="corsChosBox"
+    private ChoiceBox<Course> corsChosBox; // Value injected by FXMLLoader
 
-    @FXML
-    void search(ActionEvent event) {
-    	data.clear();
-    	String id = stdIdTxt.getText();
-    	
-    	int currSem = getCurrSem();
-    	if(currSem > 0){
-	    	HashMap<String, String> msg = new HashMap<>();
-	    	// gets the student name, class from DB
-	    	msg.put("msgType", "select");
-	    	msg.put("query", "SELECT users.Name, Student_Class.ClassName FROM users, Student_Class WHERE users.ID = '" + id + "' AND Student_Class.StudentID = '" + id + "' AND Student_Class.Year = '" + currSem + "';");
-	    	try{
-	    		Main.client.sendMessageToServer(msg);
-	    		synchronized (Main.client){
-	    			Main.client.wait();
-	    			ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
-	    	    	if(!array.isEmpty()){
-	    	    		//set the fields for student
-	    	    		stdNameLbl.setText("Student name: " + array.get(0));
-	    	    		ClsLbl.setText("Class room: " + array.get(1));
-	    	    		student = new Student();
-	    	    		student.setID(id);
-	    	    		student.setName(array.get(1));
-	    	    		student.setName(array.get(0));
-	    	    		// gets all the course the student is taken this semester
-	    	    		msg.put("query", "SELECT CourseID FROM Course_Student WHERE StudentID = '" + id + "';");
-	    	    		Main.client.sendMessageToServer(msg);
-	    	    		Main.client.wait();
-	    	    		array = (ArrayList<String>) Main.client.getMessage();
-	    	    		setCourses(array);
-	    	    	}else{
-	    	    		// student id was not found
-	    	    		student = null;
-	    	    		Thread thread = new Thread(new Runnable(){
-	    					@Override
-	    					public void run() {
-	    						JOptionPane.showMessageDialog(null, 
-	    								  "Student id was not found!", "NOT FOUND", JOptionPane.ERROR_MESSAGE);		
-	    					}
-	    				});
-	    	    		thread.start();
-	    	    	}
-	    		}
-	    	}catch(Exception e){
-	    		student = null;
-	    		e.printStackTrace();
-	    	}
-    	}else{
-    		errorLbl.setText("Connection error!");
-    	}
-    	
-    }
     
     @FXML
     void removeCourse(ActionEvent event) {
-    	//checks if student was searched
-    	if(student != null){
-    		//gets course id from the textBox
-	    	String courseId  = crsIdtxt.getText();
+    	//show confirmation dialog
+    	Alert alert = new Alert(AlertType.CONFIRMATION);
+    	alert.setTitle("Confirmation Dialog");
+    	alert.setHeaderText(null);
+    	alert.setContentText("Are you sure you want to remove student from course?");
+
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if (result.get() == ButtonType.OK){
+	    	CourseInfo courseInfo = crsTbl.getSelectionModel().getSelectedItem();
+	    	NewStudenCoursePlacement newPlacement = new NewStudenCoursePlacement(student.getID(), courseInfo.getId(), Action.remove);
 	    	try {
-				if(isCourseIdOk(courseId)){
-					if(isSignedToCourse(courseId)){
-						//sends new request to the principal
-						newPlacement = new NewStudenCoursePlacement();
-						newPlacement.setCoureID(courseId);
-						newPlacement.setStudentID(student.getID());
-						newPlacement.setAction(Action.remove);
-						if(sendNewAssignment(newPlacement) > 0){
-							errorLbl.setText("The reqest was sent to the principal.");
-							errorLbl.setTextFill(Color.web("#0000ff"));
-						}else{
-							errorLbl.setText("This request has already been sent.");
-							errorLbl.setTextFill(Color.web("#ff0000"));
-						}
-					}else{
-						errorLbl.setText("Student not assigned to course");
-						errorLbl.setTextFill(Color.web("#ff0000"));
-					}
+				if(sendNewRequest(newPlacement) > 0){
+					alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Request sent");
+					alert.setHeaderText(null);
+					alert.setContentText("The request has been sent to the principal successfully");
+					alert.show();
 				}else{
-					errorLbl.setText("Course doesn't exist!");
-					errorLbl.setTextFill(Color.web("#ff0000"));
+					alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("Request sent");
+					alert.setHeaderText(null);
+					alert.setContentText("The request has been already sent before!!\nPlease wait for the pricipal.");
+					alert.show();
 				}
 			} catch (InterruptedException e) {
-				errorLbl.setText("Connection ERROR");
-				errorLbl.setTextFill(Color.web("#ff0000"));
+				alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
 				e.printStackTrace();
 			}
     	}
@@ -158,44 +115,53 @@ public class ChangeStudentAssignmentController {
     
     @FXML
     void AssignNewCourse(ActionEvent event) {
-    	//checks if student was searched
-    	if(student != null){
-    		//gets course id from the textBox
-	    	String courseId  = crsIdtxt.getText();
-	    	try {
-				if(isCourseIdOk(courseId)){
-					//checks if the course id inserted is valid
-					if(!isSignedToCourse(courseId)){
-						//if the student not signed to the course sends a new request to the principal
-						newPlacement = new NewStudenCoursePlacement();
-						newPlacement.setCoureID(courseId);
-						newPlacement.setStudentID(student.getID());
-						newPlacement.setAction(Action.assign);
-						if(sendNewAssignment(newPlacement) > 0){
-							errorLbl.setText("The reqest was sent to the principal.");
-							errorLbl.setTextFill(Color.web("#0000ff"));
-						}else{
-							errorLbl.setText("This request has already been sent.");
-							errorLbl.setTextFill(Color.web("#ff0000"));
-						}
+    	Course selectedCourse = corsChosBox.getSelectionModel().getSelectedItem();
+    	String courseId = Integer.toString(selectedCourse.getCourseID());
+    	
+    	//show confirmation dialog
+    	Alert alert = new Alert(AlertType.CONFIRMATION);
+    	alert.setTitle("Confirmation Dialog");
+    	alert.setHeaderText(null);
+    	alert.setContentText("Are you sure you want to assign student" + student.getID() + " to course " + selectedCourse.getName() + "?");
+
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if (result.get() == ButtonType.OK){
+	    	if(!isSignedToCourse(courseId)){
+	    		NewStudenCoursePlacement newPlacement = new NewStudenCoursePlacement(student.getID(), courseId, Action.assign);
+	    		try {
+					if(sendNewRequest(newPlacement) > 0){
+						alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Request sent");
+						alert.setHeaderText(null);
+						alert.setContentText("The request has been sent to the principal successfully");
+						alert.show();
 					}else{
-						errorLbl.setText("Student is allready assigned to course");
-						errorLbl.setTextFill(Color.web("#ff0000"));
+						alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Request sent");
+						alert.setHeaderText(null);
+						alert.setContentText("The request has been already sent before!!\nPlease wait for the pricipal.");
+						alert.show();
 					}
-				}else{
-					errorLbl.setText("Course doesn't exist!");
-					errorLbl.setTextFill(Color.web("#ff0000"));
+				} catch (InterruptedException e) {
+					alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error Dialog");
+					alert.setHeaderText(null);
+					alert.setContentText("Connection error!!");
+					alert.show();
+					e.printStackTrace();
 				}
-			} catch (InterruptedException e) {
-				errorLbl.setText("Connection ERROR");
-				errorLbl.setTextFill(Color.web("#ff0000"));
-				e.printStackTrace();
-			}
+	    	}else{
+	    		alert = new Alert(AlertType.INFORMATION);
+				alert.setTitle("Invalid input");
+				alert.setHeaderText(null);
+				alert.setContentText("Student is already assigned to course!!");
+				alert.show();
+	    	}
     	}
     }
     
     //sends new request to the principal
-    private int sendNewAssignment(NewStudenCoursePlacement newPlacement) throws InterruptedException{
+    private int sendNewRequest(NewStudenCoursePlacement newPlacement) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	int msgFromServer;
     	
@@ -211,23 +177,12 @@ public class ChangeStudentAssignmentController {
     }
     
     //checks if the student already signed to the course
-    private boolean isSignedToCourse(String courseId) throws InterruptedException{
-    	HashMap<String, String> msg = new HashMap<>();
-    	ArrayList<String> msgFromServer;
-    	
-    	//checks if student signed for course in DB
-    	msg.put("msgType", "select");
-    	msg.put("query", "SELECT 1 FROM Course_Student WHERE CourseID = '" + courseId + "' AND StudentID = '" + student.getID() + "';");
-    	Main.client.sendMessageToServer(msg);
-		synchronized (Main.client){
-			Main.client.wait();
-			msgFromServer = (ArrayList<String>) Main.client.getMessage();
-			if(msgFromServer.isEmpty()){
-				return false;
-			}else{
-				return true;
-			}
-		}
+    private boolean isSignedToCourse(String courseId){
+    	for(int i = 0; i < data.size(); i++){
+    		if(data.get(i).id.equals(courseId))
+    			return true;
+    	}
+    	return false;
     }
     
     //get the current semester id
@@ -251,31 +206,17 @@ public class ChangeStudentAssignmentController {
 	    		currSem = Integer.parseInt(serverMsg.get(0));
 	    	}
 			}catch (InterruptedException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
 				e.printStackTrace();
 			}
 		}
 		return currSem;
     }
-    
-    //checks if the course id in the textbox is valid
-    private boolean isCourseIdOk(String courseId) throws InterruptedException{
-    	HashMap<String, String> msg = new HashMap<>();
-    	ArrayList<String> msgFromServer;
-    	
-    	//checks if the course exists in the DB
-    	msg.put("msgType", "select");
-    	msg.put("query", "SELECT 1 FROM Course WHERE CourseID = '" + courseId + "';");
-    	Main.client.sendMessageToServer(msg);
-		synchronized (Main.client){
-			Main.client.wait();
-			msgFromServer = (ArrayList<String>) Main.client.getMessage();
-			if(msgFromServer.isEmpty()){
-				return false;
-			}else{
-				return true;
-			}
-		}
-    }
+
     
     //set the table items list
     private void setCourses(ArrayList<String> coursesIds) throws InterruptedException{
@@ -305,6 +246,36 @@ public class ChangeStudentAssignmentController {
     	}
     }
     
+    public void setStudent(Student student){
+    	HashMap<String, String> msg = new HashMap<>();
+    	ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
+    	
+    	this.student = student;
+    	//set the fields for student
+		stdNameLbl.setText("Student name: " + student.getName());
+		ClsLbl.setText("Class room: " + student.getClassRoom());
+		stdIdLbl.setText("Student id: " + student.getID());
+		
+		// gets all the course the student is taken this semester
+		msg.put("msgType", "select");
+		msg.put("query", "SELECT CourseID FROM Course_Student WHERE StudentID = '" + student.getID() + "' AND semesterId = '" + getCurrSem() + "';");
+		synchronized (Main.client) {
+			Main.client.sendMessageToServer(msg);
+			try {
+				Main.client.wait();		
+				array = (ArrayList<String>) Main.client.getMessage();
+				setCourses(array);
+			} catch (InterruptedException e) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+				e.printStackTrace();
+			}
+		}
+    }
+    
     //class for courses taken by the student
     public static class CourseInfo{
     	private StringProperty name;
@@ -328,5 +299,42 @@ public class ChangeStudentAssignmentController {
         	setId(courseId);
         }
     }
+
+	
+    @Override
+	public void initialize(URL location, ResourceBundle resources) {
+    	ArrayList<String> teachingunits;
+		removeCrs.setDisable(true);
+		newAsnBtn.setDisable(true);
+		corsChosBox.setDisable(true);
+		
+		teachingunits = TeachingUnit.getTeachingUnit();
+		tuChosBox.setItems(FXCollections.observableArrayList(teachingunits));
+		
+		tuChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					ArrayList<Course> courses = Course.getCourses(teachingunits.get(newValue.intValue()));
+					corsChosBox.setItems(FXCollections.observableArrayList(courses));
+					corsChosBox.setDisable(false);
+					newAsnBtn.setDisable(true);
+				}
+	          });
+		
+		corsChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				newAsnBtn.setDisable(false);
+			}
+          });
+		
+		crsTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+		    if (newSelection != null) {
+		    	removeCrs.setDisable(false);
+		    }else{
+		    	removeCrs.setDisable(true);
+		    }
+		});
+	}
     
 }

@@ -3,12 +3,9 @@ package Controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
-import Controller.ChangeTeacherPlacementController.Classes;
-import Entity.Action;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -17,9 +14,12 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class StudentExceptionalRequest implements Initializable{
@@ -52,9 +52,15 @@ public class StudentExceptionalRequest implements Initializable{
     @FXML
     void approve(ActionEvent event) {
     	StudRequestInfo requestInfo = studTbl.getSelectionModel().selectedItemProperty().get();
-    	int dialogButton = JOptionPane.YES_NO_OPTION;
-    	dialogButton = JOptionPane.showConfirmDialog (null, "Are you sure you want to approve it?\nThe change will be permanent","WARNING", dialogButton);
-    	if(dialogButton == JOptionPane.YES_OPTION){
+    	
+    	//show confirmation dialog
+    	Alert alert = new Alert(AlertType.CONFIRMATION);
+    	alert.setTitle("Confirmation Dialog");
+    	alert.setHeaderText(null);
+    	alert.setContentText("Are you sure you want to approve it?\nThe change will be permanent");
+
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if (result.get() == ButtonType.OK){
     		if(requestInfo.getRequest().equals("assign")){
         		assignToCourse(requestInfo);
         	}else{
@@ -66,9 +72,15 @@ public class StudentExceptionalRequest implements Initializable{
     @FXML
     void disapprove(ActionEvent event) {
     	StudRequestInfo requestInfo = studTbl.getSelectionModel().selectedItemProperty().get();
-    	int dialogButton = JOptionPane.YES_NO_OPTION;
-    	dialogButton = JOptionPane.showConfirmDialog (null, "Are you sure you want to disapprove it?\nThe change will be permanent","WARNING", dialogButton);
-    	if(dialogButton == JOptionPane.YES_OPTION){
+    	
+    	//show confirmation dialog
+    	Alert alert = new Alert(AlertType.CONFIRMATION);
+    	alert.setTitle("Confirmation Dialog");
+    	alert.setHeaderText(null);
+    	alert.setContentText("Are you sure you want to disapprove it?\nThe change will be permanent");
+
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if (result.get() == ButtonType.OK){
     		deleteRow(requestInfo);
     	}
     }
@@ -81,9 +93,9 @@ public class StudentExceptionalRequest implements Initializable{
     	msg.put("msgType", "delete");
     	msg.put("query", "DELETE FROM Course_Student WHERE CourseID = " + requestInfo.getCourseId() + " AND StudentID = " + requestInfo.getId() + " AND semesterId = " + getCurrSem() + ";");
     	
-    	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
 			try {
+				Main.client.sendMessageToServer(msg);
 				Main.client.wait();
 				//delete from table
 				deleteRow(requestInfo);
@@ -152,8 +164,12 @@ public class StudentExceptionalRequest implements Initializable{
 		    	if(msgFromServer > 0){
 		    		data.remove(requestInfo);
 		    	}else{
-		    		JOptionPane.showMessageDialog(null, 
-							  "Problem with connection to server!!", "ERROR", JOptionPane.ERROR_MESSAGE);
+		    		Alert alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error Dialog");
+					alert.setHeaderText(null);
+					alert.setContentText("Connection error!!");
+					alert.show();
+
 		    	}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

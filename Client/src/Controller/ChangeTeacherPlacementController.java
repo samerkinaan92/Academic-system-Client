@@ -3,24 +3,31 @@ package Controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
+import Entity.Course;
 import Entity.NewTeacherPlacement;
+import Entity.TeachingUnit;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ChangeTeacherPlacementController implements Initializable{
@@ -35,8 +42,12 @@ public class ChangeTeacherPlacementController implements Initializable{
 		private final ObservableList<Teachers> teachersData =
 		        FXCollections.observableArrayList();
 	
-		 @FXML // fx:id="crsIdTxt"
-	    private TextField crsIdTxt; // Value injected by FXMLLoader
+
+	    @FXML // fx:id="tuChosBox"
+	    private ChoiceBox<String> tuChosBox; // Value injected by FXMLLoader
+
+	    @FXML // fx:id="corsChosBox"
+	    private ChoiceBox<Course> corsChosBox; // Value injected by FXMLLoader
 
 	    @FXML // fx:id="classesTbl"
 	    private TableView<Classes> classesTbl; // Value injected by FXMLLoader
@@ -80,126 +91,74 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	Teachers teacher = teachersTbl.getSelectionModel().getSelectedItem();
 	    	Classes selClass = classesTbl.getSelectionModel().getSelectedItem();
 	    	
+	    	
+	    	//show confirmation dialog
+	    	Alert alert = new Alert(AlertType.CONFIRMATION);
+	    	alert.setTitle("Confirmation Dialog");
+	    	alert.setHeaderText(null);
+	    	alert.setContentText("Are you sure you want to replace teacher in class " + selClass.getClassName() + "?");
+
+	    	Optional<ButtonType> conBtn = alert.showAndWait();
+	    	if (conBtn.get() == ButtonType.OK){
 	    	//checks if the same teacher was picked
-	    	if(teacher.getTeacherId().equals(selClass.getTeacherId())){
-	    		Thread thread = new Thread(new Runnable(){
-					@Override
-					public void run() {
-				JOptionPane.showMessageDialog(null, 
-						  "Invalid input! you choose the same teacher! \nPlaese choose another teacher", "INVALID INPUT", JOptionPane.ERROR_MESSAGE);
-					}
-				});
-	    		thread.start();
-	    	}else{
-	    		// checks if the chosen teacher to replace have enough hours for the course
-	    		if(Integer.parseInt(teacher.getHoursLeft()) < weeklyHours){
-	    			//if not show an error dialog
-	    			Thread thread = new Thread(new Runnable(){
-						@Override
-						public void run() {
-					JOptionPane.showMessageDialog(null, 
-							  "Invalid input! the teacher you choose doesn't have enough hours left! \nPlaese choose another teacher", "NO HOURS LEFT", JOptionPane.ERROR_MESSAGE);
-						}
-					});
-		    		thread.start();
-	    		}else{
-	    			//sends a new request to the principal
-	    			newPlacement = new NewTeacherPlacement();
-	    			newPlacement.setCourseID(selClass.getCourseInClassId());
-	    			newPlacement.setCurrTeacherID(selClass.getTeacherId());
-	    			newPlacement.setNewTeacherID(teacher.getTeacherId());
-	    			
-	    			HashMap<String, String> msg = new HashMap<>();
-	    	    	msg.put("msgType", "insert");
-	    	    	msg.put("query", "INSERT INTO NewTeacherPlacement (newTeacherID, currTeacherID, Class_Courseid) VALUES (" + newPlacement.getNewTeacherID() + ", " + newPlacement.getCurrTeacherID() + ", " + newPlacement.getCourseID() + ");");
-	    	    	synchronized (Main.client) {
-	    	    		Main.client.sendMessageToServer(msg);
-	    				try {
-							Main.client.wait();
-							int result = (int)Main.client.getMessage();
-							if(result > 0){
-								Thread thread = new Thread(new Runnable(){
-			    					@Override
-			    					public void run() {
-								JOptionPane.showMessageDialog(null, 
-										  "The request has been sent to the principal successfully", "OK", JOptionPane.INFORMATION_MESSAGE);
-			    					}
-			    				});
-			    	    		thread.start();
-							}else{
-								Thread thread = new Thread(new Runnable(){
-			    					@Override
-			    					public void run() {
-								JOptionPane.showMessageDialog(null, 
-										  "Failed to send the request to the principal", "FAILED!", JOptionPane.INFORMATION_MESSAGE);
-			    					}
-			    				});
-			    	    		thread.start();
+		    	if(teacher.getTeacherId().equals(selClass.getTeacherId())){
+		    		alert = new Alert(AlertType.INFORMATION);
+					alert.setTitle("INVALID INPUT");
+					alert.setHeaderText(null);
+					alert.setContentText("Invalid input! you choose the same teacher! \nPlaese choose another teacher");
+					alert.show();
+		    	}else{
+		    		// checks if the chosen teacher to replace have enough hours for the course
+		    		if(Integer.parseInt(teacher.getHoursLeft()) < weeklyHours){
+		    			//if not show an error dialog
+			    		alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("NO HOURS LEFT");
+						alert.setHeaderText(null);
+						alert.setContentText("Invalid input! the teacher you choose doesn't have enough hours left! \nPlaese choose another teacher");
+						alert.show();
+		    		}else{
+		    			//sends a new request to the principal
+		    			newPlacement = new NewTeacherPlacement();
+		    			newPlacement.setCourseID(selClass.getCourseInClassId());
+		    			newPlacement.setCurrTeacherID(selClass.getTeacherId());
+		    			newPlacement.setNewTeacherID(teacher.getTeacherId());
+		    			
+		    			HashMap<String, String> msg = new HashMap<>();
+		    	    	msg.put("msgType", "insert");
+		    	    	msg.put("query", "INSERT INTO NewTeacherPlacement (newTeacherID, currTeacherID, Class_Courseid) VALUES (" + newPlacement.getNewTeacherID() + ", " + newPlacement.getCurrTeacherID() + ", " + newPlacement.getCourseID() + ");");
+		    	    	synchronized (Main.client) {
+		    	    		Main.client.sendMessageToServer(msg);
+		    				try {
+								Main.client.wait();
+								int result = (int)Main.client.getMessage();
+								if(result > 0){
+				    	    		alert = new Alert(AlertType.INFORMATION);
+									alert.setTitle("Request sent");
+									alert.setHeaderText(null);
+									alert.setContentText("The request has been sent to the principal successfully");
+									alert.show();
+								}else{
+				    	    		alert = new Alert(AlertType.INFORMATION);
+									alert.setTitle("FAILED!");
+									alert.setHeaderText(null);
+									alert.setContentText("Request for changing teacher for this class already exists!");
+									alert.show();
+								}
+							} catch (InterruptedException e) {
+			    	    		alert = new Alert(AlertType.ERROR);
+			    				alert.setTitle("Error Dialog");
+			    				alert.setHeaderText(null);
+			    				alert.setContentText("Connection error!!");
+			    				alert.show();
+								e.printStackTrace();
 							}
-						} catch (InterruptedException e) {
-							Thread thread = new Thread(new Runnable(){
-		    					@Override
-		    					public void run() {
-							JOptionPane.showMessageDialog(null, 
-									  "Problem with connection to server!!", "ERROR", JOptionPane.ERROR_MESSAGE);
-		    					}
-		    				});
-		    	    		thread.start();
-							e.printStackTrace();
-						}
-	    	    	}
-	    	    		
-	    		}
+		    	    	}
+		    	    		
+		    		}
+		    	}
 	    	}
 	    }
 
-	    @FXML
-	    void search(ActionEvent event) {
-	    	String courseId = crsIdTxt.getText();
-	    	HashMap<String, String> msg = new HashMap<>();
-	    	
-	    	// gets the course details given an id
-	    	msg.put("msgType", "select");
-	    	msg.put("query", "SELECT * FROM course WHERE CourseID = '" + courseId + "';");
-	    	synchronized (Main.client) {
-	    		Main.client.sendMessageToServer(msg);
-	    		try {
-					Main.client.wait();
-					ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
-					if(!array.isEmpty()){
-						//course was found
-						setCourseFields(array);
-						setTeachersTable(array.get(3));
-						msg.put("query", "SELECT * FROM Class_Course WHERE courseID = '" + courseId + "' AND Year = '" + getCurrSem() + "';");
-						Main.client.sendMessageToServer(msg);
-						Main.client.wait();
-						array = (ArrayList<String>) Main.client.getMessage();
-						setCourseInClasses(array);
-					}else{
-						// curse was not found
-						Thread thread = new Thread(new Runnable(){
-	    					@Override
-	    					public void run() {
-						JOptionPane.showMessageDialog(null, 
-								  "Course id was not found!", "NOT FOUND", JOptionPane.ERROR_MESSAGE);
-	    					}
-	    				});
-	    	    		thread.start();
-					}
-				} catch (InterruptedException e) {
-					Thread thread = new Thread(new Runnable(){
-    					@Override
-    					public void run() {
-					JOptionPane.showMessageDialog(null, 
-							  "Problem with connection to server!!", "ERROR", JOptionPane.ERROR_MESSAGE);
-    					}
-    				});
-    	    		thread.start();
-					e.printStackTrace();
-				}
-			}
-	    }
-	    
 	    //gets the current semester id
 	    private int getCurrSem(){
 	    	if(currSem != -1){
@@ -225,28 +184,28 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    }
 	    
 	    //sets the course fields
-	    private void setCourseFields(ArrayList<String> course){
-	    	crsNmLbl.setText("Course name: " + course.get(1));
-	    	wklyHourLbl.setText("Teaching unit: " + course.get(3));
-	    	tuLbl.setText("Weekly hours: " + course.get(2)); 
-	    	weeklyHours = Integer.parseInt(course.get(2));
+	    private void setCourseFields(Course course){
+	    	crsNmLbl.setText("Course name: " + course.getName());
+	    	wklyHourLbl.setText("Teaching unit: " + course.getTUID());
+	    	tuLbl.setText("Weekly hours: " + course.getWeeklyHours());
+	    	weeklyHours = course.getWeeklyHours();
 	    }
 	    
 	    //sets all the classes taken the course this semester to the table
-	    private void setCourseInClasses(ArrayList<String> classes) throws InterruptedException{
+	    private void setCourseInClasses(Course course) throws InterruptedException{
 	    	HashMap<String, String> msg = new HashMap<>();
 	    	ArrayList<String> msgFromServer;
 	    	
 	    	msg.put("msgType", "select");
-	    	classesData.clear();
-	    	for(int i = 0; i < classes.size(); i += 5){
-	    		msg.put("query", "SELECT Name FROM users WHERE id = '" + classes.get(i + 3) + "';");
+	    	msg.put("query", "select CC.ClassName, U.Name, CC.teacherID, CC.id from Class_Course CC, Users U where CC.CourseID = '" + course.getCourseID() + "' AND U.ID = CC.teacherID AND CC.semesterId = '" + getCurrSem() + "';");
+	    	synchronized (Main.client) {
 	    		Main.client.sendMessageToServer(msg);
-	    		synchronized (Main.client) {
-					Main.client.wait();
-					msgFromServer = (ArrayList<String>)Main.client.getMessage();
-					classesData.add(new Classes(classes.get(i), msgFromServer.get(0), classes.get(i + 3), classes.get(i + 4)));	
-				}
+	    		Main.client.wait();
+	    		msgFromServer = (ArrayList<String>) Main.client.getMessage();
+	    	}
+	    	classesData.clear();
+	    	for(int i = 0; i < msgFromServer.size(); i += 4){
+				classesData.add(new Classes(msgFromServer.get(i), msgFromServer.get(i + 1), msgFromServer.get(i + 2), msgFromServer.get(i + 3)));	
 	    	}
 	    	classesTbl.setItems(classesData);
 	    }
@@ -260,62 +219,26 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	
 	    	teachersData.clear();
 	    	msg.put("msgType", "select");
-	    	msg.put("query", "SELECT TeacherID FROM TeachingUnit_Teacher WHERE TUName = '" + teachingUnit + "';");
-	    	Main.client.sendMessageToServer(msg);
+	    	msg.put("query", "SELECT TUT.TeacherID, U.Name, T.MaxWorkHours FROM TeachingUnit_Teacher TUT, Users U, Teacher T WHERE TUName = '" + teachingUnit + "' AND U.ID = TUT.TeacherID AND T.TeacherID = TUT.TeacherID;");
 	    	synchronized (Main.client) {
+	    		Main.client.sendMessageToServer(msg);
 				Main.client.wait();
+				msgFromServer = (ArrayList<String>)Main.client.getMessage();
+		    	
+		    	for(int i = 0; i < msgFromServer.size(); i += 3){
+		    		teacherId = msgFromServer.get(i);
+		    		teacherName = msgFromServer.get(i + 1);
+		    		maxHours = Integer.parseInt(msgFromServer.get(i + 2));
+		    		workHours = getSumHours(teacherId);
+		    		if(maxHours != -1 && workHours != -1){
+		    			sum = maxHours - workHours;
+		    		}else{
+		    			sum = 0;
+		    		}
+		    		teachersData.add(new Teachers(String.valueOf(sum), teacherName, teacherId));
+		    	}
+		    	teachersTbl.setItems(teachersData);
 			}
-	    	msgFromServer = (ArrayList<String>)Main.client.getMessage();
-	    	
-	    	for(int i = 0; i < msgFromServer.size(); i++){
-	    		teacherId = msgFromServer.get(i);
-	    		teacherName = getTeacherName(teacherId);
-	    		maxHours = getTeacherMaxHours(teacherId);
-	    		workHours = getSumHours(teacherId);
-	    		if(maxHours != -1 && workHours != -1){
-	    			sum = maxHours - workHours;
-	    		}else{
-	    			sum = 0;
-	    		}
-	    		teachersData.add(new Teachers(String.valueOf(sum), teacherName, teacherId));
-	    	}
-	    	teachersTbl.setItems(teachersData);
-	    }
-	    
-	    // gets the maximum hours the teacher aloud to work
-	    private int getTeacherMaxHours(String teacherId) throws InterruptedException{
-	    	HashMap<String, String> msg = new HashMap<>();
-	    	ArrayList<String> msgFromServer;
-	    	
-	    	msg.put("msgType", "select");
-	    	msg.put("query", "SELECT MaxWorkHours FROM Teacher WHERE TeacherID = '" + teacherId + "';");
-	    	Main.client.sendMessageToServer(msg);
-	    	synchronized (Main.client) {
-				Main.client.wait();
-			}
-	    	msgFromServer = (ArrayList<String>)Main.client.getMessage();
-	    	if(!msgFromServer.isEmpty())
-	    		return Integer.parseInt(msgFromServer.get(0));
-	    	else
-	    		return -1;
-	    }
-	    
-	    //gets the teacher name given an id
-	    private String getTeacherName(String id) throws InterruptedException{
-	    	HashMap<String, String> msg = new HashMap<>();
-	    	ArrayList<String> msgFromServer;
-	    	
-	    	msg.put("msgType", "select");
-	    	msg.put("query", "SELECT Name FROM Users WHERE ID = '" + id + "';");
-	    	Main.client.sendMessageToServer(msg);
-	    	synchronized (Main.client) {
-				Main.client.wait();
-			}
-	    	msgFromServer = (ArrayList<String>)Main.client.getMessage();
-	    	if(!msgFromServer.isEmpty())
-	    		return msgFromServer.get(0);
-	    	else
-	    		return null;
 	    }
 	    
 	    //gets the total hours the teacher is working during week
@@ -326,21 +249,23 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    	msg.put("msgType", "select");
 	    	msg.put("query", 
 	    			"select sum(C.WeeklyHours) from Course C  where C.CourseID IN (SELECT CC.CourseID FROM Class_Course CC WHERE CC.teacherID = '" 
-	    					+ teacherId + "' AND Year = '" + getCurrSem() + "');");
-	    	Main.client.sendMessageToServer(msg);
+	    					+ teacherId + "' AND semesterId = '" + getCurrSem() + "');");
 	    	synchronized (Main.client) {
+	    		Main.client.sendMessageToServer(msg);
 				Main.client.wait();
+				msgFromServer = (ArrayList<String>)Main.client.getMessage();
+		    	if(!msgFromServer.isEmpty())
+		    		return Integer.parseInt(msgFromServer.get(0));
+		    	else
+		    		return -1;   	
 			}
-	    	msgFromServer = (ArrayList<String>)Main.client.getMessage();
-	    	if(!msgFromServer.isEmpty())
-	    		return Integer.parseInt(msgFromServer.get(0));
-	    	else
-	    		return -1;   	
 	    }
 	    
 	    //initialize all the data for the gui
 	    @Override
 		public void initialize(URL location, ResourceBundle resources) {
+	    	ArrayList<String> teachingunits;
+	    	corsChosBox.setDisable(true);
 			changeTchrBtn.setDisable(true);
 			//sets listener for item changed, makes sure that both tables items selected to enable the button
 			classesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
@@ -359,6 +284,48 @@ public class ChangeTeacherPlacementController implements Initializable{
 			    	changeTchrBtn.setDisable(true);
 			    }
 			});
+			
+			teachingunits = TeachingUnit.getTeachingUnit();
+			tuChosBox.setItems(FXCollections.observableArrayList(teachingunits));
+			
+			tuChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+					@Override
+					public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+						ArrayList<Course> courses = Course.getCourses(teachingunits.get(newValue.intValue()));
+						corsChosBox.setItems(FXCollections.observableArrayList(courses));
+						corsChosBox.setDisable(false);
+						classesData.clear();
+						try {
+							setTeachersTable(teachingunits.get(newValue.intValue()));
+						} catch (InterruptedException e) {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Error Dialog");
+							alert.setHeaderText(null);
+							alert.setContentText("Connection error!!");
+							alert.show();
+							e.printStackTrace();
+						}
+					}
+		          });
+			
+			corsChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+				@Override
+				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+					Course course = corsChosBox.getItems().get((int) newValue);
+					setCourseFields(course);
+					try {
+						setCourseInClasses(course);
+						setTeachersTable(tuChosBox.getSelectionModel().getSelectedItem());
+					} catch (InterruptedException e) {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Error Dialog");
+						alert.setHeaderText(null);
+						alert.setContentText("Connection error!!");
+						alert.show();
+						e.printStackTrace();
+					}
+				}
+	          });
 			
 			//sets the column string from the class
 			clsRomCln.setCellValueFactory(new PropertyValueFactory<Classes, String>("className"));
