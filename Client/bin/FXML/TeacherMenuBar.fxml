@@ -15,8 +15,8 @@
       <Menu mnemonicParsing="false" text="Assignments">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#DefineAssignments" text="Define" />
-            <MenuItem mnemonicParsing="false" onAction="#CheckAssignments" text="Check" />
-            <MenuItem mnemonicParsing="false" onAction="#FillEvaluationForm" text="Fill evaluation form" />
+            <MenuItem mnemonicParsing="false" onAction="#CheckAssignments" text="Check/Evaluate Submissions" />
+            
         </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Connection">
