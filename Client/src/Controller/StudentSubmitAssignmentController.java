@@ -107,15 +107,15 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  
 		  ArrayList<String> submitted = SubmittedAssignment.getSubmittedAssignments();
 		  
-		  if (submitted == null)
+		  if (submitted == null || assignmentArr == null)
 			  return;
 		  
 		  int size = assignmentArr.size();
 		  
-		  for (int i = 0; i < submitted.size(); i++){
-			  for (int j = 0; j < size; j++){
-				  if (Integer.parseInt(submitted.get(i)) == assignmentArr.get(j).getAssignmentID()){
-					  assignmentArr.remove(j);
+		  for (int i = size-1; i >= 0; i--){
+			  for (int j = 0; j < submitted.size(); j++){
+				  if (Integer.parseInt(submitted.get(j)) == assignmentArr.get(i).getAssignmentID()){
+					  assignmentArr.remove(i);
 				  }
 			  }
 		  }  
@@ -215,6 +215,11 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  return;
 		  
 		  String p = ass.getFilePath();
+		  
+		  if (!Files.exists(Paths.get(p))){
+			  return;
+		  }
+		  
 		  byte[] file = Assignment.getFile(p);
 		  
 		  FileChooser fileChooser = new FileChooser();
@@ -226,6 +231,10 @@ public class StudentSubmitAssignmentController implements Initializable {
               );
           
           File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());
+          
+          if (pa == null)
+        	  return;
+          
           Path savePath = Paths.get(pa.getAbsolutePath());
 		  
           FileOutputStream stream;
@@ -459,7 +468,20 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    @Override
 			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 			    	
-			    	guiMsg.setText("- Download Assignment,\n- Submit Assignment");
+			    	
+			    	Date publish = null, dead = null;
+			    	String selected = assignmentListView.getSelectionModel().getSelectedItem();
+			    	selected = selected.substring(selected.indexOf('(') + 1, selected.indexOf(')'));
+			    	
+			    	for (int i = 0; i < assignmentArr.size(); i++){
+			    		if (assignmentArr.get(i).getAssignmentID() == Integer.parseInt(selected)){
+			    			publish = assignmentArr.get(i).getPublishDate();
+			    			dead = assignmentArr.get(i).getDeadLine();
+			    			break;
+			    		}
+			    	}
+			    	
+			    	guiMsg.setText("Publish Date: " + publish + "\nDead line Date: " + dead);
 			    	uploadLabel.setDisable(false);
 			    	browseBtn.setDisable(false);
 			    	downloadBtn.setDisable(false);
