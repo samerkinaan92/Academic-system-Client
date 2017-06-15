@@ -3,7 +3,11 @@ package Entity;
 public class User {
 
 	private String ID;
-	private String Name;
+
+	// public String Name;
+
+	protected String Name;
+
 	
 	public User() {
 	}

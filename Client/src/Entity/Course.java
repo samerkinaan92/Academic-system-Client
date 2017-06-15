@@ -48,10 +48,9 @@ public class Course extends AcademicActivity {
 	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCourses(String teachingUnit){ // Get list of courses.
-		ArrayList<Course> DBcourses = null;
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select CourseID ,CourseName, weeklyHours, TUName From course where TUName = '" + teachingUnit + "';");
+		msgServer.put("query", "Select CourseID,CourseName, weeklyHours, TUName From course where TUName = '" + teachingUnit + "'");
 		
 		try{
 			Main.client.sendMessageToServer(msgServer);
@@ -60,17 +59,40 @@ public class Course extends AcademicActivity {
 				System.out.println("Server fatal error!");
 			}
 		synchronized (Main.client){try {
-			Main.client.sendMessageToServer(msgServer);
 			Main.client.wait();
-			ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-			DBcourses = new ArrayList<Course>();
-			
-			for (int i = 0; i < result.size(); i+=4)
-				DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<Course> DBcourses = new ArrayList<Course>();
+		
+		for (int i = 0; i < result.size(); i+=4)
+			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
 		return DBcourses;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static String getCourseName(String ID){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select CourseName From course WHERE CourseID ='"+ID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		String res;	
+		res = result.get(0);
+		return res;
 	}
 	
 	public boolean insertCourse(){ // Insert course to data base.

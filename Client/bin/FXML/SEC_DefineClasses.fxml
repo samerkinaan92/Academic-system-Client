@@ -3,16 +3,14 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SEC_DefineClasses_CTRL">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SEC_DefineClasses">
    <children>
-      <Label layoutX="175.0" layoutY="35.0" prefHeight="31.0" prefWidth="250.0" text="Create New Class" textAlignment="CENTER" textFill="#ee0606">
+      <Label layoutX="40.0" layoutY="35.0" prefHeight="31.0" prefWidth="258.0" text="Create New Class" textAlignment="CENTER" textFill="#ee0606">
          <font>
             <Font name="Rockwell Extra Bold" size="24.0" />
          </font>
@@ -20,7 +18,7 @@
             <DropShadow blurType="TWO_PASS_BOX" height="18.27" radius="6.4" spread="0.63" width="9.33" />
          </effect>
       </Label>
-      <Button fx:id="saveClassButton" layoutX="40.0" layoutY="325.0" mnemonicParsing="false" onAction="#saveNewClass" text="Save class!" textAlignment="CENTER" textFill="#db0909">
+      <Button fx:id="saveClassBTN" layoutX="174.0" layoutY="247.0" mnemonicParsing="false" onAction="#saveBTNaction" prefHeight="44.0" prefWidth="102.0" text="Save" textAlignment="CENTER" textFill="#db0909">
          <font>
             <Font name="Serif Bold" size="24.0" />
          </font>
@@ -29,15 +27,13 @@
          </effect>
       </Button>
       <Label layoutX="30.0" layoutY="140.0" text="Class Name:" />
-      <Label layoutX="30.0" layoutY="190.0" text="Choose Student:" />
-      <ListView fx:id="studentsInClass" layoutX="377.0" layoutY="106.0" prefHeight="242.0" prefWidth="209.0" />
-      <ScrollBar layoutX="568.0" layoutY="105.0" orientation="VERTICAL" prefHeight="242.0" prefWidth="18.0" />
-      <TextField fx:id="classNameTF" layoutX="152.0" layoutY="135.0" text="&quot;class name&quot;">
+      <Label layoutX="30.0" layoutY="190.0" text="Attach to semester:" />
+      <TextField fx:id="classnameTEXTFIELD" layoutX="174.0" layoutY="135.0" prefHeight="31.0" prefWidth="161.0">
          <font>
             <Font name="System Italic" size="15.0" />
          </font></TextField>
-      <Label layoutX="377.0" layoutY="84.0" prefHeight="21.0" prefWidth="129.0" text="Students in class:" />
-      <Button fx:id="attachBTN" layoutX="262.0" layoutY="227.0" mnemonicParsing="false" onAction="#saveStudentToClass" text="attach &gt;" />
-      <ComboBox fx:id="studentComboList" layoutX="152.0" layoutY="185.0" prefHeight="31.0" prefWidth="186.0" />
+      <ComboBox fx:id="semestersCOMBOBOX" layoutX="173.0" layoutY="185.0" prefHeight="31.0" prefWidth="258.0" />
+      <Label fx:id="redLABEL" layoutX="174.0" layoutY="299.0" prefHeight="21.0" prefWidth="218.0" textFill="#f50b0b" />
+      <Label fx:id="blueLABEL" layoutX="174.0" layoutY="298.0" prefHeight="21.0" prefWidth="218.0" textFill="#000dff" />
    </children>
 </AnchorPane>

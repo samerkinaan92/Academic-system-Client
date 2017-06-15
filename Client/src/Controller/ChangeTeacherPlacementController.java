@@ -288,25 +288,26 @@ public class ChangeTeacherPlacementController implements Initializable{
 			teachingunits = TeachingUnit.getTeachingUnit();
 			tuChosBox.setItems(FXCollections.observableArrayList(teachingunits));
 			
-			tuChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-					@Override
-					public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-						ArrayList<Course> courses = Course.getCourses(teachingunits.get(newValue.intValue()));
-						corsChosBox.setItems(FXCollections.observableArrayList(courses));
-						corsChosBox.setDisable(false);
-						classesData.clear();
-						try {
-							setTeachersTable(teachingunits.get(newValue.intValue()));
-						} catch (InterruptedException e) {
-							Alert alert = new Alert(AlertType.ERROR);
-							alert.setTitle("Error Dialog");
-							alert.setHeaderText(null);
-							alert.setContentText("Connection error!!");
-							alert.show();
-							e.printStackTrace();
-						}
+			tuChosBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+
+				@Override
+				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+					ArrayList<Course> courses = Course.getCourses(newValue);
+					corsChosBox.setItems(FXCollections.observableArrayList(courses));
+					corsChosBox.setDisable(false);
+					classesData.clear();
+					try {
+						setTeachersTable(newValue);
+					} catch (InterruptedException e) {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Error Dialog");
+						alert.setHeaderText(null);
+						alert.setContentText("Connection error!!");
+						alert.show();
+						e.printStackTrace();
 					}
-		          });
+				}
+			});
 			
 			corsChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 				@Override
