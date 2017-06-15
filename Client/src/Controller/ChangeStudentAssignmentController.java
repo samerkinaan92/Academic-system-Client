@@ -7,11 +7,15 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import javax.naming.spi.DirStateFactory.Result;
+
+import Controller.ChangeTeacherPlacementController.Classes;
 import Entity.Action;
 import Entity.Course;
 import Entity.NewStudenCoursePlacement;
 import Entity.Student;
 import Entity.TeachingUnit;
+import Entity.claSS;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -74,6 +78,44 @@ public class ChangeStudentAssignmentController implements Initializable{
 
     @FXML // fx:id="corsChosBox"
     private ChoiceBox<Course> corsChosBox; // Value injected by FXMLLoader
+    
+    @FXML // fx:id="classChoiceBox"
+    private ChoiceBox<String> classChoiceBox; // Value injected by FXMLLoader
+
+    @FXML // fx:id="moveClassBtn"
+    private Button moveClassBtn; // Value injected by FXMLLoader
+    
+    @FXML
+    void moveStudentToClass(ActionEvent event) {
+    	String newClass = classChoiceBox.getSelectionModel().getSelectedItem();
+    	Alert alert;
+    	if(newClass.equals(student.getClassRoom())){
+    		alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Invalid input");
+			alert.setHeaderText(null);
+			alert.setContentText("Invalid input you choose the same class room the student currently in!!\nPlease choose another class room.");
+			alert.show();
+    	}else{
+    		alert = new Alert(AlertType.CONFIRMATION);
+        	alert.setTitle("Confirmation Dialog");
+        	alert.setHeaderText(null);
+        	alert.setContentText("Are you sure you want to move student to another class room?");
+
+        	Optional<ButtonType> result = alert.showAndWait();
+        	if (result.get() == ButtonType.OK){
+        		try {
+					moveStudentToClass(newClass);
+				} catch (InterruptedException e) {
+					alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error Dialog");
+					alert.setHeaderText(null);
+					alert.setContentText("Connection error!!");
+					alert.show();
+					e.printStackTrace();
+				}
+        	}
+    	}
+    }
 
     
     @FXML
@@ -160,6 +202,25 @@ public class ChangeStudentAssignmentController implements Initializable{
     	}
     }
     
+    
+    private boolean moveStudentToClass(String classRoom) throws InterruptedException{
+    	boolean moved = false;
+    	HashMap<String, String> msg = new HashMap<>();
+    	
+    	msg.put("msgType", "update");
+    	msg.put("query", "UPDATE Student_Class SET ClassName = '" + classRoom + "' WHERE StudentID = '" + student.getID() + "';");
+    	
+    	synchronized (Main.client) {
+			Main.client.sendMessageToServer(msg);
+			Main.client.wait();
+			int result = (int) Main.client.getMessage();
+			if(result > 0){
+				moved = true;
+			}
+		}
+    	return moved;
+    }
+    
     //sends new request to the principal
     private int sendNewRequest(NewStudenCoursePlacement newPlacement) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
@@ -217,6 +278,19 @@ public class ChangeStudentAssignmentController implements Initializable{
 		return currSem;
     }
 
+    private ArrayList<String> getClassRooms() throws InterruptedException{
+    	HashMap <String,String> msgServer = new HashMap <String,String>();
+    	ArrayList<String> result = null;
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select * From class");
+		
+		synchronized (Main.client){
+			Main.client.sendMessageToServer(msgServer);
+			Main.client.wait();
+			result = (ArrayList<String>)Main.client.getMessage();
+		}
+		return result;
+    }
     
     //set the table items list
     private void setCourses(ArrayList<String> coursesIds) throws InterruptedException{
@@ -304,12 +378,26 @@ public class ChangeStudentAssignmentController implements Initializable{
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
     	ArrayList<String> teachingunits;
+    	ArrayList<String> classes = null;
 		removeCrs.setDisable(true);
 		newAsnBtn.setDisable(true);
 		corsChosBox.setDisable(true);
+		moveClassBtn.setDisable(true);
 		
 		teachingunits = TeachingUnit.getTeachingUnit();
 		tuChosBox.setItems(FXCollections.observableArrayList(teachingunits));
+		
+		try {
+			classes = getClassRooms();
+		} catch (InterruptedException e) {
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText(null);
+			alert.setContentText("Connection error!!");
+			alert.show();
+			e.printStackTrace();
+		}
+		classChoiceBox.setItems(FXCollections.observableArrayList(classes));
 		
 		tuChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
 				@Override
@@ -325,6 +413,13 @@ public class ChangeStudentAssignmentController implements Initializable{
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
 				newAsnBtn.setDisable(false);
+			}
+          });
+		
+		classChoiceBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				moveClassBtn.setDisable(false);
 			}
           });
 		

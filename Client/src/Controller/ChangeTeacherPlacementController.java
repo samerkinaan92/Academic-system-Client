@@ -292,41 +292,45 @@ public class ChangeTeacherPlacementController implements Initializable{
 
 				@Override
 				public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-					ArrayList<Course> courses = Course.getCourses(newValue);
-					corsChosBox.setItems(FXCollections.observableArrayList(courses));
-					corsChosBox.setDisable(false);
-					classesData.clear();
-					try {
-						setTeachersTable(newValue);
-					} catch (InterruptedException e) {
-						Alert alert = new Alert(AlertType.ERROR);
-						alert.setTitle("Error Dialog");
-						alert.setHeaderText(null);
-						alert.setContentText("Connection error!!");
-						alert.show();
-						e.printStackTrace();
+					if(newValue != null){
+						ArrayList<Course> courses = Course.getCourses(newValue);
+						corsChosBox.setItems(FXCollections.observableArrayList(courses));
+						corsChosBox.setDisable(false);
+						classesData.clear();
+						try {
+							setTeachersTable(newValue);
+						} catch (InterruptedException e) {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Error Dialog");
+							alert.setHeaderText(null);
+							alert.setContentText("Connection error!!");
+							alert.show();
+							e.printStackTrace();
+						}
 					}
 				}
 			});
 			
-			corsChosBox.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+			corsChosBox.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Course>() {
+
 				@Override
-				public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-					Course course = corsChosBox.getItems().get((int) newValue);
-					setCourseFields(course);
-					try {
-						setCourseInClasses(course);
-						setTeachersTable(tuChosBox.getSelectionModel().getSelectedItem());
-					} catch (InterruptedException e) {
-						Alert alert = new Alert(AlertType.ERROR);
-						alert.setTitle("Error Dialog");
-						alert.setHeaderText(null);
-						alert.setContentText("Connection error!!");
-						alert.show();
-						e.printStackTrace();
+				public void changed(ObservableValue observable, Course oldValue, Course newValue) {
+					if(newValue != null){
+						setCourseFields(newValue);
+						try {
+							setCourseInClasses(newValue);
+							setTeachersTable(tuChosBox.getSelectionModel().getSelectedItem());
+						} catch (InterruptedException e) {
+							Alert alert = new Alert(AlertType.ERROR);
+							alert.setTitle("Error Dialog");
+							alert.setHeaderText(null);
+							alert.setContentText("Connection error!!");
+							alert.show();
+							e.printStackTrace();
+						}
 					}
 				}
-	          });
+			});
 			
 			//sets the column string from the class
 			clsRomCln.setCellValueFactory(new PropertyValueFactory<Classes, String>("className"));

@@ -52,7 +52,7 @@ public class TeacherExceptionalRequest implements Initializable {
 
     @FXML
     void approve(ActionEvent event) {
-    	TeacherRequestInfo requestInfo = excepTbl.getSelectionModel().selectedItemProperty().get();
+    	TeacherRequestInfo requestInfo = excepTbl.getSelectionModel().getSelectedItem();
     	//show confirmation dialog
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
@@ -67,7 +67,7 @@ public class TeacherExceptionalRequest implements Initializable {
 
     @FXML
     void disapprove(ActionEvent event) {
-    	TeacherRequestInfo requestInfo = excepTbl.getSelectionModel().selectedItemProperty().get();
+    	TeacherRequestInfo requestInfo = excepTbl.getSelectionModel().getSelectedItem();
     	//show confirmation dailog
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
@@ -151,7 +151,7 @@ public class TeacherExceptionalRequest implements Initializable {
     	msg.put("msgType", "select");
     	msg.put("query", "SELECT U1.Name, U2.Name, CR.CourseName, CL.ClassName, R.Class_Courseid, R.newTeacherID "
     			+ "FROM NewTeacherPlacement R, Users U1, Users U2, Course CR, Class CL, Class_Course CLCR "
-    			+ "WHERE R.newTeacherID = U2.ID AND R.currTeacherID = U1.ID AND R.Class_Courseid = CLCR.id AND CLCR.CourseID = CR.CourseID AND CLCR.ClassName = CL.ClassName AND CLCR.Year = CL.Year;");
+    			+ "WHERE R.newTeacherID = U2.ID AND R.currTeacherID = U1.ID AND R.Class_Courseid = CLCR.id AND CLCR.CourseID = CR.CourseID AND CLCR.ClassName = CL.ClassName;");
     	
     	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
@@ -268,6 +268,7 @@ public class TeacherExceptionalRequest implements Initializable {
         	setCourseName(courseName);
         	setClassRoom(classRoom);
         	setCourseClassId(courseClassId);
+        	setNewTeacherId(newTeacherId);
         }
     }
 

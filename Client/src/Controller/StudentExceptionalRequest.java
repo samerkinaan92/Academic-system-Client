@@ -61,11 +61,20 @@ public class StudentExceptionalRequest implements Initializable{
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
-    		if(requestInfo.getRequest().equals("assign")){
-        		assignToCourse(requestInfo);
-        	}else{
-        		removeFromCourse(requestInfo);
-        	}
+    		try{
+	    		if(requestInfo.getRequest().equals("assign")){
+					assignToCourse(requestInfo);
+	        	}else{
+	        		removeFromCourse(requestInfo);
+	        	}
+    		}catch (InterruptedException e) {
+				alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+				e.printStackTrace();
+			}
     	}
     }
 
@@ -81,12 +90,21 @@ public class StudentExceptionalRequest implements Initializable{
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
-    		deleteRow(requestInfo);
+    		try {
+				deleteRow(requestInfo);
+			} catch (InterruptedException e) {
+				alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+				e.printStackTrace();
+			}
     	}
     }
     
     //remove the student from course
-    private void removeFromCourse(StudRequestInfo requestInfo){
+    private void removeFromCourse(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	//remove from DB
@@ -94,39 +112,29 @@ public class StudentExceptionalRequest implements Initializable{
     	msg.put("query", "DELETE FROM Course_Student WHERE CourseID = " + requestInfo.getCourseId() + " AND StudentID = " + requestInfo.getId() + " AND semesterId = " + getCurrSem() + ";");
     	
     	synchronized (Main.client) {
-			try {
-				Main.client.sendMessageToServer(msg);
-				Main.client.wait();
-				//delete from table
-				deleteRow(requestInfo);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Main.client.sendMessageToServer(msg);
+			Main.client.wait();
+			//delete from table
+			deleteRow(requestInfo);
 		}
     }
     
     //Assigns the student to the course
-    private void assignToCourse(StudRequestInfo requestInfo){
+    private void assignToCourse(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	msg.put("msgType", "insert");
     	msg.put("query", "INSERT INTO Course_Student(CourseID, StudentID,semesterId) VALUES (" + requestInfo.getCourseId() + ", " + requestInfo.getId() + ", " + getCurrSem() + ");");
     	
-    	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
-			try {
-				Main.client.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Main.client.sendMessageToServer(msg);
+			Main.client.wait();
 		}
     	deleteRow(requestInfo);
     }
     
     //gets the current semester id
-    private int getCurrSem(){
+    private int getCurrSem() throws InterruptedException{
     	if(currSem != -1){
     		return currSem;
     	}
@@ -136,21 +144,17 @@ public class StudentExceptionalRequest implements Initializable{
     	
     	Main.client.sendMessageToServer(msg);
 		synchronized (Main.client){
-			try {
 			Main.client.wait();
 			ArrayList<String> serverMsg = (ArrayList<String>) Main.client.getMessage();
 	    	if(!serverMsg.isEmpty()){
 	    		currSem = Integer.parseInt(serverMsg.get(0));
 	    	}
-			}catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 		return currSem;
     }
     
     // delete row from DB and table
-    private void deleteRow(StudRequestInfo requestInfo){
+    private void deleteRow(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	msg.put("msgType", "delete");
@@ -158,23 +162,18 @@ public class StudentExceptionalRequest implements Initializable{
     	
     	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
-			try {
-				Main.client.wait();
-				int msgFromServer = (int)Main.client.getMessage();
-		    	if(msgFromServer > 0){
-		    		data.remove(requestInfo);
-		    	}else{
-		    		Alert alert = new Alert(AlertType.ERROR);
-					alert.setTitle("Error Dialog");
-					alert.setHeaderText(null);
-					alert.setContentText("Connection error!!");
-					alert.show();
+			Main.client.wait();
+			int msgFromServer = (int)Main.client.getMessage();
+	    	if(msgFromServer > 0){
+	    		data.remove(requestInfo);
+	    	}else{
+	    		Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
 
-		    	}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+	    	}
 		}
     }
     
