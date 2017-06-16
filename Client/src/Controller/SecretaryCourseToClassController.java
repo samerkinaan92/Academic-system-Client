@@ -32,7 +32,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
 /**
- * This is the controller class for: "StudentSubmitAssignment.fxml"
+ * This is the controller class for: "SecretaryCourseToClassController.fxml"
  * @author Idan Agam
  * */
 
