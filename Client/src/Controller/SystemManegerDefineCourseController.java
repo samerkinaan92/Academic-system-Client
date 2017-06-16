@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import Entity.Course;
 import Entity.TeachingUnit;
 import application.Main;
@@ -17,13 +15,21 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * This is the controller class for: "SystemManegerDefineCourseController.fxml"
+ * @author Idan Agam
+ * */
+
 public class SystemManegerDefineCourseController implements Initializable {
+	
 	
 	@FXML
     private Label nameErr;
@@ -37,44 +43,61 @@ public class SystemManegerDefineCourseController implements Initializable {
     @FXML
     private Label unitErr;
 	
+    /** ListView for all courses defined in data base */
     @FXML
     private ListView<String> courseList;
     
+    /** TextField to filter courses in list */
     @FXML
     private TextField searchField;
 
+    /** ComboBox to select course weakly hours */
     @FXML
     private ComboBox<String> weaklyHours;
 
+    /** ComboBox to select course teaching unit */
     @FXML
     private ComboBox<String> teachingUnit;
 
+    /** TextField for new course id */
     @FXML
     private TextField courseId;
 
+    /** ListView for all added PreCourses for course */
     @FXML
     private ListView<String> preCourseList;
 
+    /** TextField for new course name */
     @FXML
     private TextField courseName;
     
     //-------------------------------------------------------------------------------------------------------------------
     
+    /** String[] to display all weakly hours */
     private final String[] hours = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
     
+    /** ArrayList to store all courses from data base	*/
     ArrayList<Course> courseArr;
     
+    /** ArrayList to store all courses (name & id)	*/
     ArrayList<String> organizedList;
+    
+    /** ArrayList to store all PreCourses for new course (name & id)	*/
     ArrayList<String> PreList = new ArrayList<String>();
     
     Course newCourse;
     boolean err;
-    
     private final ObservableList<String> boxHours = FXCollections.observableArrayList(hours);
     private ObservableList<String> coursesDB;
+    Alert infoMsg = new Alert(AlertType.INFORMATION);
+	Alert errMsg = new Alert(AlertType.ERROR);
     
     //-------------------------------------------------------------------------------------------------------------------
     
+    /**
+     * Filter course list results.
+     * @param e
+     */
     public void search(ActionEvent e){ // Filter course list.
     	ArrayList<String> temp = new  ArrayList<String>();
     	
@@ -86,6 +109,10 @@ public class SystemManegerDefineCourseController implements Initializable {
 		courseList.setItems(coursesDB);
     }
     
+    /**
+     * Add Course to PreCourse list.
+     * @param e
+     */
     public void addPreCourse(ActionEvent e){ // Add Course to PreCourse list.
     	
     	for (int i = 0; i < PreList.size(); i++)
@@ -97,6 +124,10 @@ public class SystemManegerDefineCourseController implements Initializable {
     	preCourseList.setItems(FXCollections.observableArrayList(PreList));
     }
     
+    /**
+     * Remove Course from PreCourse list.
+     * @param e
+     */
     public void removePreCourse(ActionEvent e){ // Remove Course from PreCourse list.
     	
     	for (int i = 0; i < PreList.size(); i++)
@@ -107,6 +138,11 @@ public class SystemManegerDefineCourseController implements Initializable {
     	preCourseList.setItems(FXCollections.observableArrayList(PreList));	
     }
 
+    /**
+     * Get courses names & ID's for list.
+     * @param courseArr list of all defined courses in DB
+     * @return list of courses (name & id)
+     */
     private ArrayList<String> getList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
     	
 		ArrayList<String> temp = new ArrayList<String>();
@@ -116,6 +152,11 @@ public class SystemManegerDefineCourseController implements Initializable {
 		return temp;	
 	}
     
+    /**
+     * Submit course for check & insert into DB.
+     * @param e
+     * @throws IOException
+     */
     public void submitCourse(ActionEvent e) throws IOException{ //  Submit course for check & insert.
     	  	
     	if (err){ // Reset Screen errors.
@@ -143,14 +184,20 @@ public class SystemManegerDefineCourseController implements Initializable {
     	int numOfChanges = (int)Main.client.getMessage();
     	
     	if (numOfChanges >= 1){
-	    	JOptionPane.showMessageDialog(null,"Course definition successful :)");
+    		infoMsg.setContentText("Course definition successful :)");
+    		infoMsg.showAndWait();
 	    	clearScreen();
     	}
-    	else
-    		JOptionPane.showMessageDialog(null, 
-					  "No changes were made!", "Error", JOptionPane.ERROR_MESSAGE);
+    	else{
+    		infoMsg.setContentText("No changes were made!");
+    		infoMsg.showAndWait();
+    	}
     }
-	
+
+    /**
+     * Check for illegal input.
+     * @return if new course is legal
+     */
 	private boolean checkIlegalInput(){ // Check for illegal input.
 		err = false;
 		
@@ -182,6 +229,10 @@ public class SystemManegerDefineCourseController implements Initializable {
     	return err;
 	}
 	
+	/**
+	 * Clear & update screen details.
+	 * @throws IOException
+	 */
 	private void clearScreen() throws IOException{ // Clear & update screen details.
 		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SystemManagerDefineCourses.fxml"));;
 		Main.getRoot().setCenter(pane);
@@ -189,6 +240,10 @@ public class SystemManegerDefineCourseController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1){ // Initialize window.
+		infoMsg.setTitle("Operation Successful");
+		infoMsg.setHeaderText(null);
+		errMsg.setTitle("Error Accord");
+		errMsg.setHeaderText(null);
 		courseArr = Course.getCourses();
 		organizedList = getList(courseArr);
 		Collections.sort(organizedList);
