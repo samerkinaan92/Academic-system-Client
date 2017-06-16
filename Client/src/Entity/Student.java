@@ -36,6 +36,35 @@ public class Student extends User {
 		
 	}
 	
+	public static boolean attachStudentsToCourses(int sID, ArrayList<String> student_course){
+		
+		
+		for (int i = 0; i < student_course.size(); i+=2){
+			
+			String msg = "Insert INTO course_student (CourseID, StudentID, semesterId)";
+	    	String values = " VALUES (" + student_course.get(i+1) + ", " + student_course.get(i) + ", " + sID + ")";
+	    	
+	    	HashMap <String,String> msgServer = new HashMap <String,String>();
+	    	msgServer.put("msgType", "insert");
+			msgServer.put("query", msg + values);
+	    	
+	    	try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					return false;
+				}
+	    	synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}}
+		}
+		return true;
+		
+		
+	}
+	
 	public static ArrayList<String> getTakenCourses(String sID){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
