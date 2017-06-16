@@ -47,6 +47,34 @@ public class Course extends AcademicActivity {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getPreCourses(String cID){
+		
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select preCourseID From pre_courses WHERE CourseID = " + cID);
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		if (result.size() > 0)
+			return result;
+		return null;
+		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static String getCourseName(String ID){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");

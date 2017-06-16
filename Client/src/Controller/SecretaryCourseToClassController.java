@@ -1,16 +1,17 @@
 package Controller;
 
 import java.io.IOException;
+
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import Entity.Course;
+import Entity.Secretery;
 import Entity.Semester;
+import Entity.Student;
 import Entity.Teacher;
 import Entity.TeachingUnit;
 import Entity.claSS;
@@ -22,66 +23,99 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * This is the controller class for: "StudentSubmitAssignment.fxml"
+ * @author Idan Agam
+ * */
+
 public class SecretaryCourseToClassController implements Initializable {
 	
+	/** ComboBox for all defined classes	*/
 	@FXML
 	private ComboBox<String> classChooser;
 	
+	/** ListView for all available courses to selected class	*/
 	@FXML
 	private ListView<String> availableCourses;
 	
+	/** ListView for all taken courses to selected class	*/
 	@FXML
     private ListView<String> takenCourses;
 	
 	@FXML
     private Label guiMsg;
 	
+	/** ComboBox for all defined semesters up from current	*/
 	@FXML
 	private ComboBox<String> semesterChooser;
 	
+	/** ComboBox for all defined teachers for specific teaching unit	*/
 	@FXML
     private ComboBox<String> teacherChooser;
 	
+	/** Button to attach course to class	*/
 	@FXML
     private Button attachBtn;
 	
+	/** Button to remove course from class	*/
 	@FXML
     private Button removeBtn;
 	
+	/** Button to submit changes	*/
 	@FXML
     private Button submitBtn;
 	
+	Alert infoMsg = new Alert(AlertType.INFORMATION);
+	Alert errMsg = new Alert(AlertType.ERROR);
 	
+	/** ArrayList to store all classes from data base	*/
 	ArrayList<claSS> classArr;
 	
+	/** ArrayList to store all courses from data base	*/
 	ArrayList<Course> course;
 	
+	/** ArrayList to store all semesters from data base	*/
 	ArrayList<Semester> semesterArr;
 	
+	/** ArrayList to store all teachers from data base	*/
 	ArrayList<Teacher> teacherArr;
 	 
+	/** ArrayList to store all classes (name & id)	*/
 	ArrayList<String> organizedClassList;
 	
+	/** ArrayList to store all semesters (year & season)	*/
 	ArrayList<String> organizedSemesterList;
 	
+	/** ArrayList to store all courses for specific class	*/
 	ArrayList<String> allCourses = null;
 	
+	/** ArrayList to store all taken courses to specific class	*/
 	ArrayList<String> taken = null;
 	
+	/** ArrayList to store all available courses to specific class	*/
 	ArrayList<String> available = null;
 	
+	/** ArrayList to store all added courses to specific class	*/
 	ArrayList<String> added = null;
 	
+	/** ArrayList to store all removed courses from specific class	*/
 	ArrayList<String> removed = null;
 	
 	//-------------------------------------------------------------------------------------------------------------
 	
+	/**
+	 * get semesters by year & season
+	 * @param semsterArr all semesters from DB
+	 * @return semester list (year & season)
+	 */
 	private ArrayList<String> getSemesterList(ArrayList<Semester> semsterArr){ // Get semesters year & season.
 		 
 		 ArrayList<String> temp = new ArrayList<String>();
@@ -91,6 +125,11 @@ public class SecretaryCourseToClassController implements Initializable {
 			return temp;	
 	 }
 	
+	/**
+	 * Get classes names.
+	 * @param classArr all classes from DB
+	 * @return class list (name)
+	 */
 	private ArrayList<String> getClassList(ArrayList<claSS> classArr){ // Get classes names.
 		 
 		 ArrayList<String> temp = new ArrayList<String>();
@@ -100,6 +139,11 @@ public class SecretaryCourseToClassController implements Initializable {
 			return temp;	
 	 }
 	
+	/**
+	 * Get courses names & ID's for list.
+	 * @param courseArr all courses from DB
+	 * @return course list (name & id)
+	 */
 	private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
 		ArrayList<String> temp = new ArrayList<String>();
@@ -109,6 +153,12 @@ public class SecretaryCourseToClassController implements Initializable {
 			return temp;	
 		}
 	  
+	/**
+	 * Get taken courses for class.
+	 * @param clas selected class
+	 * @param courses list of all courses
+	 * @return list of all taken courses by class
+	 */
 	@SuppressWarnings("unchecked")
 	private ArrayList<String> getTaken(String clas, ArrayList<String> courses){ // Get taken courses for class.
 		  
@@ -140,6 +190,12 @@ public class SecretaryCourseToClassController implements Initializable {
 				return null;
 	  }
 	  
+	/**
+	 * Get available courses for class.
+	 * @param courses list of all courses
+	 * @param taken list of all taken courses for class
+	 * @return list of all available courses for class
+	 */
 	private ArrayList<String> getAvailable(ArrayList<String> courses, ArrayList<String> taken){ // Get available courses for class.
 		
 		  boolean flag = true;
@@ -167,9 +223,99 @@ public class SecretaryCourseToClassController implements Initializable {
 		  else 
 			  return null;  
 	  }
+	
+	/**
+	 * Add students to courses Or Remove them as necessary, also inform principle for exception students
+	 * if exist.
+	 * @return
+	 */
+	private String addRemoveStudents(){ // Add students to courses Or Remove them as necessary.
+		
+		String cls = classChooser.getSelectionModel().getSelectedItem();
+		String exeptions = "Student/s that can't take course\n\n";
+		ArrayList<String> students = claSS.getStudents(cls);
+		ArrayList<String> addedStudents = new ArrayList<String>();
+		ArrayList<String> exeptionStudents = new ArrayList<String>();
+		String courseId;
+		boolean flag = false;
+		
+		if (added != null && !added.isEmpty() && !students.isEmpty()){
+			for (int i = 1; i < students.size(); i+=2){
+				for (int j = 0; j < added.size(); j++){
+					courseId = added.get(j).substring(added.get(j).indexOf('(')+1, added.get(j).indexOf(')'));
+					if (cantAdd(students.get(i), courseId)){
+						exeptions += students.get(i-1) + " (" + students.get(i) + ") course: " +
+								added.get(j).substring(0, added.get(j).indexOf(')')+1) + "\n";
+						flag = true;
+						exeptionStudents.add(students.get(i));
+						exeptionStudents.add(added.get(j).substring(added.get(j).indexOf('(')+1, added.get(j).indexOf(')')));
+					}
+					else{
+						addedStudents.add(students.get(i));
+						addedStudents.add(added.get(j).substring(added.get(j).indexOf('(')+1, added.get(j).indexOf(')')));
+					}
+				}
+			}
+		}
+		
+		String selected = semesterChooser.getSelectionModel().getSelectedItem();
+		int sID = 0;
+		for (int i = 0; i < semesterArr.size(); i++){
+			if (selected.equals(semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")")){
+				sID = semesterArr.get(i).getId();
+				break;
+			}
+		}
+		
+		if (!Student.attachStudentsToCourses(sID, addedStudents)){
+			errMsg.setContentText("Can't add students to class courses");
+		}
+		
+		Secretery.sendExceptionStudents(exeptionStudents);
+		
+		if (flag){
+			exeptions += "\nStudents waiting for princple aproval";
+			return exeptions;
+		}
+		return null;
+	}
+
+	/**
+	 * Check if student can be attached to course.
+	 * @param studentID Current student id
+	 * @param courseID Current course id
+	 * @return if student can be attached to course
+	 */
+	private boolean cantAdd(String studentID, String courseID){ // Check if student can be attached to course.
+		
+		ArrayList<String> takenCourses = Student.getTakenCourses(studentID);
+		ArrayList<String> preCourses = Course.getPreCourses(courseID);
+		
+		if (preCourses == null)
+			return false;
+		if (preCourses != null && takenCourses == null)
+			return true;
+		
+		int flag = preCourses.size();
+		
+		for (int i = 0; i < preCourses.size(); i++){
+			for (int j = 0; j < takenCourses.size(); j++){
+				if (preCourses.get(i).equals(takenCourses.get(j)))
+					flag--;
+			}
+		}
+		
+		if (flag > 0)
+			return true;
+		return false;
+	}
  	
 	//-------------------------------------------------------------------------------------------------------------
 
+	/**
+	 * Check if teacher has not exceeded max working hours.
+	 * @param e
+	 */
 	public void chooseTeacher(ActionEvent e){ // Check if teacher can teach course.
 		  
 		  if (teacherChooser.getSelectionModel().getSelectedItem() == null)
@@ -203,51 +349,34 @@ public class SecretaryCourseToClassController implements Initializable {
 		  attachBtn.setDisable(false);
 	  }
 	  
+	/**
+	 *  Load all classes to ComboBox.
+	 * @param e
+	 */
 	public void chooseSemester(ActionEvent e){ // Load all classes in chosen semester.
-		  
-		  int id = 0;
-		  
-		  for (int i = 0; i < semesterArr.size(); i++)
-			  if ((semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")").equals(semesterChooser.getSelectionModel().getSelectedItem())){
-				  id = semesterArr.get(i).getId();
-				  break;
-			  }
-				  
-		  classArr = claSS.getClasses();
-		  int size = classArr.size()-1;
-		  
-		  while (0 <= size){
-			  if (classArr.get(size).getYear() != id)
-				  classArr.remove(size--);
-			  else
-				  size--;
-		  }
-		  
-		  if (classArr.size() > 0){
-			  organizedClassList = getClassList(classArr);
-			  Collections.sort(organizedClassList);
-		  }
-		  else{
-			  organizedClassList = new ArrayList<String>();
-			  organizedClassList.add("No Class in Semester!");
-		  }
-		  
-		  classChooser.setItems(FXCollections.observableArrayList(organizedClassList));
-		  classChooser.setDisable(false);
-		  classChooser.getSelectionModel().clearSelection();
-		  teacherChooser.setDisable(true);
-		  teacherChooser.getSelectionModel().clearSelection();
-		  attachBtn.setDisable(true);
-		  removeBtn.setDisable(true);
+		
+		classArr = claSS.getClasses();
+		organizedClassList = getClassList(classArr);
+		Collections.sort(organizedClassList);
+		classChooser.setItems(FXCollections.observableArrayList(organizedClassList));
+		classChooser.setDisable(false);
+		classChooser.getSelectionModel().clearSelection();
+		teacherChooser.setDisable(true);
+		teacherChooser.getSelectionModel().clearSelection();
+		attachBtn.setDisable(true);
+		removeBtn.setDisable(true);
 	  }
 	  
+	/**
+	 * Load taken & available lists for chosen class, to ListViews.
+	 * @param e
+	 */
 	public void chooseClass(ActionEvent e){ // Load taken & available lists for chosen class.
 		
 		taken = null;
 		available = null;
 		removed = null;
 		added = null;
-		
 		String clas = classChooser.getSelectionModel().getSelectedItem();
 		
 		if (clas.equals("No Class in Semester!")){
@@ -287,29 +416,53 @@ public class SecretaryCourseToClassController implements Initializable {
 		takenCourses.getSelectionModel().clearSelection();
 	}
 	
+	/**
+	 * Attach course to class & show it in lists.
+	 * @param e
+	 */
 	public void attach(ActionEvent e){ // Attach course to class.
 		
 		if (available == null && taken == null){
-			guiMsg.setText("Class Was Not Selected: Please Choose Class");
+			errMsg.setContentText("Class Was Not Selected: Please Choose Class");
+			errMsg.showAndWait();
 			return;
 		}
 		
 		String selected = availableCourses.getSelectionModel().getSelectedItem();
 		
 		if (selected == null || selected.isEmpty()){
-			guiMsg.setText("Course Was Not Selected: Please Choose Course");
+			errMsg.setContentText("Course Was Not Selected: Please Choose Course");
+			errMsg.showAndWait();
 			return;
 		}
 		
 		String selectedTeacherID = teacherChooser.getSelectionModel().getSelectedItem();
+		String selectedSemester = semesterChooser.getSelectionModel().getSelectedItem();
 		
 		if (selectedTeacherID == null || selectedTeacherID.isEmpty()){
-			guiMsg.setText("Teacher Was Not Selected: Please Choose Teacher");
+			errMsg.setContentText("Teacher Was Not Selected: Please Choose Teacher");
+			errMsg.showAndWait();
 			return;
 		}
 		
 		selectedTeacherID = selectedTeacherID.substring(selectedTeacherID.indexOf('(') + 1, selectedTeacherID.indexOf(')'));
 	
+		if (selectedSemester == null || selectedSemester.isEmpty()){
+			errMsg.setContentText("Semester Was Not Selected: Please Choose Semester");
+			errMsg.showAndWait();
+			return;
+		}
+		
+		int semesterYear = Integer.parseInt(selectedSemester.substring(0, selectedSemester.indexOf('(')-1));
+		String semesterSeason = selectedSemester.substring(selectedSemester.indexOf('(')+1, selectedSemester.indexOf(')'));
+		int semesterID = -1;
+		for (int i = 0; i < semesterArr.size(); i++){
+			if (semesterArr.get(i).getYear() == semesterYear && semesterArr.get(i).getSeason().equals(semesterSeason)){
+				semesterID = semesterArr.get(i).getId();
+				break;
+			}
+		}
+		
 		for (int i = 0; i < available.size(); i++)
 			if (available.get(i).equals(selected)){
 				available.remove(i);
@@ -322,7 +475,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		if (added == null)
 			added = new ArrayList<String>();
 				
-		added.add(selected + " [" + selectedTeacherID + "]");
+		added.add(selected + " [" + selectedTeacherID + "]" + " {" + semesterID + "}");
 		taken.add(selected);
 		Collections.sort(taken);
 		// Collections.sort(available);
@@ -342,22 +495,26 @@ public class SecretaryCourseToClassController implements Initializable {
 		teacherChooser.getSelectionModel().clearSelection();
 		submitBtn.setDisable(false);
 	}
-	
+
+	/**
+	 * Remove course from class & show it in lists.
+	 * @param e
+	 */
 	public void remove(ActionEvent e){ // Remove course from class.
 		
 		if (available == null && taken == null){
-			guiMsg.setText("Class Was Not Selected: Please Choose Class");
+			errMsg.setContentText("Class Was Not Selected: Please Choose Class");
+			errMsg.showAndWait();
 			return;
 		}
 		
 		String selected = takenCourses.getSelectionModel().getSelectedItem();
 		
 		if (selected.isEmpty() || selected == null){
-			guiMsg.setText("Course Was Not Selected: Please Choose Course");
+			errMsg.setContentText("Course Was Not Selected: Please Choose Course");
+			errMsg.showAndWait();
 			return;
 		}
-		
-		
 		
 		for (int i = 0; i < taken.size(); i++)
 			if (taken.get(i).equals(selected)){
@@ -365,15 +522,11 @@ public class SecretaryCourseToClassController implements Initializable {
 				break;
 			}
 		
-		
 		if (removed == null)
 			removed = new ArrayList<String>();
-		
-		
-				
+			
 		removed.add(selected);
 		available.add(selected);
-		// Collections.sort(taken);
 		Collections.sort(available);
 		takenCourses.setItems(FXCollections.observableArrayList(taken));
 		availableCourses.setItems(FXCollections.observableArrayList(available));
@@ -385,15 +538,20 @@ public class SecretaryCourseToClassController implements Initializable {
 					break;
 				}
 			}
+		
 		removeBtn.setDisable(true);
 		submitBtn.setDisable(false);
 	}
 	
+	/**
+	 * Insert changes to data base.
+	 * @param e
+	 */
 	public void submit(ActionEvent e){ // Insert changes to data base.
 		
 		if (added == null && removed == null){
-			JOptionPane.showMessageDialog(null, 
-					  "No changes were made!", "Error", JOptionPane.ERROR_MESSAGE);
+			errMsg.setContentText("No changes were made!");
+			errMsg.showAndWait();
 			return;
 		}
 			
@@ -407,8 +565,8 @@ public class SecretaryCourseToClassController implements Initializable {
 			}
 		
 		if (cLass == null){
-			JOptionPane.showMessageDialog(null, 
-					  "No class were selected!", "Error", JOptionPane.ERROR_MESSAGE);
+			errMsg.setContentText("No class were selected!");
+			errMsg.showAndWait();
 			return;
 		}
 		
@@ -426,12 +584,13 @@ public class SecretaryCourseToClassController implements Initializable {
 			else
 				flag = 3;
 		}
-		
+		String exeptions = addRemoveStudents();
 		switch (flag){
-		case 0: JOptionPane.showMessageDialog(null, "No changes were made"); break;
-		case 1: JOptionPane.showMessageDialog(null, "Submmision Complete"); break;
-		case 2: JOptionPane.showMessageDialog(null,"Submmision Failed: Cant attach courses from class!", "Error", JOptionPane.ERROR_MESSAGE); break;
-		case 3: JOptionPane.showMessageDialog(null,"Submmision Failed: Cant remove courses from class!", "Error", JOptionPane.ERROR_MESSAGE); break;
+		case 0: infoMsg.setContentText("No changes were made"); infoMsg.showAndWait(); break;
+		case 1: if (exeptions != null){ infoMsg.setContentText(exeptions); infoMsg.showAndWait();}
+				infoMsg.setContentText("Submmision Complete"); infoMsg.showAndWait(); break;
+		case 2: errMsg.setContentText("Submmision Failed: Cant attach courses TO class!"); errMsg.showAndWait(); break;
+		case 3: errMsg.setContentText("Submmision Failed: Cant remove courses from class!"); errMsg.showAndWait(); break;
 		}
 		
 		AnchorPane pane = null;
@@ -446,10 +605,24 @@ public class SecretaryCourseToClassController implements Initializable {
 	//-------------------------------------------------------------------------------------------------------------
 	
 	@Override
-	public void initialize(URL location, ResourceBundle resources) { // Initialize window.
+	public void initialize(URL location, ResourceBundle resources) { // Initialize window. 
+		
+		infoMsg.setTitle("Operation Successful");
+		infoMsg.setHeaderText(null);
+		errMsg.setTitle("Error Accord");
+		errMsg.setHeaderText(null);
 		
 		semesterArr = Semester.getSemesters();
+		
+		int currID = Semester.getCurrent().getId();
+		for (int i = semesterArr.size()-1; i >= 0; i--){
+			if (semesterArr.get(i).getId() < currID){
+				semesterArr.remove(i);
+			}
+		}
+		
 		teacherArr = Teacher.getTeachers();
+		
 		organizedSemesterList = getSemesterList(semesterArr);
 		Collections.sort(organizedSemesterList);
 		semesterChooser.setItems(FXCollections.observableArrayList(organizedSemesterList));
