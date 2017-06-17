@@ -38,6 +38,7 @@ public class LoginController implements Initializable {
 	 @FXML
 	 private Label guiMeg;
 	 
+	 
 	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
 	 private HashMap <String, String> answer = null;
 	 private HashMap <String, String> msgServer = new HashMap <String,String>();
@@ -108,18 +109,5 @@ public class LoginController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		school.setItems(options);
-		
-		// student		String id = "424110", pass="Zd5hq";
-		// teacher		String id = "211721", pass="4nSfx";		
-		// sec
-		String id = "176214", pass="9Jr3d";
-		// SM		String id = "454545", pass="787878";
-		
-		this.id.setText(id);
-		password.setText(pass);
-		
-		school.getSelectionModel().selectFirst();
-		ip.setText("localhost");
-		port.setText("1234");
 	}
 }
