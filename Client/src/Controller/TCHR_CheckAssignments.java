@@ -147,7 +147,6 @@ public class TCHR_CheckAssignments implements Initializable {
     	
     	getCoursesFromDB();
     	setCoursesInComboBox();
-    	
     	enableElements(false);
     	
     }
@@ -179,6 +178,8 @@ public class TCHR_CheckAssignments implements Initializable {
         		stream.write(file);
         		stream.close();
         		showInfoMSG("success!","submission file saved!");
+        		showInfoMSG("Next step:","After editing the student submission,\n"
+        				+ "use the 'send back' button to send it back to:\n\nstudent ID: "+sub.studentID);
         		sub.isGotten = true;
         		
         	}
@@ -197,12 +198,13 @@ public class TCHR_CheckAssignments implements Initializable {
     	
 		  FileChooser fileChooser = new FileChooser();
           fileChooser.setTitle("Upload File");
+          showInfoMSG("Please select your EDITED submission file.\nThe selected file will be sent to:", "Student ID: "+sub.studentID);
 		  file = fileChooser.showOpenDialog(sendBTN.getScene().getWindow());
 		  
 		  if (file != null){
 			  
 			  /* START SENDING FILE */
-			  
+			 
 			 String filename = sub.assignmentID+"_"+sub.studentID;
 			 String type = file.getAbsolutePath().substring(file.getAbsolutePath().indexOf('.'));
 			 filename = filename.concat(type);
@@ -230,6 +232,7 @@ public class TCHR_CheckAssignments implements Initializable {
 				  synchronized (Main.client){
 					  try {Main.client.wait();}
 					  	catch (InterruptedException e2) {e2.printStackTrace();}}
+				  showInfoMSG("File has been sent to Student ID: "+sub.studentID, "Next Step:\nFill evaluation form and grade if you havent done so yet.");
 			  }
 			  else{
 				  System.out.println("couldnt send file info for the server!");
@@ -382,7 +385,11 @@ public class TCHR_CheckAssignments implements Initializable {
     	}
     	
     	coursesCOMBOBOX.setItems(coursesOBSRlist);			/*	POPULATE COMBOBOX COLLECTION	*/
-    	//coursesCOMBOBOX.getSelectionModel().selectFirst();
+    	
+    	if (coursesOBSRlist.isEmpty()) {
+    		showErrorMSG("No courses found for USER ID: "+Main.user.getID(), "");
+    		coursesCOMBOBOX.setDisable(true);
+    	}
     	
     }
 
