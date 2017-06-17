@@ -63,8 +63,9 @@ public class SystemManegerMenuBarController {
 	}
 	
 
-	public void message(ActionEvent e){
-	
+	public void message(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Message.fxml"));
+		Main.getRoot().setCenter(pane);
 	}
 	
 	
@@ -74,7 +75,7 @@ public class SystemManegerMenuBarController {
 	 * @throws IOException */
 	
 	public void define(ActionEvent e) throws IOException{
-		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SystemManagerDefineCourses.fxml"));;
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SystemManagerDefineCourses.fxml"));
 		Main.getRoot().setCenter(pane);
 	}
 	

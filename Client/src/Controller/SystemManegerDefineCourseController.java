@@ -7,7 +7,9 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 
 import Entity.Course;
+import Entity.Message;
 import Entity.TeachingUnit;
+import Entity.User;
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -24,7 +26,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
 /**
- * This is the controller class for: "SystemManegerDefineCourseController.fxml"
+ * This is the controller class for: "SystemManegerDefineCourser.fxml"
  * @author Idan Agam
  * */
 
@@ -94,6 +96,34 @@ public class SystemManegerDefineCourseController implements Initializable {
     
     //-------------------------------------------------------------------------------------------------------------------
     
+	/**
+	 * Send message to all relevant users.
+	 */
+	private void sendMsgs(){
+		
+		ArrayList<String> Secretary = User.getUserIdByRole("Secretary");
+		ArrayList<String> Principal = User.getUserIdByRole("Principal");
+		String title = "New course has created by: " + Main.user.getName();
+		String msg = Main.user.getName() + " (" + Main.user.getID() + ") defined new course:\n\n" +
+				"Course Id: " + newCourse.getCourseID() + "\n" +
+				"Course Name: " + newCourse.getName() + "\n" +
+				"Course Weakly Hours: " + newCourse.getWeeklyHours() + "\n" +
+				"Course Teaching Unit: " + newCourse.getTUID();
+		int from = Integer.parseInt(Main.user.getID());
+		
+		if (Secretary != null){
+			for (int i = 0; i < Secretary.size(); i++){
+				Message.sendMsg(new Message(title, msg, from, Integer.parseInt(Secretary.get(i))));
+			}
+		}
+		
+		if (Principal != null){
+			for (int i = 0; i < Principal.size(); i++){
+				Message.sendMsg(new Message(title, msg, from, Integer.parseInt(Principal.get(i))));
+			}
+		}
+	}
+	
     /**
      * Filter course list results.
      * @param e
@@ -184,6 +214,7 @@ public class SystemManegerDefineCourseController implements Initializable {
     	int numOfChanges = (int)Main.client.getMessage();
     	
     	if (numOfChanges >= 1){
+    		sendMsgs();
     		infoMsg.setContentText("Course definition successful :)");
     		infoMsg.showAndWait();
 	    	clearScreen();

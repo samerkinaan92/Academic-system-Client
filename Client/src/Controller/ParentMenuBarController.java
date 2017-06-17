@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 public class ParentMenuBarController {
@@ -58,8 +59,9 @@ public class ParentMenuBarController {
 	}
 	
 
-	public void message(ActionEvent e){
-	
+	public void message(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Message.fxml"));
+		Main.getRoot().setCenter(pane);
 	}
 	
 	
