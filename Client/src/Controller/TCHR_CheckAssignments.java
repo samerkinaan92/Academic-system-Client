@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 import javax.swing.JOptionPane;
 
 import Entity.Assignment;
+import Entity.Message;
 import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -90,6 +91,9 @@ public class TCHR_CheckAssignments implements Initializable {
 			return "\t"+this.courseName;
 		}
     }
+    
+    /**	String of the current selected course in Combo Box*/
+    String currentSelectedCourseName = "";
     
     File file;
     
@@ -233,6 +237,11 @@ public class TCHR_CheckAssignments implements Initializable {
 					  try {Main.client.wait();}
 					  	catch (InterruptedException e2) {e2.printStackTrace();}}
 				  showInfoMSG("File has been sent to Student ID: "+sub.studentID, "Next Step:\nFill evaluation form and grade if you havent done so yet.");
+				  
+	    			String title = "Submission file checked";
+	    			String MSG = "Your submission FILE in course: "+currentSelectedCourseName+" has been checked";
+	    			Message.sendMsg(new Message(title,MSG, Integer.parseInt(Main.user.getID()),sub.studentID));
+				  
 			  }
 			  else{
 				  System.out.println("couldnt send file info for the server!");
@@ -273,6 +282,17 @@ public class TCHR_CheckAssignments implements Initializable {
     			alert.setHeaderText(null);
     			alert.setContentText("Your evaluation has been saved!");
     			alert.showAndWait();
+    			
+    			String title = "Submission Checked";
+    			String MSG = "Your submission in course: "+currentSelectedCourseName+"\nhas been checked and evaluated.\n\n"
+    					+"Grade: "+sub.Grade+"\nEvaluation: "+sub.evaluation;
+    			Message.sendMsg(new Message(title,MSG, Integer.parseInt(Main.user.getID()),sub.studentID));
+    			System.out.println(MSG);
+    			
+    			evaluationTextArea.clear();
+    			finalGradeTextField.clear();
+    			evaluationTextArea.setPromptText(sub.evaluation);
+    			finalGradeTextField.setPromptText(""+sub.Grade);
 	
     		}
     		
@@ -355,7 +375,7 @@ public class TCHR_CheckAssignments implements Initializable {
 	private void getCoursesFromDB() {
     	
     	sentMSG.put("msgType", "select");
-    	sentMSG.put("query", "SELECT CC.CourseID, C.CourseName FROM course C, class_course CC WHERE teacherID = '"+Main.user.getID()+"' and CC.CourseID = C.CourseID;");
+    	sentMSG.put("query", "SELECT DISTINCT CC.CourseID, C.CourseName FROM course C, class_course CC WHERE teacherID = '"+Main.user.getID()+"' and CC.CourseID = C.CourseID;");
 		Main.client.sendMessageToServer(sentMSG);
 		synchronized (Main.client) {		
 			try {Main.client.wait();}
@@ -443,9 +463,12 @@ public class TCHR_CheckAssignments implements Initializable {
      * */
     private void coursesCOMBOBOXchangeHandler (String SI) {
     	
+    	
+    	
     	assignmentsCB.getItems().clear();
     	
     	DBCourse course = getSelectedCourse(SI);
+    	currentSelectedCourseName = course.courseName;
     	
     	getSubmissionsFromDB(course.courseID);	/*	get all submission's of a given course ID	*/
     	

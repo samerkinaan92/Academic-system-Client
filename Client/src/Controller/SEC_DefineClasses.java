@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import Entity.Message;
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -216,6 +218,7 @@ public class SEC_DefineClasses implements Initializable {
     		
     			createNewDBclassRow(getSpinnerValue());
     			showInfoMSG("Class Created Succussfuly!!", "Class Name: '"+getSpinnerValue()+"'");
+
     			disableElements(true);
     			checkBTN.setDisable(false);
         		spinner1.setDisable(false);
@@ -453,6 +456,8 @@ public class SEC_DefineClasses implements Initializable {
 			}
 		}
 		
+
+		
 		for (int i=0;i<newClassToDB.size();i++) {
 			
 			sendStudntINclassToDB(newClassToDB.get(i).ID, className);
@@ -476,5 +481,7 @@ public class SEC_DefineClasses implements Initializable {
     				System.out.println("Thread cant move to wait()");
     			}
     		}
+    		
+    		Message.sendMsg(new Message("New class assign!","You have been assigned to a new class: "+className, Integer.parseInt(Main.user.getID()),studentID));
     }
 }

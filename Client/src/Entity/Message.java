@@ -35,6 +35,7 @@ public class Message {
 		this.from = from;
 		this.to = to;
 	}
+	
 	/**
 	 * For create a new message to send.
 	 * @param title Message title
