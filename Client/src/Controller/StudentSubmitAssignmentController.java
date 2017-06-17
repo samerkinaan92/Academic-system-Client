@@ -29,11 +29,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 
 /**
@@ -99,6 +101,9 @@ public class StudentSubmitAssignmentController implements Initializable {
 	 
 	  /** File to store local assignment info  */
 	  private  File file;
+	  
+	  Alert infoMsg = new Alert(AlertType.INFORMATION);
+	  Alert errMsg = new Alert(AlertType.ERROR);
 
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
@@ -120,7 +125,6 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  }
 		  }  
 	  }
-	  
 	  
 	  /**
 	   * Get courses names & ID's for list.
@@ -177,7 +181,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			ArrayList<String> date = (ArrayList<String>)Main.client.getMessage();
 			Date subDate = null;
 			try {
-				subDate = format.parse(date.get(3));
+				subDate = format.parse(date.get(4));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -247,8 +251,8 @@ public class StudentSubmitAssignmentController implements Initializable {
           }
           catch (IOException ex) {
         	  ex.printStackTrace();
-        	  JOptionPane.showMessageDialog(null, 
-					  "Download Failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        	  errMsg.setContentText("Download Failed!");
+        	  errMsg.showAndWait();
           } 
 	  }
 	  
@@ -288,12 +292,14 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  public void submit(ActionEvent e){ // Submit file from disk to server. 
 		  
 		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
-			  guiMsg.setText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.setContentText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.showAndWait();
 			  return;
 		  }
 			  
 		  if (file == null){
-			  guiMsg.setText("No file was chosen to upload! Please browse for a file from the computer.");
+			  errMsg.setContentText("No file was chosen to upload! Please browse for a file from the computer.");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -345,7 +351,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 				}}
 		  }
 		  else{
-			  guiMsg.setText("Send file info to server failed!");
+			  errMsg.setContentText("Send file info to server failed!");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -354,7 +361,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  // Insert new submission data into data base.
 		  
 		  if (Main.client.getMessage() == null){
-			  guiMsg.setText("Send file data to server failed!");
+			  errMsg.setContentText("Send file data to server failed!");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -384,12 +392,12 @@ public class StudentSubmitAssignmentController implements Initializable {
 			}}
 	    	
 	    	if ((int)Main.client.getMessage() > 0){
-	    		JOptionPane.showMessageDialog(null, "submission Successful");
-	    		
+	    		infoMsg.setContentText("submission Successful");
+	    		infoMsg.showAndWait();
 	    	}
 	    	else{
-	    		JOptionPane.showMessageDialog(null, 
-						  "submission Filed: Data base error!", "Error", JOptionPane.ERROR_MESSAGE);
+	    		errMsg.setContentText("submission Filed: Data base error!");
+	    		errMsg.showAndWait();
 	    	}
 	    	clearScreen();
 	  }
@@ -401,7 +409,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  public void browse(ActionEvent e){ // Open file explorer for upload file.
 		  
 		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
-			  guiMsg.setText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.setContentText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -412,8 +421,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  filePath.setText(file.getAbsolutePath());
 			  submitBtn.setDisable(false);
 		  }
-		  else
-			  guiMsg.setText("No file was selected!");
+		  else{
+			  infoMsg.setContentText("No file was selected!");
+			  infoMsg.showAndWait();
+		  }
 	  }
 
 	  //-------------------------------------------------------------------------------------------------------------------
@@ -434,6 +445,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  @Override
 	  public void initialize(URL arg0, ResourceBundle arg1) { // Initialize window.
 		  
+		  infoMsg.setTitle("Operation Successful");
+		  infoMsg.setHeaderText(null);
+		  errMsg.setTitle("Error Accord");
+		  errMsg.setHeaderText(null);
 		  file = null;
 		  courseArr = Student.getCourse();
 		  organizedCourseList = getCourseList(courseArr);
@@ -461,6 +476,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    	uploadLabel.setDisable(true);
 			    	browseBtn.setDisable(true);
 			    	downloadBtn.setDisable(true);
+			    	guiMsg.setText("");
 			    }
 			}); 
 		  
