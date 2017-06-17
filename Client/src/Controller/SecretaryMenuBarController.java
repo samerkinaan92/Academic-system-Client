@@ -61,8 +61,9 @@ public class SecretaryMenuBarController {
 	}
 	
 
-	public void message(ActionEvent e){
-		
+	public void message(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Message.fxml"));
+		Main.getRoot().setCenter(pane);
 	}
 	
 	
@@ -137,6 +138,13 @@ public class SecretaryMenuBarController {
 	public void DefineClasses(ActionEvent e) throws IOException{
 
 		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SEC_DefineClasses.fxml"));;
+		Main.getRoot().setCenter(pane);
+		
+	}
+	
+	public void DeleteClass(ActionEvent e) throws IOException{
+
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SEC_DeleteClass.fxml"));;
 		Main.getRoot().setCenter(pane);
 		
 	}

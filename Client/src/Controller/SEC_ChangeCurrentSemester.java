@@ -67,7 +67,7 @@ public class SEC_ChangeCurrentSemester implements Initializable{
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
     	alert.setHeaderText("Change current Semester?");
-    	alert.setContentText("This will set "+sem.season+", "+sem.year+" as the current semester.\n Continue?");
+    	alert.setContentText("This will set ("+sem.season+", "+sem.year+") as the current semester.\n Continue?");
     	Optional<ButtonType> result = alert.showAndWait();
     	
     	if (result.get() == ButtonType.OK){
