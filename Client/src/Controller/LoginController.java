@@ -17,53 +17,32 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
-/**
- * This is the controller class for: "LoginController.fxml"
- * @author Idan Agam
- * */
-
 public class LoginController implements Initializable {
 	
-	 /** ComboBox to display schools in DB */
 	 @FXML
 	 private ComboBox<String> school;
 	
-	 /** TextField to insert user id */
 	 @FXML
 	 private TextField id;
 
-	 /** PasswordField to insert user password */
 	 @FXML
 	 private PasswordField password;
 
-	 /** TextField to insert server ip */
 	 @FXML
 	 private TextField ip;
 
-	 /** TextField to insert server port */
 	 @FXML
 	 private TextField port;
 	 
 	 @FXML
 	 private Label guiMeg;
 	 
-	 /** ObservableList List of schools. */
+	 
 	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
-	 
-	 /** HashMap answer from server */
 	 private HashMap <String, String> answer = null;
-	 
-	 /** HashMap message to server */
 	 private HashMap <String, String> msgServer = new HashMap <String,String>();
 	 
-	 //-----------------------------------------------------------------------------------------------------------------
 	 
-	 /**
-	  * Establish connection to server & Check all user input for login, if valid login to system 
-	  * else show appropriate message.
-	  * @param e
-	  * @throws InterruptedException
-	  */
 	 @SuppressWarnings("unchecked")
 	 public void OnLogin(ActionEvent e) throws InterruptedException{
 		
@@ -85,6 +64,7 @@ public class LoginController implements Initializable {
 				return;
 			}
 	
+		
 		// Send message to server with an new thread & wait for answer. 
 		
 		if (!id.getText().isEmpty() && !password.getText().isEmpty() && !school.getSelectionModel().getSelectedItem().toString().isEmpty()){
@@ -100,6 +80,8 @@ public class LoginController implements Initializable {
 				guiMeg.setText("Server fatal error!");
 				return;
 			}
+			
+			
 			synchronized (Main.client){Main.client.wait();}
 			answer = (HashMap <String, String>)Main.client.getMessage();
 		}
@@ -118,11 +100,10 @@ public class LoginController implements Initializable {
 			//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 			Main.user = new User(id.getText(), answer.get("Name"));
 			Main.openMain(answer.get("Type"));
+			Main.user.setType(answer.get("Type"));
 		}else
 			guiMeg.setText((String)answer.get("ErrMsg"));
 	 }
-	 
-	 //-----------------------------------------------------------------------------------------------------------------
 
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {

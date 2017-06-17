@@ -8,10 +8,9 @@ import application.Main;
 public class Teacher extends User {
 
 	private int maxWorkHours;
-	
 
 	public Teacher(String name){
-		this.Name = name;
+		super(name);
 	}
 	public Teacher(String name, String id, int hours){
 		super(id, name);
