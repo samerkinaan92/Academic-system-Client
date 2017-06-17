@@ -63,8 +63,9 @@ public class StudentMenuBarController {
 	}
 	
 
-	public void message(ActionEvent e){
-	
+	public void message(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Message.fxml"));
+		Main.getRoot().setCenter(pane);
 	}
 	
 	
