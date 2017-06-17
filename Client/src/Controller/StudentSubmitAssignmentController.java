@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,8 +20,11 @@ import javax.swing.JOptionPane;
 
 import Entity.Assignment;
 import Entity.Course;
+import Entity.Message;
+import Entity.Semester;
 import Entity.Student;
 import Entity.SubmittedAssignment;
+import Entity.User;
 import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -193,6 +197,50 @@ public class StudentSubmitAssignmentController implements Initializable {
 			else
 				return 0; 
 	  }
+	  
+	  /**
+		 * Send message to all relevant users.
+		 */
+		@SuppressWarnings("unchecked")
+		private void sendMsgs(){
+			
+			String selectedAss = assignmentListView.getSelectionModel().getSelectedItem();
+			String selectedCourseID = courseListView.getSelectionModel().getSelectedItem();
+			String msg = Main.user.getName() + " (" + Main.user.getID() + ")\nSubmitted assignment: " + selectedAss +
+					"\nCourse: " + selectedCourseID;
+			String title = "Assignment Submission";
+			
+			selectedCourseID = selectedCourseID.substring(selectedCourseID.indexOf('(')+1, selectedCourseID.indexOf(')'));
+			
+			int semesterID = Semester.getCurrent().getId();
+			
+			String className = Student.getStudentClass(Main.user.getID());
+			
+			HashMap <String,String> msgServer = new HashMap <String,String>();
+			msgServer.put("msgType", "select");
+			msgServer.put("query", "SELECT teacherID FROM class_course where class_course.ClassName = '"
+					+ className + "' AND class_course.semesterId = " + semesterID + " AND class_course.CourseID = " +
+					selectedCourseID +";");
+			
+			try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					System.out.println("Server fatal error!");
+				}
+			synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}}
+			ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+			
+			if (result.size() > 0){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(result.get(0)), Integer.parseInt(Main.user.getID())));
+			}
+			
+			Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Main.user.getID())));
+		}
 	 	  
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
@@ -394,6 +442,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 	    	if ((int)Main.client.getMessage() > 0){
 	    		infoMsg.setContentText("submission Successful");
 	    		infoMsg.showAndWait();
+	    		sendMsgs();
 	    	}
 	    	else{
 	    		errMsg.setContentText("submission Filed: Data base error!");
@@ -451,6 +500,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  errMsg.setHeaderText(null);
 		  file = null;
 		  courseArr = Student.getCourse();
+		  // courseArr = Course.filterOldCourses(courseArr);
+		  
 		  organizedCourseList = getCourseList(courseArr);
 		  Collections.sort(organizedCourseList);
 		  courseListView.setItems(FXCollections.observableArrayList(organizedCourseList));
