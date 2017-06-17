@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.StudentViewCourseInfoController">
+   <children>
+      <Label layoutX="186.0" layoutY="28.0" prefHeight="45.0" prefWidth="403.0" text="My courses" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+         <font>
+            <Font name="Copperplate Gothic Light" size="40.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
+      <TableView fx:id="cTable" layoutX="38.0" layoutY="158.0" onMousePressed="#showTech" prefHeight="128.0" prefWidth="565.0">
+        <columns>
+          <TableColumn fx:id="Cid" prefWidth="74.0" text="ID" />
+          <TableColumn fx:id="cName" prefWidth="153.0" text="Name" />
+            <TableColumn fx:id="CTUname" prefWidth="174.0" text="TU name" />
+            <TableColumn fx:id="cWH" prefWidth="163.0" text="Weekly hours" />
+        </columns>
+      </TableView>
+      <Label layoutX="38.0" layoutY="111.0" text="Semester:" textFill="BLUE">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <ComboBox fx:id="cComBox" layoutX="127.0" layoutY="106.0" onAction="#cComboBox" prefWidth="150.0" />
+      <ListView fx:id="teachList" layoutX="39.0" layoutY="336.0" prefHeight="117.0" prefWidth="176.0" />
+      <Label fx:id="teacherCourLabel" layoutX="41.0" layoutY="306.0" text="Teachers for course:" textFill="BLUE" />
+      <Label fx:id="weeklyHouLabel" layoutX="310.0" layoutY="111.0" text="weeklyHouLabel" textFill="BLUE" />
+   </children>
+</AnchorPane>

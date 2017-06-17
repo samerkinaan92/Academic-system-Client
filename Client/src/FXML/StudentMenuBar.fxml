@@ -14,6 +14,7 @@
       </Menu>
       <Menu mnemonicParsing="false" text="View">
         <items>
+            <MenuItem mnemonicParsing="false" onAction="#viewCourseInfo" text="Course information" />
           <MenuItem mnemonicParsing="false" onAction="#ViewPersonalInfo" text="Personal Info" />
         </items>
       </Menu>

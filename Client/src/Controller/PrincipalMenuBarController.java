@@ -135,18 +135,29 @@ public class PrincipalMenuBarController {
 	}
 	
 
+    /**OpenParInfo - event that presenting the parent information screen*/
     @FXML
-    void RemovePerEvent(ActionEvent event) throws IOException {
-    	 	
- 
+    void OpenParInfo(ActionEvent event) {
     	try {
-		   URL paneOneUrl = getClass().getResource("/FXML/PrincipalDeletePermissions.fxml");
+		   URL paneOneUrl = getClass().getResource("/FXML/PrincipalViewParInfo.fxml");
 		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
 		   BorderPane border = Main.getRoot();			    
 		   border.setCenter(paneOne);
         } catch (IOException e) {
             e.printStackTrace();
-          }        
+          }       
+    }
+    
+    @FXML
+    void viewPerInfo(ActionEvent event) {
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }       
     }
     
 	

@@ -171,6 +171,36 @@ public class claSS {
 		return result;
 
 	}
+	
+	
+	public static String getClassByStud(String ID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select ClassName from student_class where StudentID='"+ID+"';");
+		ArrayList<String> result=sendMsg(msgServer);				
+		
+		return result.get(0);
+	}
+	
+	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		@SuppressWarnings("unchecked")
+		ArrayList<String> courseResult = (ArrayList<String>)Main.client.getMessage();
+		if (courseResult == null)
+			return null;
+		return courseResult;
+	}
 
 	public String getClassName() {
 		return ClassName;

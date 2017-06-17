@@ -240,6 +240,38 @@ public class Course extends AcademicActivity {
 			return null;
 	}
 	
+	public static ArrayList<Course> getCoursesBySemStd(String sem, String stdID){
+		HashMap<String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select course.courseid,CourseName,WeeklyHours,tuname from semester,course_student,course where semester.semesterid=course_student.semesterid and semester.semesterid='"+sem+"' and course.courseid=course_student.courseid and studentid='"+stdID+"';");
+		ArrayList<String>result = sendMsg(msgServer);
+		
+		ArrayList<Course>courseArr = new ArrayList<Course>();
+		
+		for(int i=0 ; i<result.size() ; i+=4)
+			courseArr.add(new Course(Integer.parseInt(result.get(i)),result.get(i+1),Integer.parseInt(result.get(i+2)),result.get(i+3)));
+		return courseArr;
+	}
+	
+	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		@SuppressWarnings("unchecked")
+		ArrayList<String> courseResult = (ArrayList<String>)Main.client.getMessage();
+		if (courseResult == null)
+			return null;
+		return courseResult;
+	}
+	
 	
 	
 	public int getCourseID() {

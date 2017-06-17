@@ -16,13 +16,14 @@
         <items>
           <MenuItem mnemonicParsing="false" onAction="#ApproveTeacherAssignment" text="Approve Teacher Assignment" />
             <MenuItem mnemonicParsing="false" onAction="#ApproveStudentChange" text="Approve Student Change" />
-            <MenuItem mnemonicParsing="false" onAction="#RemovePerEvent" text="RemoveParentPermissions" />
         </items>
       </Menu>
       <Menu mnemonicParsing="false" text="View">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#ViewSystemData" text="System Data" />
             <MenuItem mnemonicParsing="false" onAction="#ViewStatisticalReport" text="Statistical Report" />
+            <MenuItem mnemonicParsing="false" onAction="#OpenParInfo" text="Parent information" />
+            <MenuItem mnemonicParsing="false" onAction="#viewPerInfo" text="Personal information" />
         </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Connection">
