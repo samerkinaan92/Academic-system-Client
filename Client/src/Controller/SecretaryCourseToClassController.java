@@ -234,6 +234,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		String cls = classChooser.getSelectionModel().getSelectedItem();
 		String exeptions = "Student/s that can't take course\n\n";
 		ArrayList<String> students = claSS.getStudents(cls);
+		
 		ArrayList<String> addedStudents = new ArrayList<String>();
 		ArrayList<String> exeptionStudents = new ArrayList<String>();
 		String courseId;
@@ -269,6 +270,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		
 		if (!Student.attachStudentsToCourses(sID, addedStudents)){
 			errMsg.setContentText("Can't add students to class courses");
+			errMsg.showAndWait();
 		}
 		
 		Secretery.sendExceptionStudents(exeptionStudents);
@@ -548,6 +550,12 @@ public class SecretaryCourseToClassController implements Initializable {
 	 * @param e
 	 */
 	public void submit(ActionEvent e){ // Insert changes to data base.
+		
+		String cls = classChooser.getSelectionModel().getSelectedItem();
+		if (claSS.getStudents(cls).isEmpty()){
+			errMsg.setContentText("Can't add students to class courses");
+			errMsg.showAndWait();
+		}
 		
 		if (added == null && removed == null){
 			errMsg.setContentText("No changes were made!");

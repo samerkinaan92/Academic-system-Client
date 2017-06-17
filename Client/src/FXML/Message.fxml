@@ -19,7 +19,7 @@
             <DropShadow height="8.0" radius="3.5" width="8.0" />
          </effect></Button>
       <ListView fx:id="messageList" layoutX="21.0" layoutY="119.0" prefHeight="274.0" prefWidth="548.0" />
-      <Label fx:id="headerLabel" layoutX="99.0" layoutY="24.0" prefHeight="45.0" prefWidth="403.0" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+      <Label fx:id="headerLabel" alignment="CENTER" layoutX="99.0" layoutY="24.0" prefHeight="45.0" prefWidth="403.0" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
          <font>
             <Font name="Copperplate Gothic Light" size="40.0" />
          </font>

@@ -21,7 +21,6 @@
       <Menu mnemonicParsing="false" text="Assignments">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#SubmitAssignments" text="Submit" />
-            <MenuItem mnemonicParsing="false" onAction="#DeleteAssignments" text="Delete" />
         </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Connection">
