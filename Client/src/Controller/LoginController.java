@@ -107,5 +107,19 @@ public class LoginController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		school.setItems(options);
+		
+		// student	String id = "123456", pass="asdss";
+		// teacher	String id = "211721", pass="4nSfx";		
+		// sec		
+		String id = "176214", pass="9Jr3d";
+		
+		this.id.setText(id);
+		password.setText(pass);
+		
+		school.getSelectionModel().selectFirst();
+		ip.setText("localhost");
+		port.setText("1234");
+		
+		
 	}
 }

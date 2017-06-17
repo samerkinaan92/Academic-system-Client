@@ -98,6 +98,11 @@ public class SEC_DefineClasses implements Initializable {
     @FXML
     private Label rightLABEL;
     
+	 @FXML
+	private Label counterLABEL;
+	 
+	int studentsCounter;
+    
     @FXML
     private Spinner<Character> spinner1;
 
@@ -121,6 +126,8 @@ public class SEC_DefineClasses implements Initializable {
     		}
     		rightLISTstudents.add(std.toString());
     		updateListViews();			// update list views
+    		studentsCounter++;
+    		counterLABEL.setText("("+studentsCounter+")");
     	}
 
     }
@@ -142,6 +149,11 @@ public class SEC_DefineClasses implements Initializable {
     		}
     		leftLISTstudents.add(std.toString());		// remove from left, add to right
     		updateListViews();			// update list views
+    		studentsCounter--;
+    		if (studentsCounter!=0)
+    			counterLABEL.setText("("+studentsCounter+")");
+    		else
+    			counterLABEL.setText("");
     	}
     }
 
@@ -165,6 +177,8 @@ public class SEC_DefineClasses implements Initializable {
     		
     		disableElements(false);
     		checkBTN.setDisable(true);
+    		spinner1.setDisable(true);
+    		spinner2.setDisable(true);
     		classNameLABEL.setText("'"+className+"'");
     		getStudentsFromDB();
     		setStudentsInList();
@@ -204,10 +218,14 @@ public class SEC_DefineClasses implements Initializable {
     			showInfoMSG("Class Created Succussfuly!!", "Class Name: '"+getSpinnerValue()+"'");
     			disableElements(true);
     			checkBTN.setDisable(false);
+        		spinner1.setDisable(false);
+        		spinner2.setDisable(false);
     			classNameLABEL.setText("");
     			rightLIST.getItems().clear();
     			leftLIST.getItems().clear();
-    		
+        		studentsCounter--;
+        		studentsCounter=0;
+        		counterLABEL.setText("");
     		}
     	}
     }
