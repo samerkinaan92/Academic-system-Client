@@ -141,6 +141,13 @@ public class SecretaryMenuBarController {
 		
 	}
 	
+	public void DeleteClass(ActionEvent e) throws IOException{
+
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SEC_DeleteClass.fxml"));;
+		Main.getRoot().setCenter(pane);
+		
+	}
+	
 	public void AttachCurseToClass(ActionEvent e) throws IOException{
 		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SecretaryCourseToClass.fxml"));;
 		Main.getRoot().setCenter(pane);

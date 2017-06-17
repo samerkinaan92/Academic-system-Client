@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
+
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -70,12 +72,6 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	    private ComboBox<String> seasonCOMBOBOX;
 
 	    @FXML
-	    private Label redLABEL;
-	    
-	    @FXML
-	    private Label blueLABEL;
-	    
-	    @FXML
 	    private TextField yearTEXTFIELD;
 	    
 	    @FXML
@@ -93,11 +89,6 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
     	
     	String selectedSeason = getSeason();
     	int desiredYear = (int)yearSpinner.getValue();
-
-    	//if (!(desiredYear.isEmpty()) && desiredYear.length()==4) {
-    		
-    		redLABEL.setText("");
-    		blueLABEL.setText("");
 
     		getExistingSemesters(selectedSeason,desiredYear);
 
@@ -120,12 +111,10 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
             		clearCurrentSemester ();
             	        	
     			sendNewSemester(selectedSeason,desiredYear,isCurr);
-    			blueLABEL.setText("SEMESTER CREATED SUCCESSFULY!");
-    			redLABEL.setText("");
+    			showInfoMSG("Semester creadted successfuly!", "");
     		}
     		else {
-    			redLABEL.setText("SEMESTER ALREADY EXISTS!");
-    			blueLABEL.setText("");
+    			showErrorMSG("Semester already exists!","("+selectedSeason+", "+desiredYear+") Already exists.");
     		}
     	//}
    // else {
@@ -137,7 +126,6 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
     @FXML
     void changeCurrentSemesterBTNaction(ActionEvent event) throws IOException {
     	if (!isOpened) {
-    		blueLABEL.setText("");
     		Stage stage = new Stage();
     		Scene scene = new Scene(FXMLLoader.load(getClass().getResource("/FXML/SEC_ChangeCurrentSemester.fxml")));
     		stage.setTitle("Change Current Semester");
@@ -283,7 +271,35 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 				}
 			}
 		}
-
+	}
+	
+	/**	shows information message using GUI
+	 * 
+	 * @param title 'title of the screen'
+	 * @param MSG 'message to be displayed'
+	 * */
+	private void showInfoMSG(String title, String MSG) {
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText(title);
+		alert.setContentText(MSG);
+		alert.showAndWait();
+		
+	}
+	
+    /**		pop up error message
+     * 	@param	title title
+     * @param MSG message
+     * 	*/
+	private void showErrorMSG(String title, String MSG) {
+		
+  		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Error!");
+		alert.setHeaderText(title);
+		alert.setContentText(MSG);
+		alert.showAndWait();
+		
 	}
 
 }

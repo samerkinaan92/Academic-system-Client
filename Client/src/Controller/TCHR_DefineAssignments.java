@@ -236,6 +236,10 @@ public class TCHR_DefineAssignments implements Initializable {
     	}
     	
     	coursesCB.setItems(oList);			/*	POPULATE COMBOBOX COLLECTION	*/
+    	if (oList.isEmpty()) {
+    		showErrorMSG("No courses found for USER ID: "+Main.user.getID(), "");
+    		coursesCB.setDisable(true);
+    	}
     	
     }
 
