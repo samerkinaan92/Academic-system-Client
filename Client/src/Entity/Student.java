@@ -20,6 +20,19 @@ public class Student extends User {
 		super(ID,stdname);
 	}
 	
+	public static String getStudentClass(String id){
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select ClassName From student_class WHERE student_class.StudentID =" + id);
+		
+		ArrayList<String> result = sendMsg(msgServer);
+		
+		if (result.size() > 0)
+			return result.get(0);
+		return null;
+	}
+	
+	
 	public static ArrayList<Course> getCourse(){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();

@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import Controller.SEC_DefineClasses.DBFreeStudent;
+import Entity.Message;
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -61,6 +62,8 @@ public class SEC_DeleteClass implements Initializable {
     	String selectedClass = classesCB.getSelectionModel().getSelectedItem().toString();
     	
     	if ( showsDetails(selectedClass) ) 	// if user is sure he wants to delete the class
+    		alertAllStudentsInClass(selectedClass);
+    		alertAllTeachersInClass(selectedClass);
     		deleteClass(selectedClass);
     	
     }
@@ -71,6 +74,62 @@ public class SEC_DeleteClass implements Initializable {
 		getClassesFromDB();
 		setClassesInComboBox();
 		
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void alertAllStudentsInClass(String className) {
+		
+		ArrayList<String> students = null;
+		
+		sentMSG.put("msgType", "select");
+    	sentMSG.put("query","SELECT SC.StudentID FROM student_class SC WHERE SC.ClassName='"+className+"'");
+		Main.client.sendMessageToServer(sentMSG);
+		
+		synchronized (Main.client) {		
+			try {
+				Main.client.wait();
+				students = (ArrayList<String>)Main.client.getMessage();
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+				System.out.println("Thread cant move to wait()");
+			}
+		}
+		
+		String title = "Class Removal!";
+		String MSG = "You have been removed from the class: "+className;
+		
+		for (int i=0;i<students.size();i++)
+			Message.sendMsg(new Message(title,MSG, Integer.parseInt(Main.user.getID()),Integer.parseInt(students.get(i))));
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	private void alertAllTeachersInClass(String className) {
+		
+		ArrayList<String> teachers = null;
+		
+		sentMSG.put("msgType", "select");
+    	sentMSG.put("query","SELECT teacherID FROM class_course where ClassName='"+className+"'");
+		Main.client.sendMessageToServer(sentMSG);
+		
+		synchronized (Main.client) {		
+			try {
+				Main.client.wait();
+				teachers = (ArrayList<String>)Main.client.getMessage();
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+				System.out.println("Thread cant move to wait()");
+			}
+		}
+		
+		String title = "Class Removal!";
+		String MSG = "You have been removed from the class: "+className+"\n";
+		
+		for (int i=0;i<teachers.size();i++)
+			Message.sendMsg(new Message(title,MSG, Integer.parseInt(Main.user.getID()),Integer.parseInt(teachers.get(i))));
 		
 	}
 	
@@ -128,14 +187,14 @@ public class SEC_DeleteClass implements Initializable {
 		
 	}
 	
+	
+	
 	/**	shows last message before class is deleted
 	 * @param className Class Name
 	 * @return true if user sure he want to delete the class
 	 *  */
 	@SuppressWarnings("unchecked")
 	private boolean showsDetails(String className) {
-		
-		//SELECT C.CourseName FROM class_course CC, course C WHERE className ='A2' and CC.courseID=C.courseID
 		
 		ArrayList<String> studentsFromDB = null;
 		ArrayList<String> coursesFromDB = null;

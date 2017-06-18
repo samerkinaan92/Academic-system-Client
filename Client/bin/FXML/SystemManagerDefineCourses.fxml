@@ -5,26 +5,80 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SystemManegerDefineCourseController">
    <children>
-      <ListView fx:id="courseList" layoutX="21.0" layoutY="73.0" prefHeight="351.0" prefWidth="216.0" />
-      <Label alignment="CENTER" layoutX="68.0" layoutY="14.0" prefHeight="29.0" prefWidth="107.0" text="Course List" textAlignment="CENTER" />
-      <TextField fx:id="searchField" layoutX="55.0" layoutY="43.0" onAction="#search" promptText="Enter Search " />
-      <Button layoutX="76.0" layoutY="430.0" mnemonicParsing="false" onAction="#addPreCourse" prefHeight="29.0" prefWidth="107.0" text="Add Pre Course" />
+      <ListView fx:id="courseList" layoutX="22.0" layoutY="65.0" prefHeight="351.0" prefWidth="216.0" />
+      <TextField fx:id="searchField" layoutX="55.0" layoutY="34.0" onAction="#search" promptText="&lt;&lt; Enter Search &gt;&gt;" />
       <ComboBox fx:id="weaklyHours" layoutX="293.0" layoutY="145.0" prefWidth="150.0" promptText="&lt;&lt;Weakly Hours&gt;&gt;" />
       <ComboBox fx:id="teachingUnit" layoutX="470.0" layoutY="145.0" prefWidth="150.0" promptText="&lt;&lt;Teaching Unit&gt;&gt;" />
-      <TextField fx:id="courseId" layoutX="471.0" layoutY="63.0" promptText="&lt;&lt;Course Id&gt;&gt;" />
-      <Button layoutX="400.0" layoutY="381.0" mnemonicParsing="false" onAction="#submitCourse" prefHeight="57.0" prefWidth="120.0" text="Submit" />
+      <TextField fx:id="courseId" layoutX="471.0" layoutY="76.0" promptText="&lt;&lt;Course Id&gt;&gt;" />
       <ListView fx:id="preCourseList" layoutX="371.0" layoutY="218.0" prefHeight="72.0" prefWidth="178.0" />
-      <Button layoutX="400.0" layoutY="300.0" mnemonicParsing="false" onAction="#removePreCourse" prefHeight="29.0" prefWidth="120.0" text="Remove Pre Course" />
-      <Label alignment="CENTER" layoutX="356.0" layoutY="19.0" prefHeight="29.0" prefWidth="207.0" text="Insert Course Info" textAlignment="CENTER" />
-      <Label alignment="CENTER" layoutX="406.0" layoutY="189.0" prefHeight="29.0" prefWidth="107.0" text="Pre Courses" textAlignment="CENTER" />
-      <TextField fx:id="courseName" layoutX="294.0" layoutY="63.0" promptText="&lt;&lt;Course Name&gt;&gt;" />
-      <Label fx:id="nameErr" alignment="CENTER" layoutX="224.0" layoutY="44.0" prefHeight="17.0" prefWidth="245.0" textAlignment="CENTER" textFill="RED" />
-      <Label fx:id="idErr" alignment="CENTER" layoutX="436.0" layoutY="44.0" prefHeight="17.0" prefWidth="195.0" textAlignment="CENTER" textFill="RED" />
-      <Label fx:id="hoursErr" alignment="CENTER" layoutX="234.0" layoutY="121.0" prefHeight="17.0" prefWidth="245.0" textAlignment="CENTER" textFill="RED" />
-      <Label fx:id="unitErr" alignment="CENTER" layoutX="406.0" layoutY="121.0" prefHeight="17.0" prefWidth="232.0" textAlignment="CENTER" textFill="RED" />
+      <TextField fx:id="courseName" layoutX="297.0" layoutY="76.0" promptText="&lt;&lt;Course Name&gt;&gt;" />
+      <Label alignment="CENTER" layoutX="293.0" layoutY="12.0" prefHeight="34.0" prefWidth="330.0" text="Insert Course Info" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+         <font>
+            <Font name="Copperplate Gothic Light" size="30.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
+      <Label alignment="CENTER" layoutX="61.0" layoutY="12.0" prefHeight="21.0" prefWidth="127.0" text="Course List" textFill="#4c6bc5cf">
+         <font>
+            <Font name="Impact" size="17.0" />
+         </font>
+      </Label>
+      <Label fx:id="nameErr" alignment="CENTER" layoutX="251.0" layoutY="58.0" prefHeight="21.0" prefWidth="201.0" textFill="#e30000cf">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="idErr" alignment="CENTER" layoutX="437.0" layoutY="58.0" prefHeight="21.0" prefWidth="201.0" textFill="#e30000cf">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="13.0" />
+         </font>
+      </Label>
+      <Label fx:id="hoursErr" alignment="CENTER" layoutX="242.0" layoutY="119.0" prefHeight="21.0" prefWidth="216.0" textFill="#e30000cf">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="11.0" />
+         </font>
+      </Label>
+      <Label fx:id="unitErr" alignment="CENTER" layoutX="444.0" layoutY="119.0" prefHeight="21.0" prefWidth="194.0" textFill="#e30000cf">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="11.0" />
+         </font>
+      </Label>
+      <Label alignment="CENTER" layoutX="397.0" layoutY="193.0" prefHeight="21.0" prefWidth="127.0" text="Pre Courses" textFill="#4c6bc5cf">
+         <font>
+            <Font name="Impact" size="17.0" />
+         </font>
+      </Label>
+      <Button layoutX="61.0" layoutY="423.0" mnemonicParsing="false" onAction="#addPreCourse" prefHeight="34.0" prefWidth="137.0" text="Add Pre Course" textFill="#6585dd">
+         <font>
+            <Font name="Impact" size="18.0" />
+         </font>
+         <effect>
+            <DropShadow height="8.0" radius="3.5" width="8.0" />
+         </effect>
+      </Button>
+      <Button layoutX="374.0" layoutY="298.0" mnemonicParsing="false" onAction="#removePreCourse" prefHeight="34.0" prefWidth="169.0" text="Remove Pre Course" textFill="#6585dd">
+         <font>
+            <Font name="Impact" size="18.0" />
+         </font>
+         <effect>
+            <DropShadow height="8.0" radius="3.5" width="8.0" />
+         </effect>
+      </Button>
+      <Button layoutX="361.0" layoutY="390.0" mnemonicParsing="false" onAction="#submitCourse" prefHeight="42.0" prefWidth="194.0" text="Submit" textFill="#2d74b5">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="23.0" />
+         </font>
+         <effect>
+            <DropShadow />
+         </effect>
+      </Button>
    </children>
 </AnchorPane>

@@ -2,9 +2,7 @@ package Controller;
 
 import java.io.IOException;
 import java.net.URL;
-
 import javax.swing.JOptionPane;
-
 import application.Main;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;

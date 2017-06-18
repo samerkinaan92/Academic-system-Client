@@ -22,10 +22,73 @@ public class Course extends AcademicActivity {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static ArrayList<Course> filterOldCourses(ArrayList<Course> courses){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select CourseID From mat.course_student WHERE course_student.StudentID = " + Main.user.getID() 
+			+ " AND course_student.semesterId = " + Semester.getCurrent().getId() + ";");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		for (int i = courses.size() - 1; i >= 0 ; i--){
+			boolean flag = false;
+			for (int j = 0; j < result.size(); j++){
+				if (String.valueOf(courses.get(i).getCourseID()).equals(result.get(j))){
+					flag = true;
+					break;
+				}
+			}
+			
+			if (!flag){
+				courses.remove(i);
+			}
+		}
+		
+		return courses;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCourses(){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
 		msgServer.put("query", "Select CourseID,CourseName, weeklyHours, TUName From course");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<Course> DBcourses = new ArrayList<Course>();
+		
+		for (int i = 0; i < result.size(); i+=4)
+			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
+		return DBcourses;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Course> getCourses(String teachingUnit){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select CourseID,CourseName, weeklyHours, TUName From course where TUName = '" + teachingUnit + "'");
 		
 		try{
 			Main.client.sendMessageToServer(msgServer);
@@ -232,6 +295,12 @@ public class Course extends AcademicActivity {
 		if (courseResult == null)
 			return null;
 		return courseResult;
+	}
+	
+
+	@Override
+	public String toString() {	
+		return getName() + " (" + getCourseID() + ")";
 	}
 	
 	

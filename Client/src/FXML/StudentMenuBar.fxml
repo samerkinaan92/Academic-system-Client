@@ -21,7 +21,10 @@
       <Menu mnemonicParsing="false" text="Assignments">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#SubmitAssignments" text="Submit" />
+<<<<<<< HEAD
             <MenuItem mnemonicParsing="false" onAction="#evaluationEvent" text="Evaluations" />
+=======
+>>>>>>> refs/heads/master
         </items>
       </Menu>
       <Menu mnemonicParsing="false" text="Connection">

@@ -3,20 +3,27 @@ package Entity;
 public class NewStudenCoursePlacement {
 
 	private String studentID;
-	private String coureID;
+	private String courseID;
 	private Action action;
 	
+	
+	
+	public NewStudenCoursePlacement(String studentID, String courseID, Action action) {
+		this.studentID = studentID;
+		this.courseID = courseID;
+		this.action = action;
+	}
 	public String getStudentID() {
 		return studentID;
 	}
 	public String getCoureID() {
-		return coureID;
+		return courseID;
 	}
 	public void setStudentID(String studentID) {
 		this.studentID = studentID;
 	}
 	public void setCoureID(String coureID) {
-		this.coureID = coureID;
+		this.courseID = coureID;
 	}
 	public Action getAction() {
 		return action;
