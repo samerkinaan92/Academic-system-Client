@@ -1,17 +1,10 @@
 package Entity;
-<<<<<<< HEAD
-
-=======
->>>>>>> refs/heads/master
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
-<<<<<<< HEAD
-=======
 
->>>>>>> refs/heads/master
 import application.Main;
 
 public class User {
