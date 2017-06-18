@@ -46,6 +46,8 @@ public class Course extends AcademicActivity {
 		return DBcourses;
 	}
 	
+	
+	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCourses(String teachingUnit){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -203,6 +205,7 @@ public class Course extends AcademicActivity {
 	public String toString() {	
 		return getName() + " (" + getCourseID() + ")";
 	}
+	
 
 	public int getCourseID() {
 		return CourseID;
@@ -230,12 +233,4 @@ public class Course extends AcademicActivity {
 		this.weeklyHours = weeklyHours;
 	}
 	
-	/*
-	public int getActivityID() {
-		return ActivityID;
-	}
-	public void setActivityID(int activityID) {
-		ActivityID = activityID;
-	}
-	*/
 }
