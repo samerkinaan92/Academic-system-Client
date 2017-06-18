@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JOptionPane;
 
@@ -14,6 +15,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class StudentMenuBarController {
@@ -61,8 +63,9 @@ public class StudentMenuBarController {
 	}
 	
 
-	public void message(ActionEvent e){
-	
+	public void message(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Message.fxml"));
+		Main.getRoot().setCenter(pane);
 	}
 	
 	
@@ -71,8 +74,27 @@ public class StudentMenuBarController {
 	
 	/** Private Actions */
 	
+    @FXML
+    void viewCourseInfo(ActionEvent event) {
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/StudentViewCourses.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }       
+    }
+	
 	public void ViewPersonalInfo(ActionEvent e){
-		
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }       
 	}
 	
 	public void SubmitAssignments(ActionEvent e) throws IOException{
@@ -80,9 +102,7 @@ public class StudentMenuBarController {
 		Main.getRoot().setCenter(pane);
 	}
 	
-	public void DeleteAssignments(ActionEvent e){
-		
-	}
+	
 	
 	
 	/** Private Actions */

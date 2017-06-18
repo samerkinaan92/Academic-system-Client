@@ -5,12 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
-import javax.swing.JOptionPane;
-
-import Controller.SEC_DefineClasses.DBSemester;
 import application.Main;
-import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -72,14 +67,24 @@ public class SEC_ChangeCurrentSemester implements Initializable{
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
     	alert.setHeaderText("Change current Semester?");
-    	alert.setContentText("This will set "+sem.season+", "+sem.year+" as the current semester.\n Continue?");
+    	alert.setContentText("This will set ("+sem.season+", "+sem.year+") as the current semester.\n Continue?");
     	Optional<ButtonType> result = alert.showAndWait();
     	
     	if (result.get() == ButtonType.OK){
+        	
     		clearCurrentSemester();
         	setNewCurrent(sem.season,sem.year);
         	Stage st = (Stage) setCurrentBTN.getScene().getWindow();
         	SEC_CreateNewSemester_CTRL.isOpened = false;
+        	
+        	
+        	alert = new Alert(AlertType.INFORMATION);
+        	alert.setTitle("Success");
+        	alert.setHeaderText(null);
+        	alert.setContentText("Current semester has been canged!");
+        	alert.showAndWait();
+        	
+        	
         	st.close();
     	}
     }
@@ -87,12 +92,13 @@ public class SEC_ChangeCurrentSemester implements Initializable{
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
+		setCurrentBTN.setDisable(true);
 		getSimpleSemestersFromDB();
 		setSimpleSemestersInComboBox();
 		
 	}		
 	
-	/**	get semesters from server[DB] into an array list of DBSemester object's  */
+	/**	get semesters from server[DB] into an array list of DBSimpleSemester object's  */
 	@SuppressWarnings("unchecked")
 	private void getSimpleSemestersFromDB() {
 		
@@ -125,7 +131,9 @@ public class SEC_ChangeCurrentSemester implements Initializable{
     		semestersInCOMBOBOX.add(semesters.get(i).toString());
     	}
     	chooseSemesterCOMBOBOX.setItems(semestersInCOMBOBOX);			/*	POPULATE COMBOBOX 	*/
-    	chooseSemesterCOMBOBOX.getSelectionModel().selectFirst();	
+    	chooseSemesterCOMBOBOX.getSelectionModel().selectFirst();
+    	if (!semestersInCOMBOBOX.isEmpty()) 
+    		setCurrentBTN.setDisable(false);
 	}		
 	
 	/** This method clear's Current Semester's 'isCurr' status.

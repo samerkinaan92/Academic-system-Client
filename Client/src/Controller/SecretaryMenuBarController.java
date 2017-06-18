@@ -13,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class SecretaryMenuBarController {
@@ -60,8 +61,9 @@ public class SecretaryMenuBarController {
 	}
 	
 
-	public void message(ActionEvent e){
-		
+	public void message(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Message.fxml"));
+		Main.getRoot().setCenter(pane);
 	}
 	
 	
@@ -133,25 +135,17 @@ public class SecretaryMenuBarController {
 		
 	}
 	
-	public void DefineClasses(ActionEvent e){
+	public void DefineClasses(ActionEvent e) throws IOException{
+
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SEC_DefineClasses.fxml"));;
+		Main.getRoot().setCenter(pane);
 		
-		String fxml_url = "/FXML/SEC_DefineClasses.fxml";
-		URL paneUrl = getClass().getResource(fxml_url);
-		AnchorPane pane;
-		try{
-			pane = FXMLLoader.load(paneUrl);
-			Main.getRoot().setCenter(pane);
-		}catch (IOException ex) {
-			Thread thread = new Thread(new Runnable(){
-				@Override
-				public void run() {
-			JOptionPane.showMessageDialog(null, 
-					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
-				}
-			});
-    		thread.start();
-			ex.printStackTrace();
-		}
+	}
+	
+	public void DeleteClass(ActionEvent e) throws IOException{
+
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SEC_DeleteClass.fxml"));;
+		Main.getRoot().setCenter(pane);
 		
 	}
 	
@@ -160,10 +154,17 @@ public class SecretaryMenuBarController {
 		Main.getRoot().setCenter(pane);
 	}
 	
-	public void AttachStudentToClass(ActionEvent e){
-		
-	}
-	
+    @FXML
+    void ViewPerInfo(ActionEvent event) {
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }          
+    }
 	
 	/** Private Actions */
 	

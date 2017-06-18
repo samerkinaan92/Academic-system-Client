@@ -1,4 +1,5 @@
 package Controller;
+
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -100,6 +101,7 @@ public class LoginController implements Initializable {
 			//((Node)(e.getSource())).getScene().getWindow().hide(); // Close login window.
 			Main.user = new User(id.getText(), answer.get("Name"));
 			Main.openMain(answer.get("Type"));
+			Main.user.setType(answer.get("Type"));
 		}else
 			guiMeg.setText((String)answer.get("ErrMsg"));
 	 }

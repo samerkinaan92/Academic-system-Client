@@ -11,6 +11,8 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 
+import org.omg.CosNaming.NamingContextPackage.AlreadyBound;
+
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -28,6 +30,8 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Spinner;
+import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -41,8 +45,8 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	/**  */
 	ArrayList<String> existingSemesters = new ArrayList<String>();
 	
-	/**  String representation fo the current Year	*/
-	//String thisYear = new SimpleDateFormat("yyyy").format(new Date());
+	/**  Current Year	*/
+	Integer thisYear = Integer.parseInt(new SimpleDateFormat("yyyy").format(new Date()));
 	
 	/** String's Observable List representing Season to be displayed @ Season's COMBO BOX */
 	private  ObservableList<String> seasons;
@@ -55,6 +59,9 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	 *  */
 	static boolean isOpened = false;
 	
+    @FXML
+    private Spinner<Integer> yearSpinner;
+	
 	  @FXML
 	    private Button createBTN;
 
@@ -64,15 +71,6 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	    @FXML
 	    private ComboBox<String> seasonCOMBOBOX;
 
-	    @FXML
-	    private Label redLABEL;
-	    
-	    @FXML
-	    private Label blueLABEL;
-
-	    @FXML
-	    private Label yearLABEL;
-	    
 	    @FXML
 	    private TextField yearTEXTFIELD;
 	    
@@ -90,23 +88,17 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
     	int isCurr = 0;
     	
     	String selectedSeason = getSeason();
-    	String desiredYear = yearTEXTFIELD.getText();
-
-    	if (!(desiredYear.isEmpty()) && desiredYear.length()==4) {
-    		
-    		redLABEL.setText("");
-    		blueLABEL.setText("");
+    	int desiredYear = (int)yearSpinner.getValue();
 
     		getExistingSemesters(selectedSeason,desiredYear);
 
     		if(existingSemesters.isEmpty()) {
     			
-    			
             	if (setcurrentCHECKBOX.isSelected()) {	// check if to set as current semester
 
             		Alert alert = new Alert(AlertType.CONFIRMATION);
             		alert.setTitle("Confirmation Dialog");
-            		alert.setHeaderText("Current semester will be changed!");
+            		alert.setHeaderText("Semester has been created SUCCUSSFULY!");
             		alert.setContentText("Replace "+getCurrentSemester()+" "
             				+ "as the current semester?");
             		Optional<ButtonType> result = alert.showAndWait();
@@ -119,17 +111,14 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
             		clearCurrentSemester ();
             	        	
     			sendNewSemester(selectedSeason,desiredYear,isCurr);
-    			blueLABEL.setText("SEMESTER CREATED SUCCESSFULY!");
-    			redLABEL.setText("");
+    			showInfoMSG("Semester creadted successfuly!", "");
     		}
     		else {
-    			redLABEL.setText("SEMESTER ALREADY EXISTS!");
-    			blueLABEL.setText("");
+    			showErrorMSG("Semester already exists!","("+selectedSeason+", "+desiredYear+") Already exists.");
     		}
-    	}
-    	else {
-    		redLABEL.setText("must enter a year! (ex: 2017)");
-    	}
+    	//}
+   // else {
+    //	}
     	isCurr = 0;
     }
     	
@@ -159,11 +148,15 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 		seasonCOMBOBOX.getSelectionModel().selectFirst();
 		setcurrentCHECKBOX.setSelected(true);
 		
+        SpinnerValueFactory<Integer> sVf = //
+                new SpinnerValueFactory.IntegerSpinnerValueFactory(thisYear, thisYear+10);
+        yearSpinner.setValueFactory(sVf);
+		
 	}
 	
 	/** Initialize's this class's existingSemesters ArrayList with all of the existing semester from DB */
-	@SuppressWarnings({ "unchecked", "unused" })
-	private void getExistingSemesters (String selectedSeason, String desiredYear) {		// set answer with the server reponse to the select query
+	@SuppressWarnings("unchecked")
+	private void getExistingSemesters (String selectedSeason, int desiredYear) {		// set answer with the server reponse to the select query
 		
 		MSG.put("msgType", "select");
 		MSG.put("query", "SELECT * FROM semester WHERE season='"+selectedSeason+"' and year='"+desiredYear+"'");
@@ -190,7 +183,7 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	 *  
 	 *  */
 	@SuppressWarnings("unchecked")
-	private void sendNewSemester (String selectedSeason, String desiredYear, int isCurr) {
+	private void sendNewSemester (String selectedSeason, int desiredYear, int isCurr) {
 
 		MSG.put("msgType", "update");
 		MSG.put("query", "INSERT INTO `mat`.`semester` (`Season`, `Year`, `isCurr`) VALUES ('"+selectedSeason+"', '"+desiredYear+"', '"+isCurr+"')");
@@ -278,7 +271,35 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 				}
 			}
 		}
-
+	}
+	
+	/**	shows information message using GUI
+	 * 
+	 * @param title 'title of the screen'
+	 * @param MSG 'message to be displayed'
+	 * */
+	private void showInfoMSG(String title, String MSG) {
+		
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Information");
+		alert.setHeaderText(title);
+		alert.setContentText(MSG);
+		alert.showAndWait();
+		
+	}
+	
+    /**		pop up error message
+     * 	@param	title title
+     * @param MSG message
+     * 	*/
+	private void showErrorMSG(String title, String MSG) {
+		
+  		Alert alert = new Alert(AlertType.WARNING);
+		alert.setTitle("Error!");
+		alert.setHeaderText(title);
+		alert.setContentText(MSG);
+		alert.showAndWait();
+		
 	}
 
 }

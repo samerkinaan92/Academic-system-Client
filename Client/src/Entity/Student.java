@@ -10,10 +10,27 @@ public class Student extends User {
 
 	
 	private String classRoom;
-	private String parentID1;
-	private String parentID2;
 	
+	public Student()
+	{
+		
+	}
 	
+	public Student(String ID, String stdname){
+		super(ID,stdname);
+	}
+	
+	public static String getStudentClass(String id){
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select ClassName From student_class WHERE student_class.StudentID =" + id);
+		
+		ArrayList<String> result = sendMsg(msgServer);
+		
+		if (result.size() > 0)
+			return result.get(0);
+		return null;
+	}
 	
 	
 	public static ArrayList<Course> getCourse(){
@@ -35,6 +52,49 @@ public class Student extends User {
 			DBcourses.add(new Course(Integer.parseInt(result.get(0)), result.get(1), Integer.parseInt(result.get(2)), result.get(3)));
 		}
 		return DBcourses;
+		
+	}
+	
+	public static boolean attachStudentsToCourses(int sID, ArrayList<String> student_course){
+		
+		
+		for (int i = 0; i < student_course.size(); i+=2){
+			
+			String msg = "Insert INTO course_student (CourseID, StudentID, semesterId)";
+	    	String values = " VALUES (" + student_course.get(i+1) + ", " + student_course.get(i) + ", " + sID + ")";
+	    	
+	    	HashMap <String,String> msgServer = new HashMap <String,String>();
+	    	msgServer.put("msgType", "insert");
+			msgServer.put("query", msg + values);
+	    	
+	    	try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					return false;
+				}
+	    	synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}}
+		}
+		return true;
+		
+		
+	}
+	
+	public static ArrayList<String> getTakenCourses(String sID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select CourseID From course_student WHERE course_student.StudentID =" + sID);
+		
+		ArrayList<String> courseResult = sendMsg(msgServer);
+		
+		if (courseResult.size() > 0)
+			return courseResult;
+		return null;
 		
 	}
 	
@@ -77,21 +137,10 @@ public class Student extends User {
 	public String getClassRoom() {
 		return classRoom;
 	}
-	public String getParentID1() {
-		return parentID1;
-	}
-	public String getParentID2() {
-		return parentID2;
-	}
 	
 	public void setClassRoom(String classRoom) {
 		this.classRoom = classRoom;
 	}
-	public void setParentID1(String parentID1) {
-		this.parentID1 = parentID1;
-	}
-	public void setParentID2(String parentID2) {
-		this.parentID2 = parentID2;
-	}
+
 
 }

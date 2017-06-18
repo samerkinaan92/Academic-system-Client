@@ -4,44 +4,64 @@
 <?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Spinner?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="294.0" prefWidth="454.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SEC_CreateNewSemester_CTRL">
+<AnchorPane prefHeight="397.0" prefWidth="579.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SEC_CreateNewSemester_CTRL">
    <children>
-      <Button fx:id="createBTN" layoutX="126.0" layoutY="236.0" mnemonicParsing="false" onAction="#createBTNaction" text="Create New Semester!" textAlignment="CENTER" textFill="#db0909">
+      <ComboBox fx:id="seasonCOMBOBOX" layoutX="205.0" layoutY="146.0" prefHeight="31.0" prefWidth="160.0" />
+      <CheckBox fx:id="setcurrentCHECKBOX" layoutX="377.0" layoutY="151.0" mnemonicParsing="false" prefHeight="21.0" prefWidth="27.0" />
+      <Spinner fx:id="yearSpinner" layoutX="205.0" layoutY="194.0" prefHeight="31.0" prefWidth="160.0" />
+      <Label layoutX="68.0" layoutY="51.0" prefHeight="45.0" prefWidth="463.0" text="Create new semester" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
          <font>
-            <Font name="Serif Bold" size="18.0" />
+            <Font name="Copperplate Gothic Light" size="40.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
+      <Label layoutX="89.0" layoutY="199.0" prefHeight="22.0" prefWidth="86.0" text="select year:" textFill="#4c6bc5cf">
+         <font>
+            <Font name="Impact" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="89.0" layoutY="151.0" prefHeight="22.0" prefWidth="109.0" text="select season:" textFill="#4c6bc5cf">
+         <font>
+            <Font name="Impact" size="18.0" />
+         </font>
+      </Label>
+      <Label layoutX="405.0" layoutY="151.0" prefHeight="22.0" prefWidth="86.0" text="set as current" textFill="#4c6bc5cf">
+         <font>
+            <Font name="Impact" size="15.0" />
+         </font>
+      </Label>
+      <Button fx:id="changeCurrentSemesterBTN" layoutX="377.0" layoutY="193.0" mnemonicParsing="false" onAction="#changeCurrentSemesterBTNaction" prefHeight="34.0" prefWidth="144.0" text="change current" textFill="#6585dd">
+         <font>
+            <Font name="Impact" size="18.0" />
+         </font>
+         <effect>
+            <DropShadow height="8.0" radius="3.5" width="8.0" />
+         </effect>
+      </Button>
+      <Button fx:id="createBTN" layoutX="144.0" layoutY="288.0" mnemonicParsing="false" onAction="#createBTNaction" prefHeight="42.0" prefWidth="265.0" text="create semester!" textFill="#2d74b5">
+         <font>
+            <Font name="Copperplate Gothic Bold" size="23.0" />
          </font>
          <effect>
             <DropShadow />
          </effect>
       </Button>
-      <Label layoutX="75.0" layoutY="32.0" prefHeight="31.0" prefWidth="321.0" text="Create New Semester" textAlignment="CENTER" textFill="#ee0606">
+      <Label fx:id="redLABEL" layoutX="156.0" layoutY="349.0" prefHeight="21.0" prefWidth="317.0" textFill="#e30000cf">
          <font>
-            <Font name="Rockwell Extra Bold" size="24.0" />
-         </font>
-         <effect>
-            <DropShadow blurType="TWO_PASS_BOX" height="18.27" radius="6.4" spread="0.63" width="9.33" />
-         </effect>
-      </Label>
-      <Label fx:id="seasonLABEL" layoutX="92.0" layoutY="112.0" prefHeight="21.0" prefWidth="102.0" text="Select season:" textFill="#1e0f02">
-         <font>
-            <Font name="System Bold" size="15.0" />
+            <Font name="Copperplate Gothic Bold" size="16.0" />
          </font>
       </Label>
-      <ComboBox fx:id="seasonCOMBOBOX" layoutX="205.0" layoutY="107.0" prefHeight="31.0" prefWidth="150.0" />
-      <Label fx:id="redLABEL" layoutX="79.0" layoutY="73.0" prefHeight="21.0" prefWidth="298.0" textFill="RED" />
-      <Label fx:id="yearLABEL" layoutX="92.0" layoutY="158.0" prefHeight="21.0" prefWidth="102.0" text="Enter year:" textFill="#1e0f02">
+      <Label fx:id="blueLABEL" layoutX="156.0" layoutY="349.0" prefHeight="21.0" prefWidth="367.0" textFill="#0048e3cf">
          <font>
-            <Font name="System Bold" size="15.0" />
+            <Font name="Copperplate Gothic Bold" size="16.0" />
          </font>
       </Label>
-      <TextField fx:id="yearTEXTFIELD" layoutX="205.0" layoutY="153.0" prefHeight="31.0" prefWidth="56.0" promptText="2017" />
-      <Label fx:id="blueLABEL" layoutX="72.0" layoutY="73.0" prefHeight="21.0" prefWidth="321.0" textFill="#1500ff" />
-      <CheckBox fx:id="setcurrentCHECKBOX" layoutX="280.0" layoutY="158.0" mnemonicParsing="false" text="set as curent" />
-      <Button fx:id="changeCurrentSemesterBTN" layoutX="280.0" layoutY="184.0" mnemonicParsing="false" onAction="#changeCurrentSemesterBTNaction" prefHeight="31.0" prefWidth="122.0" text="change current" />
    </children>
 </AnchorPane>

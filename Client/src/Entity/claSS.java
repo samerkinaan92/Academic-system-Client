@@ -8,12 +8,10 @@ import application.Main;
 public class claSS {
 	
 	private String ClassName;
-	private int year;
 	
 	
-	public claSS(String name, int year){
+	public claSS(String name){
 		ClassName = name;
-		this.year = year;
 	}
 	
 	
@@ -38,8 +36,8 @@ public class claSS {
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		ArrayList<claSS> DBclasses = new ArrayList<claSS>();
 		
-		for (int i = 0; i < result.size(); i+=2)
-			DBclasses.add(new claSS(result.get(i), Integer.parseInt(result.get(i+1))));
+		for (int i = 0; i < result.size(); i++)
+			DBclasses.add(new claSS(result.get(i)));
 		return DBclasses;
 		
 	}
@@ -48,8 +46,9 @@ public class claSS {
 		
 		
 		for (int i = 0; i < added.size(); i++){
-			String msg = "Insert INTO class_course (ClassName, Year, CourseID, teacherID)";
-	    	String values = " VALUES ('" + cLass.getClassName() + "', " + cLass.getYear() + ", " + 
+			String msg = "Insert INTO class_course (ClassName, semesterId, CourseID, teacherID)";
+	    	String values = " VALUES ('" + cLass.getClassName() + "', " +
+	    			added.get(i).substring(added.get(i).indexOf('{')+1, added.get(i).indexOf('}')) + ", " + 
 	    			added.get(i).substring(added.get(i).indexOf('(')+1, added.get(i).indexOf(')')) + ", " + 
 	    			added.get(i).substring(added.get(i).indexOf('[')+1, added.get(i).indexOf(']')) + ")";
 	    	
@@ -73,6 +72,52 @@ public class claSS {
 		
 		
 		return (int) Main.client.getMessage();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getStudents(String cls){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select StudentID from student_class where ClassName = '"+cls+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<String> students = new ArrayList<String>();
+		for (int i = 0; i < result.size(); i++){
+			
+			msgServer = new HashMap <String,String>();
+			msgServer.put("msgType", "select");
+			msgServer.put("query", "select Name,ID from users where ID = "+result.get(i));
+			
+			try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					System.out.println("Server fatal error!");
+				}
+			synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			}
+			ArrayList<String> result1 = (ArrayList<String>)Main.client.getMessage();
+			students.add(result1.get(0));
+			students.add(result1.get(1));
+		}
+		return students;
 	}
 
 	
@@ -126,6 +171,36 @@ public class claSS {
 		return result;
 
 	}
+	
+	
+	public static String getClassByStud(String ID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select ClassName from student_class where StudentID='"+ID+"';");
+		ArrayList<String> result=sendMsg(msgServer);				
+		
+		return result.get(0);
+	}
+	
+	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		@SuppressWarnings("unchecked")
+		ArrayList<String> courseResult = (ArrayList<String>)Main.client.getMessage();
+		if (courseResult == null)
+			return null;
+		return courseResult;
+	}
 
 	public String getClassName() {
 		return ClassName;
@@ -134,16 +209,6 @@ public class claSS {
 
 	public void setClassName(String className) {
 		ClassName = className;
-	}
-
-
-	public int getYear() {
-		return year;
-	}
-
-
-	public void setYear(int year) {
-		this.year = year;
 	}
 
 }

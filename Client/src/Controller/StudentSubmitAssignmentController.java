@@ -7,6 +7,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,8 +20,11 @@ import javax.swing.JOptionPane;
 
 import Entity.Assignment;
 import Entity.Course;
+import Entity.Message;
+import Entity.Semester;
 import Entity.Student;
 import Entity.SubmittedAssignment;
+import Entity.User;
 import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -29,11 +33,13 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 
 /**
@@ -99,6 +105,9 @@ public class StudentSubmitAssignmentController implements Initializable {
 	 
 	  /** File to store local assignment info  */
 	  private  File file;
+	  
+	  Alert infoMsg = new Alert(AlertType.INFORMATION);
+	  Alert errMsg = new Alert(AlertType.ERROR);
 
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
@@ -107,20 +116,19 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  
 		  ArrayList<String> submitted = SubmittedAssignment.getSubmittedAssignments();
 		  
-		  if (submitted == null)
+		  if (submitted == null || assignmentArr == null)
 			  return;
 		  
 		  int size = assignmentArr.size();
 		  
-		  for (int i = 0; i < submitted.size(); i++){
-			  for (int j = 0; j < size; j++){
-				  if (Integer.parseInt(submitted.get(i)) == assignmentArr.get(j).getAssignmentID()){
-					  assignmentArr.remove(j);
+		  for (int i = size-1; i >= 0; i--){
+			  for (int j = 0; j < submitted.size(); j++){
+				  if (Integer.parseInt(submitted.get(j)) == assignmentArr.get(i).getAssignmentID()){
+					  assignmentArr.remove(i);
 				  }
 			  }
 		  }  
 	  }
-	  
 	  
 	  /**
 	   * Get courses names & ID's for list.
@@ -177,7 +185,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			ArrayList<String> date = (ArrayList<String>)Main.client.getMessage();
 			Date subDate = null;
 			try {
-				subDate = format.parse(date.get(3));
+				subDate = format.parse(date.get(4));
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
@@ -189,6 +197,50 @@ public class StudentSubmitAssignmentController implements Initializable {
 			else
 				return 0; 
 	  }
+	  
+	  /**
+		 * Send message to all relevant users.
+		 */
+		@SuppressWarnings("unchecked")
+		private void sendMsgs(){
+			
+			String selectedAss = assignmentListView.getSelectionModel().getSelectedItem();
+			String selectedCourseID = courseListView.getSelectionModel().getSelectedItem();
+			String msg = Main.user.getName() + " (" + Main.user.getID() + ")\nSubmitted assignment: " + selectedAss +
+					"\nCourse: " + selectedCourseID;
+			String title = "Assignment Submission";
+			
+			selectedCourseID = selectedCourseID.substring(selectedCourseID.indexOf('(')+1, selectedCourseID.indexOf(')'));
+			
+			int semesterID = Semester.getCurrent().getId();
+			
+			String className = Student.getStudentClass(Main.user.getID());
+			
+			HashMap <String,String> msgServer = new HashMap <String,String>();
+			msgServer.put("msgType", "select");
+			msgServer.put("query", "SELECT teacherID FROM class_course where class_course.ClassName = '"
+					+ className + "' AND class_course.semesterId = " + semesterID + " AND class_course.CourseID = " +
+					selectedCourseID +";");
+			
+			try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					System.out.println("Server fatal error!");
+				}
+			synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}}
+			ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+			
+			if (result.size() > 0){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(result.get(0)), Integer.parseInt(Main.user.getID())));
+			}
+			
+			Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Main.user.getID())));
+		}
 	 	  
 	  //-------------------------------------------------------------------------------------------------------------------
 	  
@@ -215,6 +267,11 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  return;
 		  
 		  String p = ass.getFilePath();
+		  
+		  if (!Files.exists(Paths.get(p))){
+			  return;
+		  }
+		  
 		  byte[] file = Assignment.getFile(p);
 		  
 		  FileChooser fileChooser = new FileChooser();
@@ -226,6 +283,10 @@ public class StudentSubmitAssignmentController implements Initializable {
               );
           
           File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());
+          
+          if (pa == null)
+        	  return;
+          
           Path savePath = Paths.get(pa.getAbsolutePath());
 		  
           FileOutputStream stream;
@@ -238,8 +299,8 @@ public class StudentSubmitAssignmentController implements Initializable {
           }
           catch (IOException ex) {
         	  ex.printStackTrace();
-        	  JOptionPane.showMessageDialog(null, 
-					  "Download Failed!", "Error", JOptionPane.ERROR_MESSAGE);
+        	  errMsg.setContentText("Download Failed!");
+        	  errMsg.showAndWait();
           } 
 	  }
 	  
@@ -279,12 +340,14 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  public void submit(ActionEvent e){ // Submit file from disk to server. 
 		  
 		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
-			  guiMsg.setText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.setContentText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.showAndWait();
 			  return;
 		  }
 			  
 		  if (file == null){
-			  guiMsg.setText("No file was chosen to upload! Please browse for a file from the computer.");
+			  errMsg.setContentText("No file was chosen to upload! Please browse for a file from the computer.");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -336,7 +399,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 				}}
 		  }
 		  else{
-			  guiMsg.setText("Send file info to server failed!");
+			  errMsg.setContentText("Send file info to server failed!");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -345,7 +409,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  // Insert new submission data into data base.
 		  
 		  if (Main.client.getMessage() == null){
-			  guiMsg.setText("Send file data to server failed!");
+			  errMsg.setContentText("Send file data to server failed!");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -375,12 +440,13 @@ public class StudentSubmitAssignmentController implements Initializable {
 			}}
 	    	
 	    	if ((int)Main.client.getMessage() > 0){
-	    		JOptionPane.showMessageDialog(null, "submission Successful");
-	    		
+	    		infoMsg.setContentText("submission Successful");
+	    		infoMsg.showAndWait();
+	    		sendMsgs();
 	    	}
 	    	else{
-	    		JOptionPane.showMessageDialog(null, 
-						  "submission Filed: Data base error!", "Error", JOptionPane.ERROR_MESSAGE);
+	    		errMsg.setContentText("submission Filed: Data base error!");
+	    		errMsg.showAndWait();
 	    	}
 	    	clearScreen();
 	  }
@@ -392,7 +458,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  public void browse(ActionEvent e){ // Open file explorer for upload file.
 		  
 		  if (assignmentListView.getSelectionModel().getSelectedItem().isEmpty()){
-			  guiMsg.setText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.setContentText("No assignment was chosen! Please choose assignment from the assignment list.");
+			  errMsg.showAndWait();
 			  return;
 		  }
 		  
@@ -403,8 +470,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  filePath.setText(file.getAbsolutePath());
 			  submitBtn.setDisable(false);
 		  }
-		  else
-			  guiMsg.setText("No file was selected!");
+		  else{
+			  infoMsg.setContentText("No file was selected!");
+			  infoMsg.showAndWait();
+		  }
 	  }
 
 	  //-------------------------------------------------------------------------------------------------------------------
@@ -425,8 +494,14 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  @Override
 	  public void initialize(URL arg0, ResourceBundle arg1) { // Initialize window.
 		  
+		  infoMsg.setTitle("Operation Successful");
+		  infoMsg.setHeaderText(null);
+		  errMsg.setTitle("Error Accord");
+		  errMsg.setHeaderText(null);
 		  file = null;
 		  courseArr = Student.getCourse();
+		  // courseArr = Course.filterOldCourses(courseArr);
+		  
 		  organizedCourseList = getCourseList(courseArr);
 		  Collections.sort(organizedCourseList);
 		  courseListView.setItems(FXCollections.observableArrayList(organizedCourseList));
@@ -452,6 +527,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    	uploadLabel.setDisable(true);
 			    	browseBtn.setDisable(true);
 			    	downloadBtn.setDisable(true);
+			    	guiMsg.setText("");
 			    }
 			}); 
 		  
@@ -459,7 +535,20 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    @Override
 			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 			    	
-			    	guiMsg.setText("- Download Assignment,\n- Submit Assignment");
+			    	
+			    	Date publish = null, dead = null;
+			    	String selected = assignmentListView.getSelectionModel().getSelectedItem();
+			    	selected = selected.substring(selected.indexOf('(') + 1, selected.indexOf(')'));
+			    	
+			    	for (int i = 0; i < assignmentArr.size(); i++){
+			    		if (assignmentArr.get(i).getAssignmentID() == Integer.parseInt(selected)){
+			    			publish = assignmentArr.get(i).getPublishDate();
+			    			dead = assignmentArr.get(i).getDeadLine();
+			    			break;
+			    		}
+			    	}
+			    	
+			    	guiMsg.setText("Publish Date: " + publish + "\nDead line Date: " + dead);
 			    	uploadLabel.setDisable(false);
 			    	browseBtn.setDisable(false);
 			    	downloadBtn.setDisable(false);

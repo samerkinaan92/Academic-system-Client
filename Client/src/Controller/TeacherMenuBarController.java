@@ -25,7 +25,7 @@ public class TeacherMenuBarController {
 	private MenuBar bar;
 
 	
-	public void logout(ActionEvent e) throws IOException{
+	public void logout(ActionEvent e) throws IOException {
 		
 		Stage stage;
 		Scene scene;
@@ -61,8 +61,9 @@ public class TeacherMenuBarController {
 	}
 	
 
-	public void message(ActionEvent e){
-	
+	public void message(ActionEvent e) throws IOException{
+		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/Message.fxml"));
+		Main.getRoot().setCenter(pane);
 	}
 	
 	
@@ -72,6 +73,24 @@ public class TeacherMenuBarController {
 	/** Private Actions */
 	
 	public void DefineAssignments(ActionEvent e){
+		
+		String fxml_url = "/FXML/TCHR_DefineAssignments.fxml";
+		URL paneUrl = getClass().getResource(fxml_url);
+		AnchorPane pane;
+		try{
+			pane = FXMLLoader.load(paneUrl);
+			Main.getRoot().setCenter(pane);
+		}catch (IOException ex) {
+			Thread thread = new Thread(new Runnable(){
+				@Override
+				public void run() {
+			JOptionPane.showMessageDialog(null, 
+					  "Could not open window!", "Error", JOptionPane.ERROR_MESSAGE);
+				}
+			});
+    		thread.start();
+			ex.printStackTrace();
+		}
 		
 	}
 	
@@ -94,10 +113,6 @@ public class TeacherMenuBarController {
     		thread.start();
 			ex.printStackTrace();
 		}
-		
-	}
-	
-	public void FillEvaluationForm(ActionEvent e){
 		
 	}
 	

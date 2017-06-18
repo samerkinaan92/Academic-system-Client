@@ -8,10 +8,9 @@ import application.Main;
 public class Teacher extends User {
 
 	private int maxWorkHours;
-	
 
 	public Teacher(String name){
-		this.Name = name;
+		super(name);
 	}
 	public Teacher(String name, String id, int hours){
 		super(id, name);
@@ -237,14 +236,10 @@ public static ArrayList<claSS> getTeachersClass(String ID){
 	}}
 	@SuppressWarnings("unchecked")
 	ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-	for (int i=0 ; i < result.size() ; i++)
-		System.out.println(result.get(i));
+	
 	ArrayList<claSS> DBclasses = new ArrayList<claSS>();
 	for (int i = 0; i < result.size(); i++)
-		DBclasses.add(new claSS(result.get(i), Integer.parseInt(result.get(i+1))));
-
-
-	
+		DBclasses.add(new claSS(result.get(i)));
 	return DBclasses;
 	
 }

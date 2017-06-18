@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UserViewPersonalInfoController">
+   <children>
+      <Label layoutX="119.0" layoutY="30.0" prefHeight="45.0" prefWidth="403.0" text="Personal informaion" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+         <font>
+            <Font name="Copperplate Gothic Light" size="40.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
+      <Label layoutX="64.0" layoutY="121.0" text="Name:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="64.0" layoutY="152.0" text="ID:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="usrName" layoutX="170.0" layoutY="121.0" text="stdName" />
+      <Label fx:id="usrID" layoutX="170.0" layoutY="152.0" text="stdID" />
+      <Label layoutX="62.0" layoutY="185.0" text="Adress:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label fx:id="usrAddr" layoutX="170.0" layoutY="185.0" text="stdAddr" />
+      <Label layoutX="63.0" layoutY="219.0" text="Phone:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label layoutX="63.0" layoutY="251.0" text="Email:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="usrPhone" layoutX="170.0" layoutY="219.0" text="stdPhone" />
+      <Label fx:id="usrEmail" layoutX="170.0" layoutY="251.0" text="stdEmail" />
+      <Label fx:id="sClass" layoutX="64.0" layoutY="284.0" text="Class:" visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="stdClass" layoutX="170.0" layoutY="284.0" text="stdClass" visible="false" />
+      <Label fx:id="stdP1" layoutX="65.0" layoutY="318.0" text="Parent: " visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="stdpar1" layoutX="170.0" layoutY="318.0" text="stdpar1" visible="false" />
+      <Label fx:id="stdP2" layoutX="65.0" layoutY="352.0" text="Parent2:" visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font></Label>
+      <Label fx:id="stdpar2" layoutX="170.0" layoutY="352.0" text="stdpar2" visible="false" />
+   </children>
+</AnchorPane>

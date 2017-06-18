@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane onMousePressed="#paneEvent" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PrincipalViewParInfo">
+   <children>
+      <Label layoutX="125.0" layoutY="14.0" prefHeight="45.0" prefWidth="403.0" text="Parent information" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+         <font>
+            <Font name="Copperplate Gothic Light" size="40.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
+      <Label layoutX="40.0" layoutY="87.0" prefHeight="22.0" prefWidth="133.0" text="Parents of class:" textFill="#4c6bc5cf">
+         <font>
+            <Font name="Impact" size="18.0" />
+         </font>
+      </Label>
+      <ComboBox fx:id="classList" layoutX="184.0" layoutY="82.0" onAction="#showStud" prefWidth="150.0" />
+      <Label fx:id="noStudMsg" layoutX="350.0" layoutY="87.0" text="No student in class" textFill="RED" visible="false">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Pane fx:id="listPane" layoutX="40.0" layoutY="152.0" prefHeight="279.0" prefWidth="572.0" visible="false">
+         <children>
+            <TableView fx:id="stdTable" layoutX="7.0" layoutY="27.0" onMousePressed="#showPar" prefHeight="224.0" prefWidth="262.0">
+              <columns>
+                <TableColumn fx:id="IDcolumn" editable="false" prefWidth="112.0" text="ID" />
+                <TableColumn fx:id="nameColumn" editable="false" prefWidth="149.0" text="Name" />
+              </columns>
+            </TableView>
+            <TableView fx:id="parTable" layoutX="296.0" layoutY="27.0" onMousePressed="#parSelect" prefHeight="224.0" prefWidth="262.0">
+              <columns>
+                <TableColumn fx:id="parIDcolumn" prefWidth="119.0" text="ID" />
+                <TableColumn fx:id="nameParColumn" minWidth="0.0" prefWidth="148.0" text="Name" />
+              </columns>
+            </TableView>
+            <Button fx:id="infoBtn" disable="true" layoutX="329.0" layoutY="283.0" mnemonicParsing="false" onAction="#viewInfo" text="Parent infromation" />
+            <Label fx:id="stdLabel" layoutX="14.0" layoutY="3.0" prefHeight="22.0" prefWidth="232.0" text="stdLabel" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="17.0" />
+               </font>
+            </Label>
+            <Label fx:id="parLabel" layoutX="307.0" layoutY="3.0" prefHeight="22.0" prefWidth="220.0" text="parLabel" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="17.0" />
+               </font>
+            </Label>
+         </children>
+      </Pane>
+      <Button layoutX="119.0" layoutY="431.0" mnemonicParsing="false" onAction="#backBtn" text="Back" />
+   </children>
+</AnchorPane>
