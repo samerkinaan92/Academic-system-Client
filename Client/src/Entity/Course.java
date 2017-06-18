@@ -22,6 +22,44 @@ public class Course extends AcademicActivity {
 	}
 	
 	@SuppressWarnings("unchecked")
+	public static ArrayList<Course> filterOldCourses(ArrayList<Course> courses){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select CourseID From mat.course_student WHERE course_student.StudentID = " + Main.user.getID() 
+			+ " AND course_student.semesterId = " + Semester.getCurrent().getId() + ";");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		for (int i = courses.size() - 1; i >= 0 ; i--){
+			boolean flag = false;
+			for (int j = 0; j < result.size(); j++){
+				if (String.valueOf(courses.get(i).getCourseID()).equals(result.get(j))){
+					flag = true;
+					break;
+				}
+			}
+			
+			if (!flag){
+				courses.remove(i);
+			}
+		}
+		
+		return courses;
+	}
+	
+	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCourses(){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -46,13 +84,13 @@ public class Course extends AcademicActivity {
 		return DBcourses;
 	}
 	
-	
-	
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Course> getCourses(String teachingUnit){ // Get list of courses.
+	public static ArrayList<String> getPreCourses(String cID){
+		
+		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select CourseID,CourseName, weeklyHours, TUName From course where TUName = '" + teachingUnit + "'");
+		msgServer.put("query", "Select preCourseID From pre_courses WHERE CourseID = " + cID);
 		
 		try{
 			Main.client.sendMessageToServer(msgServer);
@@ -66,11 +104,12 @@ public class Course extends AcademicActivity {
 			e.printStackTrace();
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-		ArrayList<Course> DBcourses = new ArrayList<Course>();
 		
-		for (int i = 0; i < result.size(); i+=4)
-			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
-		return DBcourses;
+		if (result.size() > 0)
+			return result;
+		return null;
+		
+		
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -201,12 +240,40 @@ public class Course extends AcademicActivity {
 			return null;
 	}
 	
-	@Override
-	public String toString() {	
-		return getName() + " (" + getCourseID() + ")";
+	public static ArrayList<Course> getCoursesBySemStd(String sem, String stdID){
+		HashMap<String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select course.courseid,CourseName,WeeklyHours,tuname from semester,course_student,course where semester.semesterid=course_student.semesterid and semester.semesterid='"+sem+"' and course.courseid=course_student.courseid and studentid='"+stdID+"';");
+		ArrayList<String>result = sendMsg(msgServer);
+		
+		ArrayList<Course>courseArr = new ArrayList<Course>();
+		
+		for(int i=0 ; i<result.size() ; i+=4)
+			courseArr.add(new Course(Integer.parseInt(result.get(i)),result.get(i+1),Integer.parseInt(result.get(i+2)),result.get(i+3)));
+		return courseArr;
 	}
 	
-
+	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		@SuppressWarnings("unchecked")
+		ArrayList<String> courseResult = (ArrayList<String>)Main.client.getMessage();
+		if (courseResult == null)
+			return null;
+		return courseResult;
+	}
+	
+	
+	
 	public int getCourseID() {
 		return CourseID;
 	}
@@ -233,4 +300,12 @@ public class Course extends AcademicActivity {
 		this.weeklyHours = weeklyHours;
 	}
 	
+	/*
+	public int getActivityID() {
+		return ActivityID;
+	}
+	public void setActivityID(int activityID) {
+		ActivityID = activityID;
+	}
+	*/
 }
