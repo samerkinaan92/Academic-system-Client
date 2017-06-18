@@ -102,9 +102,10 @@ public class StudentMenuBarController {
 		Main.getRoot().setCenter(pane);
 	}
 	
-	public void DeleteAssignments(ActionEvent e){
-		
-	}
+    @FXML
+    void evaluationEvent(ActionEvent event) {
+
+    }
 	
 	
 	
