@@ -6,10 +6,14 @@
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ChangeTeacherPlacementController">
    <children>
-      <Label layoutX="7.0" layoutY="32.0" text="Choose teaching unit" />
+      <Label layoutX="7.0" layoutY="62.0" text="Choose teaching unit" textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
       <TableView fx:id="classesTbl" layoutX="13.0" layoutY="144.0" prefHeight="272.0" prefWidth="275.0">
         <columns>
           <TableColumn fx:id="clsRomCln" prefWidth="97.0" text="Class room" />
@@ -17,11 +21,26 @@
             <TableColumn fx:id="tchrIdCln" prefWidth="75.0" text="Teacher id" />
         </columns>
       </TableView>
-      <Label layoutX="14.0" layoutY="127.0" text="Choose class room where you want to change" />
-      <Label fx:id="crsNmLbl" layoutX="13.0" layoutY="99.0" text="Course name:" />
-      <Label fx:id="tuLbl" layoutX="232.0" layoutY="99.0" text="Teaching unit: " />
-      <Label fx:id="wklyHourLbl" layoutX="406.0" layoutY="99.0" text="Weekly hours: " />
-      <Button fx:id="changeTchrBtn" layoutX="14.0" layoutY="423.0" mnemonicParsing="false" onAction="#changeTeacher" text="Change teacher" />
+      <Label layoutX="14.0" layoutY="127.0" text="Choose class room where you want to change" textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
+      <Label fx:id="crsNmLbl" layoutX="13.0" layoutY="99.0" text="Course name:" textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
+      <Label fx:id="tuLbl" layoutX="232.0" layoutY="99.0" text="Teaching unit: " textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
+      <Label fx:id="wklyHourLbl" layoutX="406.0" layoutY="99.0" text="Weekly hours: " textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
+      <Button fx:id="changeTchrBtn" layoutX="14.0" layoutY="423.0" mnemonicParsing="false" onAction="#changeTeacher" text="Change teacher" textFill="#6585dd">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Button>
       <TableView fx:id="teachersTbl" layoutX="346.0" layoutY="144.0" prefHeight="272.0" prefWidth="257.0">
         <columns>
           <TableColumn fx:id="tchrIdTcln" prefWidth="75.0" text="Teacher id" />
@@ -29,9 +48,20 @@
             <TableColumn fx:id="horsLftTcln" prefWidth="72.0" text="Hours left" />
         </columns>
       </TableView>
-      <ChoiceBox fx:id="tuChosBox" layoutX="138.0" layoutY="28.0" prefWidth="150.0" />
-      <Label layoutX="320.0" layoutY="32.0" text="Choose course" />
-      <ChoiceBox fx:id="corsChosBox" layoutX="415.0" layoutY="28.0" prefWidth="150.0" />
-      <Label layoutX="346.0" layoutY="127.0" text="Choose new teacher that will replace" />
+      <ChoiceBox fx:id="tuChosBox" layoutX="136.0" layoutY="58.0" prefWidth="150.0" />
+      <Label layoutX="320.0" layoutY="62.0" text="Choose course" textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
+      <ChoiceBox fx:id="corsChosBox" layoutX="417.0" layoutY="58.0" prefWidth="150.0" />
+      <Label layoutX="346.0" layoutY="127.0" text="Choose new teacher that will replace" textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
+      <Label layoutX="13.0" layoutY="14.0" text="Change class teacher" textFill="#0c59b2">
+         <font>
+            <Font name="Impact" size="24.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

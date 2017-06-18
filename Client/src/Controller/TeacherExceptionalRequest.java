@@ -24,8 +24,16 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+/**
+* this controller handles the exceptional change teacher request
+* @author Samer Kinaan
+*
+*/
 public class TeacherExceptionalRequest implements Initializable {
 	
+	/**
+	 * ObservableList for the request table 
+	 */
 	private final ObservableList<TeacherRequestInfo> data =
 	        FXCollections.observableArrayList();
 	
@@ -50,6 +58,10 @@ public class TeacherExceptionalRequest implements Initializable {
     @FXML // fx:id="DisaprvBtn"
     private Button DisaprvBtn; // Value injected by FXMLLoader
 
+    /**
+     * approve the request when the approve button clicks
+     * @param event
+     */
     @FXML
     void approve(ActionEvent event) {
     	TeacherRequestInfo requestInfo = excepTbl.getSelectionModel().getSelectedItem();
@@ -61,10 +73,30 @@ public class TeacherExceptionalRequest implements Initializable {
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
-    		changeTeacher(requestInfo);
-    	} 
+    		try {
+				changeTeacher(requestInfo);
+	    		String title = "The request was approved";
+				String msg = "Hello\nThe request for changing " 
+						+ requestInfo.getCurrTeacherName() + " to " + requestInfo.getNewTeacherName() 
+						+ " in class " + requestInfo.getClassRoom() + " was approved.";
+				sendMsg(title, msg, requestInfo.getCurrTeacherId(), null, false);
+				sendMsg(title, msg, requestInfo.getNewTeacherId(), null, false);
+				sendMsg(title, msg, null, "Secretary", true);
+	    	} catch (InterruptedException e) {
+	    		alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+				e.printStackTrace();
+			}
+    	}
     }
 
+    /**
+     * disapproves the request when the disapprove button clicks
+     * @param event
+     */
     @FXML
     void disapprove(ActionEvent event) {
     	TeacherRequestInfo requestInfo = excepTbl.getSelectionModel().getSelectedItem();
@@ -76,12 +108,89 @@ public class TeacherExceptionalRequest implements Initializable {
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
-    		deleteRow(requestInfo);
+    		try {
+	    		deleteRow(requestInfo);
+	    		String title = "The request was disapproved";
+				String msg = "Hello\nThe request for changing " 
+						+ requestInfo.getCurrTeacherName() + " to " + requestInfo.getNewTeacherName() 
+						+ " in class " + requestInfo.getClassRoom() + " was disapproved.";
+				sendMsg(title, msg, requestInfo.getCurrTeacherId(), null, false);
+				sendMsg(title, msg, requestInfo.getNewTeacherId(), null, false);
+				sendMsg(title, msg, null, "Secretary", true);
+    		} catch (InterruptedException e) {
+	    		alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+				e.printStackTrace();
+			}
     	} 
     }
     
-    // change teacher teaching class
-    private void changeTeacher(TeacherRequestInfo requestInfo){
+    
+    /**
+     * send message to user
+     * @param title	 the title of the message
+     * @param msg	the message body
+     * @param id	the user id to send to
+     * @param role	the role of the receiver
+     * @param group	false if for 1 receiver, true if for a job type
+     * @throws InterruptedException		if interrupted will waiting for message from the server
+     */
+    private void sendMsg(String title, String msg, String id, String role, boolean group) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	
+    	msgToServer.put("msgType", "insert");
+    	if(!group){
+	    	msgToServer.put("query", "INSERT INTO messages (`sendTime`, `title`, `message`, `from`, `to`) "
+	    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + id + "');");
+	    	
+	    	synchronized (Main.client) {
+	    		Main.client.sendMessageToServer(msgToServer);
+	    		Main.client.wait();
+			}
+    	}else{
+    		ArrayList<String> ids = getUserTypeIds(role);
+    		for(int i = 0; i < ids.size(); i++){
+    			msgToServer.put("query", "INSERT INTO messages(`sendTime`, `title`, `message`, `from`, `to`) "
+		    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + ids.get(i) + "');");
+		    	
+		    	synchronized (Main.client) {
+		    		Main.client.sendMessageToServer(msgToServer);
+		    		Main.client.wait();
+				}
+    		}
+    	}
+    }
+    
+    /**
+     * gets all the users id with role
+     * @param type	role of the group of user
+     * @return	array list containing all the ids of the role
+     * @throws InterruptedException if interrupted will waiting for message from the server
+     */
+    private ArrayList<String> getUserTypeIds(String type) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	ArrayList<String> ids = null;
+    	
+    	msgToServer.put("msgType", "select");
+    	msgToServer.put("query", "SELECT ID FROM users WHERE Role = '" + type + "';");
+    	
+    	synchronized (Main.client) {
+    		Main.client.sendMessageToServer(msgToServer);
+    		Main.client.wait();
+    		ids = (ArrayList<String>) Main.client.getMessage();
+		}
+    	return ids;
+    }
+    
+    /**
+     *  change teacher teaching class
+     * @param requestInfo request info
+     * @throws InterruptedException
+     */
+    private void changeTeacher(TeacherRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	//updates the teacher in course class
@@ -90,27 +199,22 @@ public class TeacherExceptionalRequest implements Initializable {
     	
     	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
-			try {
-				Main.client.wait();
-				deleteRow(requestInfo);
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Information Dialog");
-				alert.setHeaderText(null);
-				alert.setContentText("The teacher have been changed");
-				alert.show();
-			} catch (InterruptedException e) {
-				Alert alert = new Alert(AlertType.ERROR);
-				alert.setTitle("Error Dialog");
-				alert.setHeaderText(null);
-				alert.setContentText("Connection error!!");
-				alert.show();
-				e.printStackTrace();
-			}
+			Main.client.wait();
+			deleteRow(requestInfo);
+			Alert alert = new Alert(AlertType.INFORMATION);
+			alert.setTitle("Information Dialog");
+			alert.setHeaderText(null);
+			alert.setContentText("The teacher have been changed");
+			alert.show();
 		}
     }
     
-    // delete row from DB and table
-    private void deleteRow(TeacherRequestInfo requestInfo){
+    /**
+     *  delete row from DB and table
+     * @param requestInfo request info
+     * @throws InterruptedException
+     */
+    private void deleteRow(TeacherRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	//delete from DB
@@ -119,31 +223,18 @@ public class TeacherExceptionalRequest implements Initializable {
     	
     	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
-			try {
-				Main.client.wait();
-				int msgFromServer = (int)Main.client.getMessage();
-		    	if(msgFromServer > 0){
-		    		//delete from table
-		    		data.remove(requestInfo);
-		    	}else{
-		    		Alert alert = new Alert(AlertType.INFORMATION);
-					alert.setTitle("Error Dialog");
-					alert.setHeaderText(null);
-					alert.setContentText("Connection error!!");
-					alert.show();
-		    	}
-			} catch (InterruptedException e) {
-				Alert alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Error Dialog");
-				alert.setHeaderText(null);
-				alert.setContentText("Connection error!!");
-				alert.show();
-				e.printStackTrace();
-			}
+			Main.client.wait();
+			int msgFromServer = (int)Main.client.getMessage();
+	    	if(msgFromServer > 0){
+	    		//delete from table
+	    		data.remove(requestInfo);
+	    	}
 		}
     }
     
-    // set the changing teacher requests table items
+    /**
+     *  set the changing teacher requests table items
+     */
     private void setTeachersReqestsTbl(){
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> msgFromServer;
@@ -200,7 +291,11 @@ public class TeacherExceptionalRequest implements Initializable {
     	setTeachersReqestsTbl();
 	}
 	
-	// class for the changing teacher request table
+	/**
+	 *  class for the changing teacher request table
+	 * @author Samer Kinaan
+	 *
+	 */
 	public static class TeacherRequestInfo{
 		private String courseClassId, currTeacherId, newTeacherId;
 		

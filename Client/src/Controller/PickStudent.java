@@ -27,10 +27,15 @@ import javafx.fxml.Initializable;
 
 public class PickStudent implements Initializable {
 	
-	private int currSem= -1;
+	/**
+	 * class room data for class rooms table
+	 */
 	private final ObservableList<ClassInfo> clsData =
 	        FXCollections.observableArrayList();
 	
+	/**
+	 * student data for students table
+	 */
 	private final ObservableList<StudInfo> stdData =
 	        FXCollections.observableArrayList();
 	
@@ -55,6 +60,10 @@ public class PickStudent implements Initializable {
     @FXML // fx:id="slctStdBtn"
     private Button slctStdBtn; // Value injected by FXMLLoader
 
+    /**
+     * gets the students from selected class
+     * @param event
+     */
     @FXML
     void selectClass(ActionEvent event) {
     	HashMap<String, String> msgToSrv = new HashMap<>();
@@ -83,6 +92,10 @@ public class PickStudent implements Initializable {
 		}
     }
 
+    /**
+     * gets the student info and opens the change student controller
+     * @param event
+     */
     @FXML
     void selectStudent(ActionEvent event) {
     	StudInfo studInfo = stdTbl.getSelectionModel().getSelectedItem();
@@ -107,7 +120,10 @@ public class PickStudent implements Initializable {
 			ex.printStackTrace();
 		}
     }
-    
+   
+    /**
+     * sets all the class room in the class rooms table
+     */
     private void setClassRooms(){
     	HashMap<String, String> msgToSrv = new HashMap<>();
     	ArrayList<String> msgFromSrv;
@@ -130,6 +146,9 @@ public class PickStudent implements Initializable {
 		}
     }
 
+    /**
+     * set listeners for the tables and sets the class rooms in table
+     */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
@@ -162,6 +181,9 @@ public class PickStudent implements Initializable {
 		setClassRooms();
 	}
 	
+	/**
+	 * class for class rooms table
+	 */
 	public static class ClassInfo{
     	private StringProperty name;
         public void setName(String value) { nameProperty().set(value); }
@@ -176,7 +198,9 @@ public class PickStudent implements Initializable {
         }
     }
 	
-	//class for the students requests table
+	/*
+	 * class for the students table
+	 */
     public static class StudInfo{
     	private StringProperty name;
         public void setName(String value) { nameProperty().set(value); }

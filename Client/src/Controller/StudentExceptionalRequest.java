@@ -22,9 +22,22 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+
+/**
+* this controller handles the exceptional student request
+* @author Samer Kinaan
+*
+*/
 public class StudentExceptionalRequest implements Initializable{
 	
+	/**
+	 * current semester id
+	 */
 	private int currSem= -1;
+	
+	/**
+	 * Students Request Info data for request table
+	 */
 	private final ObservableList<StudRequestInfo> data =
 	        FXCollections.observableArrayList();
 	
@@ -49,6 +62,11 @@ public class StudentExceptionalRequest implements Initializable{
     @FXML // fx:id="DisaprvBtn"
     private Button DisaprvBtn; // Value injected by FXMLLoader
 
+    /**
+     * approve the request when the approve button clicks
+     * 
+     * @param event
+     */
     @FXML
     void approve(ActionEvent event) {
     	StudRequestInfo requestInfo = studTbl.getSelectionModel().selectedItemProperty().get();
@@ -64,9 +82,21 @@ public class StudentExceptionalRequest implements Initializable{
     		try{
 	    		if(requestInfo.getRequest().equals("assign")){
 					assignToCourse(requestInfo);
+					String title = "The request was approved";
+					String msg = "Hello\nThe request for assigning you to course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, requestInfo.getId(), null, false);
+					msg = "Hello\nThe request for assigning " + requestInfo.getName() + " to course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, null, "Secretary", true);
 	        	}else{
 	        		removeFromCourse(requestInfo);
+	        		String title = "The request was approved";
+					String msg = "Hello\nThe request for removing you from course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, requestInfo.getId(), null, false);
+					msg = "Hello\nThe request for removing " + requestInfo.getName() + " from course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, null, "Secretary", true);
 	        	}
+	    		
+	    		
     		}catch (InterruptedException e) {
 				alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");
@@ -78,6 +108,11 @@ public class StudentExceptionalRequest implements Initializable{
     	}
     }
 
+    /**
+     * disapproves the request when the disapprove button clicks
+     * 
+     * @param event
+     */
     @FXML
     void disapprove(ActionEvent event) {
     	StudRequestInfo requestInfo = studTbl.getSelectionModel().selectedItemProperty().get();
@@ -92,6 +127,11 @@ public class StudentExceptionalRequest implements Initializable{
     	if (result.get() == ButtonType.OK){
     		try {
 				deleteRow(requestInfo);
+				String title = "The request was disapproved";
+				String msg = "Hello\nThe request for removing you from course " + requestInfo.getCourse() + " was disapproved";
+				sendMsg(title, msg, requestInfo.getId(), null, false);
+				msg = "Hello\nThe request for removing " + requestInfo.getName() + " from course " + requestInfo.getCourse() + " was disapproved";
+				sendMsg(title, msg, null, "Secretary", true);
 			} catch (InterruptedException e) {
 				alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");
@@ -102,8 +142,69 @@ public class StudentExceptionalRequest implements Initializable{
 			}
     	}
     }
+ 
+    /**
+     * send message to user
+     * @param title	 the title of the message
+     * @param msg	the message body
+     * @param id	the user id to send to
+     * @param role	the role of the receiver
+     * @param group	false if for 1 receiver, true if for a job type
+     * @throws InterruptedException		if interrupted will waiting for message from the server
+     */
+    private void sendMsg(String title, String msg, String id, String role, boolean group) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	
+    	msgToServer.put("msgType", "insert");
+    	if(!group){
+	    	msgToServer.put("query", "INSERT INTO messages (`sendTime`, `title`, `message`, `from`, `to`) "
+	    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + id + "');");
+	    	
+	    	synchronized (Main.client) {
+	    		Main.client.sendMessageToServer(msgToServer);
+	    		Main.client.wait();
+			}
+    	}else{
+    		ArrayList<String> ids = getUserTypeIds(role);
+    		for(int i = 0; i < ids.size(); i++){
+    			msgToServer.put("query", "INSERT INTO messages(`sendTime`, `title`, `message`, `from`, `to`) "
+		    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + ids.get(i) + "');");
+		    	
+		    	synchronized (Main.client) {
+		    		Main.client.sendMessageToServer(msgToServer);
+		    		Main.client.wait();
+				}
+    		}
+    	}
+    }
     
-    //remove the student from course
+    /**
+     * gets all the users id with role
+     * @param type	role of the group of user
+     * @return	array list containing all the ids of the role
+     * @throws InterruptedException if interrupted will waiting for message from the server
+     */
+    private ArrayList<String> getUserTypeIds(String type) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	ArrayList<String> ids = null;
+    	
+    	msgToServer.put("msgType", "select");
+    	msgToServer.put("query", "SELECT ID FROM users WHERE Role = '" + type + "';");
+    	
+    	synchronized (Main.client) {
+    		Main.client.sendMessageToServer(msgToServer);
+    		Main.client.wait();
+    		ids = (ArrayList<String>) Main.client.getMessage();
+		}
+    	return ids;
+    }
+    
+    /**
+     * remove the student from course.
+     * 
+     * @param requestInfo  requestInfo that has the request details
+     * @throws InterruptedException
+     */
     private void removeFromCourse(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
@@ -119,7 +220,12 @@ public class StudentExceptionalRequest implements Initializable{
 		}
     }
     
-    //Assigns the student to the course
+    /**
+     * Assigns the student to the course.
+     * 
+     * @param requestInfo	requestInfo that has the request details
+     * @throws InterruptedException
+     */
     private void assignToCourse(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
@@ -133,7 +239,11 @@ public class StudentExceptionalRequest implements Initializable{
     	deleteRow(requestInfo);
     }
     
-    //gets the current semester id
+    /**
+     * gets the current semester id
+     * @return the id of the current semester
+     * @throws InterruptedException
+     */
     private int getCurrSem() throws InterruptedException{
     	if(currSem != -1){
     		return currSem;
@@ -153,7 +263,11 @@ public class StudentExceptionalRequest implements Initializable{
 		return currSem;
     }
     
-    // delete row from DB and table
+    /**
+     *  delete row from DB and table
+     * @param requestInfo  requestInfo that has the request details
+     * @throws InterruptedException
+     */
     private void deleteRow(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
@@ -177,6 +291,9 @@ public class StudentExceptionalRequest implements Initializable{
 		}
     }
     
+    /**
+     * sets all listeners
+     */
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
     	
@@ -204,7 +321,9 @@ public class StudentExceptionalRequest implements Initializable{
     	setStudentsRequestsTbl();
 	}
     
-    //set all the students requests in the table
+    /**
+     * set all the students requests in the table
+     */
     private void setStudentsRequestsTbl(){
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> msgFromServer;
@@ -231,7 +350,11 @@ public class StudentExceptionalRequest implements Initializable{
 		}
     }
 	
-    //class for the students requests table
+    /**
+     * class for the students requests table
+     * @author Samer Kinaan
+     *
+     */
     public static class StudRequestInfo{
     	private StringProperty name;
         public void setName(String value) { nameProperty().set(value); }

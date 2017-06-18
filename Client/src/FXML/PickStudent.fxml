@@ -7,12 +7,11 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PickStudent">
    <children>
-      <Label layoutX="14.0" layoutY="14.0" text="Choose a student">
+      <Label layoutX="12.0" layoutY="14.0" text="Choose a student" textFill="#0c59b2">
          <font>
-            <Font name="System Bold" size="24.0" />
+            <Font name="Impact" size="24.0" />
          </font>
       </Label>
       <TableView fx:id="clsRomTbl" layoutX="12.0" layoutY="71.0" prefHeight="349.0" prefWidth="229.0">
@@ -26,9 +25,21 @@
           <TableColumn fx:id="stdIdCln" prefWidth="135.0" text="Student id" />
         </columns>
       </TableView>
-      <Button fx:id="slctClsBtn" layoutX="12.0" layoutY="429.0" mnemonicParsing="false" onAction="#selectClass" text="Select class" />
-      <Button fx:id="slctStdBtn" layoutX="320.0" layoutY="429.0" mnemonicParsing="false" onAction="#selectStudent" text="Select student" />
-      <Label layoutX="12.0" layoutY="53.0" text="Class rooms" />
-      <Label layoutX="320.0" layoutY="53.0" text="Students in class room" />
+      <Button fx:id="slctClsBtn" layoutX="12.0" layoutY="429.0" mnemonicParsing="false" onAction="#selectClass" text="Select class" textFill="#6585dd">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Button>
+      <Button fx:id="slctStdBtn" layoutX="320.0" layoutY="429.0" mnemonicParsing="false" onAction="#selectStudent" text="Select student" textFill="#6585dd">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Button>
+      <Label layoutX="12.0" layoutY="53.0" text="Class rooms" textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
+      <Label layoutX="320.0" layoutY="53.0" text="Students in class room" textFill="#4c6bc5">
+         <font>
+            <Font name="Impact" size="14.0" />
+         </font></Label>
    </children>
 </AnchorPane>

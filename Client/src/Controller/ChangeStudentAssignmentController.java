@@ -38,53 +38,111 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.paint.Color;
 
+/**
+ * this controller handles the changing student course or class
+ * @author Samer Kinaan
+ *
+ */
 public class ChangeStudentAssignmentController implements Initializable{
 	
+	/**
+	 * the student downing the changes
+	 */
 	private Student student;
+	
+	/**
+	 * current semester
+	 */
 	private int currSem= -1;
+	
+	/**
+	 * data for courses taken by the student to present in table
+	 */
 	private final ObservableList<CourseInfo> data =
 	        FXCollections.observableArrayList();
 	
+	/**
+	 *  Value injected by FXMLLoader
+	 */
 	@FXML // fx:id="stdIdLbl"
 	private Label stdIdLbl; // Value injected by FXMLLoader
 
+	/**
+	 *  Value injected by FXMLLoader
+	 */
 	@FXML // fx:id="stdIdTxt"
     private TextField stdIdTxt; // Value injected by FXMLLoader
 
-
+	/**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="stdNameLbl"
     private Label stdNameLbl; // Value injected by FXMLLoader
 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="ClsLbl"
     private Label ClsLbl; // Value injected by FXMLLoader
 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="newAsnBtn"
     private Button newAsnBtn; // Value injected by FXMLLoader
 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="crsTbl"
     private TableView<CourseInfo> crsTbl; // Value injected by FXMLLoader
-    
+
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="nameCln"
     private TableColumn<CourseInfo, String> nameCln; // Value injected by FXMLLoader
 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="idCln"
     private TableColumn<CourseInfo, String> idCln; // Value injected by FXMLLoader
 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="removeCrs"
     private Button removeCrs; // Value injected by FXMLLoader
-    
+ 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="tuChosBox"
     private ChoiceBox<String> tuChosBox; // Value injected by FXMLLoader
 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="corsChosBox"
     private ChoiceBox<Course> corsChosBox; // Value injected by FXMLLoader
-    
+ 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="classChoiceBox"
     private ChoiceBox<String> classChoiceBox; // Value injected by FXMLLoader
 
+    /**
+	 *  Value injected by FXMLLoader
+	 */
     @FXML // fx:id="moveClassBtn"
     private Button moveClassBtn; // Value injected by FXMLLoader
-    
+ 
+    /**
+     * move student to another class
+     * @param event
+     */
     @FXML
     void moveStudentToClass(ActionEvent event) {
     	String newClass = classChoiceBox.getSelectionModel().getSelectedItem();
@@ -117,9 +175,14 @@ public class ChangeStudentAssignmentController implements Initializable{
     	}
     }
 
-    
+    /**
+     * send request for removing student from choosing course
+     * @param event
+     */
     @FXML
     void removeCourse(ActionEvent event) {
+    	CourseInfo courseInfo = crsTbl.getSelectionModel().getSelectedItem();
+    	NewStudenCoursePlacement newPlacement = new NewStudenCoursePlacement(student.getID(), courseInfo.getId(), Action.remove);
     	//show confirmation dialog
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
@@ -128,10 +191,16 @@ public class ChangeStudentAssignmentController implements Initializable{
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
-	    	CourseInfo courseInfo = crsTbl.getSelectionModel().getSelectedItem();
-	    	NewStudenCoursePlacement newPlacement = new NewStudenCoursePlacement(student.getID(), courseInfo.getId(), Action.remove);
 	    	try {
 				if(sendNewRequest(newPlacement) > 0){
+					//send messages to users
+					String title = "Request was sent to principal";;
+					String msg = "Hello\nRequest for removing you from course " + courseInfo.getName() + " was sent to the principal.";
+					sendMsg(title, msg, student.getID(), null, false);
+					msg = "Hello\nYou have a new changing course requset to handle.";
+					sendMsg(title, msg, null, "Principal", true);
+					
+					//show dialog
 					alert = new Alert(AlertType.INFORMATION);
 					alert.setTitle("Request sent");
 					alert.setHeaderText(null);
@@ -155,6 +224,10 @@ public class ChangeStudentAssignmentController implements Initializable{
     	}
     }
     
+    /**
+     * send request for assigning student to choosing course
+     * @param event
+     */
     @FXML
     void AssignNewCourse(ActionEvent event) {
     	Course selectedCourse = corsChosBox.getSelectionModel().getSelectedItem();
@@ -164,7 +237,7 @@ public class ChangeStudentAssignmentController implements Initializable{
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
     	alert.setHeaderText(null);
-    	alert.setContentText("Are you sure you want to assign student" + student.getID() + " to course " + selectedCourse.getName() + "?");
+    	alert.setContentText("Are you sure you want to assign " + student.getName() + " to course " + selectedCourse.getName() + "?");
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
@@ -172,6 +245,13 @@ public class ChangeStudentAssignmentController implements Initializable{
 	    		NewStudenCoursePlacement newPlacement = new NewStudenCoursePlacement(student.getID(), courseId, Action.assign);
 	    		try {
 					if(sendNewRequest(newPlacement) > 0){
+						String title = "Request was sent to principal";;
+						String msg = "Hello\nRequest for assigning you for course " + selectedCourse.getName() + " was sent to the principal.";
+						sendMsg(title, msg, student.getID(), null, false);
+						msg = "Hello\nYou have a new changing course requset to handle.";
+						sendMsg(title, msg, null, "Principal", true);
+						
+						// show dialog
 						alert = new Alert(AlertType.INFORMATION);
 						alert.setTitle("Request sent");
 						alert.setHeaderText(null);
@@ -202,7 +282,63 @@ public class ChangeStudentAssignmentController implements Initializable{
     	}
     }
     
+    /**
+     * send message to user
+     * @param title	 the title of the message
+     * @param msg	the message body
+     * @param id	the user id to send to
+     * @param role	the role of the receiver
+     * @param group	false if for 1 receiver, true if for a job type
+     * @throws InterruptedException		if interrupted will waiting for message from the server
+     */
+    private void sendMsg(String title, String msg, String id, String role, boolean group) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	
+    	msgToServer.put("msgType", "insert");
+    	if(!group){
+	    	msgToServer.put("query", "INSERT INTO messages (`sendTime`, `title`, `message`, `from`, `to`) "
+	    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + id + "');");
+	    	
+	    	synchronized (Main.client) {
+	    		Main.client.sendMessageToServer(msgToServer);
+	    		Main.client.wait();
+			}
+    	}else{
+    		ArrayList<String> ids = getUserTypeIds(role);
+    		for(int i = 0; i < ids.size(); i++){
+    			msgToServer.put("query", "INSERT INTO messages(`sendTime`, `title`, `message`, `from`, `to`) "
+		    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + ids.get(i) + "');");
+		    	
+		    	synchronized (Main.client) {
+		    		Main.client.sendMessageToServer(msgToServer);
+		    		Main.client.wait();
+				}
+    		}
+    	}
+    }
     
+    /**
+     * gets all the users id with role
+     * @param type	role of the group of user
+     * @return	array list containing all the ids of the role
+     * @throws InterruptedException if interrupted will waiting for message from the server
+     */
+    private ArrayList<String> getUserTypeIds(String type) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	ArrayList<String> ids = null;
+    	
+    	msgToServer.put("msgType", "select");
+    	msgToServer.put("query", "SELECT ID FROM users WHERE Role = '" + type + "';");
+    	
+    	synchronized (Main.client) {
+    		Main.client.sendMessageToServer(msgToServer);
+    		Main.client.wait();
+    		ids = (ArrayList<String>) Main.client.getMessage();
+		}
+    	return ids;
+    }
+  
+    //TODO move student from class
     private boolean moveStudentToClass(String classRoom) throws InterruptedException{
     	boolean moved = false;
     	HashMap<String, String> msg = new HashMap<>();
@@ -221,7 +357,12 @@ public class ChangeStudentAssignmentController implements Initializable{
     	return moved;
     }
     
-    //sends new request to the principal
+    /**
+     * sends new request to the principal
+     * @param newPlacement to be sent to the principal
+     * @return	if the request was sent
+     * @throws InterruptedException
+     */
     private int sendNewRequest(NewStudenCoursePlacement newPlacement) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	int msgFromServer;
@@ -237,7 +378,11 @@ public class ChangeStudentAssignmentController implements Initializable{
 		return msgFromServer;
     }
     
-    //checks if the student already signed to the course
+    /**
+     * checks if the student already signed to the course
+     * @param courseId course id
+     * @return	true if the student is assigned to the course, else false
+     */
     private boolean isSignedToCourse(String courseId){
     	for(int i = 0; i < data.size(); i++){
     		if(data.get(i).id.equals(courseId))
@@ -246,7 +391,10 @@ public class ChangeStudentAssignmentController implements Initializable{
     	return false;
     }
     
-    //get the current semester id
+    /**
+     * get the current semester id
+     * @return	the id of the current semester
+     */
     private int getCurrSem(){
     	// if the currSem variable is not -1 then no need to get it from the DB
     	if(currSem != -1){
@@ -278,6 +426,11 @@ public class ChangeStudentAssignmentController implements Initializable{
 		return currSem;
     }
 
+    /**
+     * gets all the class room in school
+     * @return	array list of all the class room in the school
+     * @throws InterruptedException
+     */
     private ArrayList<String> getClassRooms() throws InterruptedException{
     	HashMap <String,String> msgServer = new HashMap <String,String>();
     	ArrayList<String> result = null;
@@ -292,7 +445,13 @@ public class ChangeStudentAssignmentController implements Initializable{
 		return result;
     }
     
-    //set the table items list
+    /**
+     * set the table with the courses taken by 
+     * the student this semester.
+     * 
+     * @param coursesIds all the courses id taken by the student
+     * @throws InterruptedException
+     */
     private void setCourses(ArrayList<String> coursesIds) throws InterruptedException{
     	String courseId, courseName;
     	HashMap<String, String> msg = new HashMap<>();
@@ -320,6 +479,12 @@ public class ChangeStudentAssignmentController implements Initializable{
     	}
     }
     
+    
+    /**
+     * sets and get all the data of the student
+     * 
+     * @param student student instance
+     */
     public void setStudent(Student student){
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> array = (ArrayList<String>) Main.client.getMessage();
@@ -350,7 +515,11 @@ public class ChangeStudentAssignmentController implements Initializable{
 		}
     }
     
-    //class for courses taken by the student
+    /**
+     * class for courses taken by the student
+     * @author Samer Kinaan
+     *
+     */
     public static class CourseInfo{
     	private StringProperty name;
         public void setName(String value) { nameProperty().set(value); }
@@ -374,7 +543,9 @@ public class ChangeStudentAssignmentController implements Initializable{
         }
     }
 
-	
+	/**
+	 * initialize the listeners for all the nodes
+	 */
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
     	ArrayList<String> teachingunits;
