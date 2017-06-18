@@ -6,8 +6,6 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import application.Main;
 import javafx.fxml.Initializable;
 import javafx.beans.property.SimpleStringProperty;
