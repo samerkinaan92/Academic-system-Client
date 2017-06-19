@@ -287,7 +287,6 @@ public class TCHR_CheckAssignments implements Initializable {
     			String MSG = "Your submission in course: "+currentSelectedCourseName+"\nhas been checked and evaluated.\n\n"
     					+"Grade: "+sub.Grade+"\nEvaluation: "+sub.evaluation;
     			Message.sendMsg(new Message(title,MSG, Integer.parseInt(Main.user.getID()),sub.studentID));
-    			System.out.println(MSG);
     			
     			evaluationTextArea.clear();
     			finalGradeTextField.clear();
