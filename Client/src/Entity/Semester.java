@@ -32,14 +32,19 @@ public class Semester {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		if (result.isEmpty()){
+			return null;
+		}
+		
 		ArrayList<Semester> DBsemester = new ArrayList<Semester>();
 		
 		for (int i = 0; i < result.size(); i+=4)
@@ -70,20 +75,18 @@ public class Semester {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		
 		if (result.size() == 4)
 			return new Semester(Integer.parseInt(result.get(3)), result.get(0), Integer.parseInt(result.get(2)), Integer.parseInt(result.get(1)));
 		return null;
-		
-		
 	}
 	
 	

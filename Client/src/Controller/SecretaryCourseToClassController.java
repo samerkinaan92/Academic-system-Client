@@ -642,14 +642,38 @@ public class SecretaryCourseToClassController implements Initializable {
 		
 		semesterArr = Semester.getSemesters();
 		
-		int currID = Semester.getCurrent().getId();
+		if (semesterArr == null){
+			infoMsg.setContentText("No Semesters defined in data base!");
+			infoMsg.showAndWait();
+			return;
+		}
+		
+		Semester cur = Semester.getCurrent();
+		if (cur == null){
+			infoMsg.setContentText("No Current Semester defined in data base!");
+			infoMsg.showAndWait();
+			return;
+		}
+		
 		for (int i = semesterArr.size()-1; i >= 0; i--){
-			if (semesterArr.get(i).getId() < currID){
+			
+			if (semesterArr.get(i).getYear() == cur.getYear() && semesterArr.get(i).getSeason().compareTo(cur.getSeason()) < 0){
+				semesterArr.remove(i);
+			}
+			
+			if (semesterArr.get(i).getYear() < cur.getYear()){
 				semesterArr.remove(i);
 			}
 		}
 		
+		
 		teacherArr = Teacher.getTeachers();
+		
+		if (teacherArr == null){
+			infoMsg.setContentText("No Teachers defined in data base!");
+			infoMsg.showAndWait();
+			return;
+		}
 		
 		organizedSemesterList = getSemesterList(semesterArr);
 		Collections.sort(organizedSemesterList);
