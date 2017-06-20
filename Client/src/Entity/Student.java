@@ -101,6 +101,12 @@ public class Student extends User {
 		return true;
 	}
 	
+	/**
+	 * Remove students from courses and pending requests at principle 
+	 * @param sID Semester id
+	 * @param student_course Array of student & course id's
+	 * @return If succeed
+	 */
 	public static boolean removeStudentsfromCourses(int sID, ArrayList<String> student_course){
 		
 		HashMap <String,String> msgServer;

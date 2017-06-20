@@ -358,8 +358,6 @@ public class SecretaryCourseToClassController implements Initializable {
 		  
 		  if (teacherChooser.getSelectionModel().getSelectedItem() != null){
 			 
-		  
-			  
 			  String selectedCourse = availableCourses.getSelectionModel().getSelectedItem();
 			  String selectedTeacherID = teacherChooser.getSelectionModel().getSelectedItem();
 			  selectedTeacherID = selectedTeacherID.substring(selectedTeacherID.indexOf('(') + 1, selectedTeacherID.indexOf(')'));
