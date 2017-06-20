@@ -118,11 +118,15 @@ public class SecretaryCourseToClassController implements Initializable {
 	 */
 	private ArrayList<String> getSemesterList(ArrayList<Semester> semsterArr){ // Get semesters year & season.
 		 
-		 ArrayList<String> temp = new ArrayList<String>();
-			for (int i = 0; i < semsterArr.size(); i++)
-				temp.add(semsterArr.get(i).getYear() + " (" + semsterArr.get(i).getSeason() + ")");
+		ArrayList<String> temp = new ArrayList<String>();
+		if (semsterArr == null){
+			return temp;
+		}
+		
+		for (int i = 0; i < semsterArr.size(); i++)
+			temp.add(semsterArr.get(i).getYear() + " (" + semsterArr.get(i).getSeason() + ")");
 			
-			return temp;	
+		return temp;	
 	 }
 	
 	/**
@@ -132,11 +136,15 @@ public class SecretaryCourseToClassController implements Initializable {
 	 */
 	private ArrayList<String> getClassList(ArrayList<claSS> classArr){ // Get classes names.
 		 
-		 ArrayList<String> temp = new ArrayList<String>();
-			for (int i = 0; i < classArr.size(); i++)
-				temp.add(classArr.get(i).getClassName());
+		ArrayList<String> temp = new ArrayList<String>();
+		if (classArr == null){
+			return temp;
+		}
+		
+		for (int i = 0; i < classArr.size(); i++)
+			temp.add(classArr.get(i).getClassName());
 			
-			return temp;	
+		return temp;	
 	 }
 	
 	/**
@@ -147,10 +155,14 @@ public class SecretaryCourseToClassController implements Initializable {
 	private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
 		ArrayList<String> temp = new ArrayList<String>();
-			for (int i = 0; i < courseArr.size(); i++)
-				temp.add(courseArr.get(i).getName() + " (" + courseArr.get(i).getCourseID() + ")");
+		if (courseArr == null){
+			return temp;
+		}
+		
+		for (int i = 0; i < courseArr.size(); i++)
+			temp.add(courseArr.get(i).getName() + " (" + courseArr.get(i).getCourseID() + ")");
 			
-			return temp;	
+		return temp;	
 		}
 	  
 	/**
@@ -171,23 +183,31 @@ public class SecretaryCourseToClassController implements Initializable {
 				Main.client.sendMessageToServer(msgServer);
 				}
 				catch(Exception exp){
-					System.out.println("Server fatal error!");
+					errMsg.setContentText("Send Message To Server Failed!");
+					errMsg.showAndWait();
+					return null;
 				}
 			synchronized (Main.client){try {
 				Main.client.wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				errMsg.setContentText("Send Message To Server Failed!");
+				errMsg.showAndWait();
+				return null;
 			}}
 			ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 			
 			if (result.size() > 0){
 				ArrayList<String> temp = new ArrayList<String>();
-				for (int i = 0; i < result.size(); i+=2)
+				for (int i = 0; i < result.size(); i+=2){
 					temp.add(result.get(i+1) + " (" + result.get(i) + ")");
+				}
 				return temp;
 			}
-			else
+			else{
+				infoMsg.setContentText("Class Has No Attached Courses!");
+				infoMsg.showAndWait();
 				return null;
+			}
 	  }
 	  
 	/**

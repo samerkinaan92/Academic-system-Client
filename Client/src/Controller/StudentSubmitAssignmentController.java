@@ -7,7 +7,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -16,15 +15,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
 import Entity.Assignment;
 import Entity.Course;
 import Entity.Message;
 import Entity.Semester;
 import Entity.Student;
 import Entity.SubmittedAssignment;
-import Entity.User;
 import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -108,16 +104,34 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  
 	  Alert infoMsg = new Alert(AlertType.INFORMATION);
 	  Alert errMsg = new Alert(AlertType.ERROR);
+	  Alert warMsg = new Alert(AlertType.WARNING);
 
 	  //-------------------------------------------------------------------------------------------------------------------
+	  
+	  /**
+	   * Clear & update screen details.
+	   */
+	  private void clearScreen(){ // Clear & update screen details.
+		  SplitPane pane = null;
+		  try {
+			  pane = FXMLLoader.load(getClass().getResource("/FXML/StudentSubmitAssignment.fxml"));
+		  } 
+		  catch (IOException e) {
+			  errMsg.setContentText("Send Message To Server Failed!");
+			  errMsg.showAndWait();
+			  return;
+		  };
+		Main.getRoot().setCenter(pane);
+	  }
 	  
 	  /** Remove all submitted assignments from list. */
 	  private void removeSubmitted(){ // Remove all submitted assignments from list.
 		  
 		  ArrayList<String> submitted = SubmittedAssignment.getSubmittedAssignments();
 		  
-		  if (submitted == null || assignmentArr == null)
+		  if (submitted == null || assignmentArr == null){
 			  return;
+		  }
 		  
 		  int size = assignmentArr.size();
 		  
@@ -137,11 +151,16 @@ public class StudentSubmitAssignmentController implements Initializable {
 	   */
 	  private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
-			ArrayList<String> temp = new ArrayList<String>();
-			for (int i = 0; i < courseArr.size(); i++)
-				temp.add(courseArr.get(i).getName() + " (" + courseArr.get(i).getCourseID() + ")");
+		  ArrayList<String> temp = new ArrayList<String>();
 			
-			return temp;	
+		  if (courseArr == null){
+			  return temp;
+		  }
+		  
+		  for (int i = 0; i < courseArr.size(); i++)
+			  temp.add(courseArr.get(i).getName() + " (" + courseArr.get(i).getCourseID() + ")");
+			
+		  return temp;	
 		}
 	  
 	  /**
@@ -152,6 +171,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  private ArrayList<String> getAssignmentList(ArrayList<Assignment> assignmentArr){ // Get Assignment names & ID's for list.
 	    	
 			ArrayList<String> temp = new ArrayList<String>();
+			if (assignmentArr == null){
+				return temp;
+			}
+			
 			for (int i = 0; i < assignmentArr.size(); i++)
 				temp.add(assignmentArr.get(i).getAssignmentName() + " (" + assignmentArr.get(i).getAssignmentID() + ")");
 			
@@ -175,19 +198,25 @@ public class StudentSubmitAssignmentController implements Initializable {
 				Main.client.sendMessageToServer(msgServer);
 				}
 				catch(Exception exp){
-					System.out.println("Server fatal error!");
+					errMsg.setContentText("Send Message To Server Failed!");
+					errMsg.showAndWait();
+					return -1;
 				}
 			synchronized (Main.client){try {
 				Main.client.wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				errMsg.setContentText("Send Message To Server Failed!");
+				errMsg.showAndWait();
+				return -1;
 			}}
 			ArrayList<String> date = (ArrayList<String>)Main.client.getMessage();
 			Date subDate = null;
 			try {
 				subDate = format.parse(date.get(4));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				errMsg.setContentText("Date Format Not Valid In Data Base!");
+				errMsg.showAndWait();
+				return -1;
 			}
 
 			Date curDate = new Date();
@@ -206,7 +235,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			
 			String selectedAss = assignmentListView.getSelectionModel().getSelectedItem();
 			String selectedCourseID = courseListView.getSelectionModel().getSelectedItem();
-			String msg = Main.user.getName() + " (" + Main.user.getID() + ")\nSubmitted assignment: " + selectedAss +
+			String msg = Main.user.getName() + " (" + Main.user.getID() + ")\n\nSubmitted assignment: " + selectedAss +
 					"\nCourse: " + selectedCourseID;
 			String title = "Assignment Submission";
 			
@@ -226,20 +255,31 @@ public class StudentSubmitAssignmentController implements Initializable {
 				Main.client.sendMessageToServer(msgServer);
 				}
 				catch(Exception exp){
-					System.out.println("Server fatal error!");
+					errMsg.setContentText("Send Message To Server Failed!");
+					errMsg.showAndWait();
+					return;
 				}
 			synchronized (Main.client){try {
 				Main.client.wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				errMsg.setContentText("Send Message To Server Failed!");
+				errMsg.showAndWait();
+				return;
 			}}
 			ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 			
 			if (result.size() > 0){
-				Message.sendMsg(new Message(title, msg, Integer.parseInt(result.get(0)), Integer.parseInt(Main.user.getID())));
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(result.get(0))));
+			}
+			else{
+				warMsg.setContentText("Send Message To Teacher Failed!");
+				warMsg.showAndWait();
 			}
 			
-			Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Main.user.getID())));
+			if (Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Main.user.getID()))) == 0){
+				warMsg.setContentText("Send Message To Student Failed!");
+				warMsg.showAndWait();
+			}
 		}
 	 	  
 	  //-------------------------------------------------------------------------------------------------------------------
@@ -253,49 +293,73 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  Assignment ass = null;
 		  String selected = assignmentListView.getSelectionModel().getSelectedItem();
 		 		  
-		  if (selected == null)
+		  if (selected == null){
+			  warMsg.setContentText("No Assignment Was Selected!");
+			  warMsg.showAndWait();
 			  return;
+		  }
 		
 		  selected = selected.substring(selected.indexOf('(') + 1, selected.indexOf(')'));
 		  
 		  for (int i = 0; i < assignmentArr.size(); i++){
-			  if (assignmentArr.get(i).getAssignmentID() == Integer.parseInt(selected))
+			  if (assignmentArr.get(i).getAssignmentID() == Integer.parseInt(selected)){
 				  ass = assignmentArr.get(i);
+				  break;
+			  }
 		  }
 		  
-		  if (ass == null)
+		  if (ass == null){
+			  warMsg.setContentText("Assignment Was Not Found In Data Base!");
+			  warMsg.showAndWait();
 			  return;
+		  }
 		  
 		  String p = ass.getFilePath();
 		  
+		  /*
 		  if (!Files.exists(Paths.get(p))){
+			  warMsg.setContentText("File Is Not In Server File Path!");
+			  warMsg.showAndWait();
 			  return;
 		  }
+		  */
 		  
 		  byte[] file = Assignment.getFile(p);
+		  
+		  if (file == null){
+			  errMsg.setContentText("Failed Getting File Stream From Server!");
+        	  errMsg.showAndWait();
+        	  return;
+		  }
 		  
 		  FileChooser fileChooser = new FileChooser();
           fileChooser.setTitle("Save Assignment");
           fileChooser.getExtensionFilters().addAll(
                   new FileChooser.ExtensionFilter("All Files", "*.*"),
                   new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                  new FileChooser.ExtensionFilter("Acrobat Reader Files", "*.pdf"),
                   new FileChooser.ExtensionFilter("Word Documents", "*.docx")
               );
-          
+          String[] fileName = p.split("/");
+          fileChooser.setInitialFileName(fileName[fileName.length - 1]);
           File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());
           
-          if (pa == null)
+          
+          if (pa == null){
+        	  warMsg.setContentText("Save Path Was Not Selected!");
+			  warMsg.showAndWait();
         	  return;
+          }
           
           Path savePath = Paths.get(pa.getAbsolutePath());
-		  
           FileOutputStream stream;
           
           try {
         	  stream = new FileOutputStream(savePath.toString());
         	  stream.write(file);
         	  stream.close();
-        	  JOptionPane.showMessageDialog(null, "Assignment Saved");
+        	  infoMsg.setContentText("Assignment Saved");
+        	  infoMsg.showAndWait();
           }
           catch (IOException ex) {
         	  ex.printStackTrace();
@@ -310,6 +374,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 	   */
 	  public void CourseSearch(ActionEvent e){ // Filter course list results.
 		  ArrayList<String> temp = new  ArrayList<String>();
+		  
+		  if (organizedCourseList == null){
+			  return;
+		  }
 	    	
 		  for (int i = 0; i < organizedCourseList.size(); i++)
 			  if (organizedCourseList.get(i).toLowerCase().contains(courseSearch.getText().toLowerCase()))
@@ -325,6 +393,10 @@ public class StudentSubmitAssignmentController implements Initializable {
 	  public void AssignmentSearch(ActionEvent e){ // Filter assignment list results.
 	  
 		  ArrayList<String> temp = new  ArrayList<String>();
+		  
+		  if (organizedAssignmentList == null){
+			  return;
+		  }
 	    	
 		  for (int i = 0; i < organizedAssignmentList.size(); i++)
 			  if (organizedAssignmentList.get(i).toLowerCase().contains(assignmentSearch.getText().toLowerCase()))
@@ -368,13 +440,17 @@ public class StudentSubmitAssignmentController implements Initializable {
 				Main.client.sendMessageToServer(msgServer);
 				}
 				catch(Exception exp){
-					System.out.println("Server fatal error!");
+					errMsg.setContentText("Send Message To Server Failed!");
+					errMsg.showAndWait();
+					return;
 				}
 		  
 		  synchronized (Main.client){try {
 				Main.client.wait();
 			} catch (InterruptedException ex) {
-				ex.printStackTrace();
+				errMsg.setContentText("Send Message To Server Failed!");
+				errMsg.showAndWait();
+				return;
 			}}
 		  
 		  //-----------------------------------------------------------------------------------------------------------------
@@ -388,14 +464,18 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  try {
 				data = Files.readAllBytes(p);
 			} catch (IOException e1) {
-				e1.printStackTrace();
+				errMsg.setContentText("Reading File Data Failed!");
+				errMsg.showAndWait();
+				return;
 			}
 			  Main.client.sendMessageToServer(data);
 			  
 			  synchronized (Main.client){try {
 					Main.client.wait();
 				} catch (InterruptedException e2) {
-					e2.printStackTrace();
+					errMsg.setContentText("Send Message To Server Failed!");
+					errMsg.showAndWait();
+					return;
 				}}
 		  }
 		  else{
@@ -431,12 +511,16 @@ public class StudentSubmitAssignmentController implements Initializable {
 				Main.client.sendMessageToServer(msgServer);
 				}
 				catch(Exception exp){
-					exp.printStackTrace();
+					errMsg.setContentText("Send Message To Server Failed!");
+					errMsg.showAndWait();
+					return;
 				}
 	    	synchronized (Main.client){try {
 				Main.client.wait();
 			} catch (InterruptedException ex) {
-				ex.printStackTrace();
+				errMsg.setContentText("Send Message To Server Failed!");
+				errMsg.showAndWait();
+				return;
 			}}
 	    	
 	    	if ((int)Main.client.getMessage() > 0){
@@ -471,25 +555,12 @@ public class StudentSubmitAssignmentController implements Initializable {
 			  submitBtn.setDisable(false);
 		  }
 		  else{
-			  infoMsg.setContentText("No file was selected!");
-			  infoMsg.showAndWait();
+			  warMsg.setContentText("No file was selected!");
+			  warMsg.showAndWait();
 		  }
 	  }
 
 	  //-------------------------------------------------------------------------------------------------------------------
-	  
-	  /**
-	   * Clear & update screen details.
-	   */
-	  private void clearScreen(){ // Clear & update screen details.
-		  SplitPane pane = null;
-		try {
-			pane = FXMLLoader.load(getClass().getResource("/FXML/StudentSubmitAssignment.fxml"));
-		} catch (IOException e) {
-			e.printStackTrace();
-		};
-			Main.getRoot().setCenter(pane);
-		}
 	  
 	  @Override
 	  public void initialize(URL arg0, ResourceBundle arg1) { // Initialize window.
@@ -498,6 +569,8 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  infoMsg.setHeaderText(null);
 		  errMsg.setTitle("Error Accord");
 		  errMsg.setHeaderText(null);
+		  warMsg.setTitle("Notifcation");
+		  warMsg.setHeaderText(null);
 		  file = null;
 		  courseArr = Student.getCourse();
 		  // courseArr = Course.filterOldCourses(courseArr);

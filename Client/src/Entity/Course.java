@@ -13,7 +13,13 @@ public class Course extends AcademicActivity {
 	private String TUID;
 	private int weeklyHours;
 	
-	
+	/**
+	 * Create new course
+	 * @param CourseID Course Id
+	 * @param Name Course name
+	 * @param weeklyHours Course weekly hours
+	 * @param TUID Course teaching unit id
+	 */
 	public Course(int CourseID, String Name, int weeklyHours, String TUID){
 		this.CourseID = CourseID;
 		this.Name = Name;
@@ -21,8 +27,18 @@ public class Course extends AcademicActivity {
 		this.weeklyHours = weeklyHours;
 	}
 	
+	/**
+	 * Filter from array courses that different from current semester
+	 * @param courses list of courses to filter from
+	 * @return The filtered list
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> filterOldCourses(ArrayList<Course> courses){
+		
+		if (courses == null)
+			return null;
+		if (courses.isEmpty())
+			return null;
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -33,12 +49,12 @@ public class Course extends AcademicActivity {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		
@@ -55,10 +71,13 @@ public class Course extends AcademicActivity {
 				courses.remove(i);
 			}
 		}
-		
 		return courses;
 	}
 	
+	/**
+	 * Get list of all defined courses in data base.
+	 * @return Array of all courses
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCourses(){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -69,12 +88,12 @@ public class Course extends AcademicActivity {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		ArrayList<Course> DBcourses = new ArrayList<Course>();
@@ -84,9 +103,13 @@ public class Course extends AcademicActivity {
 		return DBcourses;
 	}
 	
+	/**
+	 * Get all pre courses for a specific course
+	 * @param cID Course id to check all pre courses
+	 * @return list of all pre courses
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getPreCourses(String cID){
-		
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -96,24 +119,28 @@ public class Course extends AcademicActivity {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		
 		if (result.size() > 0)
 			return result;
-		return null;
-		
-		
+		return null;	
 	}
 	
+	/**
+	 * Get course name by course id
+	 * @param ID Course id
+	 * @return The course name
+	 */
 	@SuppressWarnings("unchecked")
 	public static String getCourseName(String ID){ // Get list of courses.
+		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
 		msgServer.put("query", "Select CourseName From course WHERE CourseID ='"+ID+"';");
@@ -122,20 +149,27 @@ public class Course extends AcademicActivity {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		
-		String res;	
-		res = result.get(0);
-		return res;
+		if (result.size() == 1){
+			String res = result.get(0);
+			return res;
+		}
+		
+		return null;
 	}
 	
+	/**
+	 * Insert new course to data base
+	 * @return If succeed
+	 */
 	public boolean insertCourse(){ // Insert course to data base.
 		
 		String msg = "Insert INTO course (CourseID, CourseName, weeklyHours, TUName)";
@@ -155,12 +189,17 @@ public class Course extends AcademicActivity {
     	synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return false;
 		}}
 		
 		return true;
 	}
 	
+	/**
+	 * Update all PreCourses for Course in data base.
+	 * @param PreList All pre courses to update
+	 * @return If succeed
+	 */
 	public boolean updatePreCourses(ArrayList<String> PreList){ // Update PreCourses for Course in data base.
 		
 		for (int i = 0; i < PreList.size(); i++){
@@ -177,17 +216,22 @@ public class Course extends AcademicActivity {
 				Main.client.sendMessageToServer(msgServer);
 				}
 				catch(Exception exp){
-					System.out.println("Server fatal error!");
+					return false;
 				}
 	    	synchronized (Main.client){try {
 				Main.client.wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				return false;
 			}}
 		}
 		return true;
 	}
 		
+	/**
+	 * Check if Course ID exist in data base.
+	 * @param CourseID Course id to check
+	 * @return If exists
+	 */
 	@SuppressWarnings("unchecked")
 	public static boolean checkLegal(String CourseID){ // Check if Course ID exist in data base.
 		HashMap<String,String> msgServer = new HashMap <String,String>();
@@ -198,12 +242,12 @@ public class Course extends AcademicActivity {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				exp.printStackTrace();;
+				return false;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return false;
 		}}
 		
 		ArrayList<String>	result = (ArrayList<String>)Main.client.getMessage();
@@ -214,6 +258,11 @@ public class Course extends AcademicActivity {
 		return true;
 	}
 	
+	/**
+	 * Get the teaching unit of a specific course.
+	 * @param coursID Course id to check
+	 * @return Teaching unit name
+	 */
 	@SuppressWarnings("unchecked")
 	public static String getTU(String coursID){
 		
@@ -225,12 +274,12 @@ public class Course extends AcademicActivity {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		
@@ -253,26 +302,30 @@ public class Course extends AcademicActivity {
 		return courseArr;
 	}
 	
+	/**
+	 * Send message to server
+	 * @param msgServer The message to be send
+	 * @return Answer from server
+	 */
+	@SuppressWarnings("unchecked")
 	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
 		try{
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
-		@SuppressWarnings("unchecked")
+		
 		ArrayList<String> courseResult = (ArrayList<String>)Main.client.getMessage();
 		if (courseResult == null)
 			return null;
 		return courseResult;
 	}
-	
-	
 	
 	public int getCourseID() {
 		return CourseID;
@@ -299,13 +352,4 @@ public class Course extends AcademicActivity {
 	public void setWeeklyHours(int weeklyHours) {
 		this.weeklyHours = weeklyHours;
 	}
-	
-	/*
-	public int getActivityID() {
-		return ActivityID;
-	}
-	public void setActivityID(int activityID) {
-		ActivityID = activityID;
-	}
-	*/
 }
