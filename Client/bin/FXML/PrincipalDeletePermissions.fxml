@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane onMousePressed="#panePress" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PrincipalDeletePermissionsController">
+   <children>
+      <Label layoutX="125.0" layoutY="14.0" prefHeight="45.0" prefWidth="403.0" text="Parent permissions" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+         <font>
+            <Font name="Copperplate Gothic Light" size="40.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
+      <Label layoutX="48.0" layoutY="102.0" text="ID:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="48.0" layoutY="131.0" text="Name:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="241.0" layoutY="102.0" text="Email:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="241.0" layoutY="131.0" text="Address:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <Label layoutX="447.0" layoutY="102.0" text="Phone:">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TableView fx:id="studTable" layoutX="48.0" layoutY="176.0" onMousePressed="#setClick" prefHeight="199.0" prefWidth="537.0">
+        <columns>
+          <TableColumn fx:id="stdIDColumn" prefWidth="165.0" text="Student ID" />
+          <TableColumn fx:id="stdNameColumn" prefWidth="209.0" text="Student Name" />
+            <TableColumn fx:id="permColumn" prefWidth="162.0" text="Permissions" />
+        </columns>
+      </TableView>
+      <Label fx:id="parName" layoutX="104.0" layoutY="131.0" prefHeight="21.0" prefWidth="122.0" text="parName" />
+      <Label fx:id="IDlabel" layoutX="104.0" layoutY="102.0" text="IDlabel" />
+      <Label fx:id="emailLabel" layoutX="309.0" layoutY="102.0" prefHeight="21.0" prefWidth="116.0" text="emailLabel" />
+      <Label fx:id="AddressLabel" layoutX="309.0" layoutY="131.0" prefHeight="21.0" prefWidth="116.0" text="AddressLabel" />
+      <Label fx:id="PhoneLabel" layoutX="511.0" layoutY="102.0" text="PhoneLabel" />
+      <Button fx:id="changeBtn" disable="true" layoutX="254.0" layoutY="413.0" mnemonicParsing="false" onAction="#ChangePer" text="Chane permissions" />
+      <Button layoutX="126.0" layoutY="413.0" mnemonicParsing="false" onAction="#backBtn" text="Back" />
+      <Button layoutX="456.0" layoutY="413.0" mnemonicParsing="false" onAction="#finishBtn" text="Finish" />
+   </children>
+</AnchorPane>

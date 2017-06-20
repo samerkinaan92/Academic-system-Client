@@ -6,8 +6,6 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.sql.Date;
-import java.sql.Time;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -15,9 +13,6 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
-
-import Controller.SEC_DefineClasses.DBFreeStudent;
-import Controller.TCHR_CheckAssignments.DBCourse;
 import Entity.Message;
 import application.Main;
 import javafx.beans.value.ChangeListener;
@@ -34,6 +29,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 
@@ -100,7 +96,11 @@ public class TCHR_DefineAssignments implements Initializable {
     @FXML
     private TextField fileTF;
 
-	private Date Date;
+    @FXML
+    private Label ddREDstar;
+
+    @FXML
+    private Label nameREDstar;
 
     /**	file chooser button event handler */
     @FXML
@@ -119,34 +119,55 @@ public class TCHR_DefineAssignments implements Initializable {
     @FXML
     void submitBTNaction(ActionEvent event) {
     	
-    	Alert alert = new Alert(AlertType.CONFIRMATION);
-    	alert.setTitle("Confirmation Dialog");
-    	alert.setHeaderText("Confirm your request");
-    	alert.setContentText("This will create the new assignment.\nContinue?");
-
-    	Optional<ButtonType> result = alert.showAndWait();
-    	if (result.get() == ButtonType.OK){
+    	if (validInput()) {	// check for empty fields
     		
-        	DBAssignment ass = new DBAssignment();	/*	create the assignment	*/
-        	ass.name = nameTF.getText();
-        	ass.courseID = getSelectedCourseFromCB().courseID;
-        	ass.publishDate = new SimpleDateFormat("YYYY-MM-dd").format(Calendar.getInstance().getTime());
-        	ass.deadLine = datePicker.getValue().toString();
-        	ass.semesterID = getCurrentSemesterID();
-        	sendFileToServer();
-        	ass.filePath = "C:/M.A.T files/assignments/"+filename;
-        	createNewDBassignment(ass);
+    		Alert alert = new Alert(AlertType.CONFIRMATION);
+    		alert.setTitle("Confirmation Dialog");
+    		alert.setHeaderText("Confirm your request");
+    		alert.setContentText("This will create the new assignment.\nContinue?");
+    		Optional<ButtonType> result = alert.showAndWait();
+    		
+    		if (result.get() == ButtonType.OK) {
+    		
+    			DBAssignment ass = new DBAssignment();	/*	create the assignment	*/
+    			ass.name = nameTF.getText();
+    			ass.courseID = getSelectedCourseFromCB().courseID;
+    			ass.publishDate = new SimpleDateFormat("YYYY-MM-dd").format(Calendar.getInstance().getTime());
+    			ass.deadLine = datePicker.getValue().toString();
+    			ass.semesterID = getCurrentSemesterID();
+    			sendFileToServer();
+    			ass.filePath = "C:/M.A.T files/assignments/"+filename;
+
+    			createNewDBassignment(ass);
         	
-        	showInfoMSG("success", "Assignment created succussfuly!\n(Alert message has been sent to users)");
-        	alertAllStudents(ass);	//	alert all students
-        	alertAllTeachers(ass);
+    			showInfoMSG("success", "Assignment created succussfuly!\n(Alert message has been sent to users)");
+    			alertAllStudents(ass);	//	alert all students
+    			alertAllTeachers(ass);
+      
+    			getCoursesFromDB();		/*	init	*/
+    			setCoursesInComboBox();
+    			datePicker.setValue(LocalDate.now());
+    			setItemsDisabled(true);
+    			nameREDstar.setVisible(false);
+    			ddREDstar.setVisible(false);
         	
-        	getCoursesFromDB();		/*	init	*/
-    		setCoursesInComboBox();
-    		datePicker.setValue(LocalDate.now());
-    		setItemsDisabled(true);
-        	
+    		}
     	}
+    	
+    	else {
+
+    		if (datePicker.getValue() == null)
+    			ddREDstar.setVisible(true);
+    		else ddREDstar.setVisible(false);
+    		
+    		if (nameTF.getText().isEmpty())
+    			nameREDstar.setVisible(true);
+    		else nameREDstar.setVisible(false);
+    		
+    		showErrorMSG("invalid input", "do not leave empty fields");
+    	}
+    	
+    	
     }
     
     /** send alert to all teacher's on this course about the new assignment
@@ -155,7 +176,6 @@ public class TCHR_DefineAssignments implements Initializable {
     @SuppressWarnings("unchecked")
 	private void alertAllTeachers (DBAssignment ass) {
     	
-    	//SELECT DISTINCT teacherID FROM class_course CC WHERE CC.CourseID='5'
     	sentMSG.put("msgType", "select");
     	sentMSG.put("query", "SELECT DISTINCT teacherID FROM class_course CC WHERE CC.CourseID='"+ass.courseID+"'");
 		Main.client.sendMessageToServer(sentMSG);
@@ -177,9 +197,6 @@ public class TCHR_DefineAssignments implements Initializable {
 				+"Name:\t\t"+ass.name+"\nPublish Date:\t"+ass.publishDate+"\nDeadLine:\t\t"+ass.deadLine;
 		for (int i=0;i<teachers.size();i++) 
 			Message.sendMsg(new Message(title, MSG, Integer.parseInt(Main.user.getID()), Integer.parseInt(teachers.get(i))));
-		
-    	
-    	
     }
     
     /** send alert to all student's about the new assignment
@@ -226,6 +243,22 @@ public class TCHR_DefineAssignments implements Initializable {
 		setCoursesInComboBox();
 		setItemsDisabled(true);
 		
+		fileBTN.setTooltip(new Tooltip("upload assignment file"));
+		submitBTN.setTooltip(new Tooltip("create new assignment"));
+		
+	}
+	
+	/**	check for empty name/date fields
+	 * @return	true only if all fields have values
+	 * */
+	private boolean validInput() {
+		
+		if (nameTF.getText().isEmpty())
+			return false;
+		if (datePicker.getValue() == null)
+			return false;
+		return true;
+		
 	}
 	
 	/**	disables items in this scene
@@ -245,6 +278,8 @@ public class TCHR_DefineAssignments implements Initializable {
 			fileTF.setText("");
 			fileBTN.setDisable(true);
 			submitBTN.setDisable(true);
+			ddREDstar.setVisible(false);
+			nameREDstar.setVisible(false);
 		}
 		else {			// enable all
 			
@@ -403,19 +438,21 @@ public class TCHR_DefineAssignments implements Initializable {
 	@SuppressWarnings("unchecked")
 	private int getCurrentSemesterID () {
 
-		ArrayList <String> currentSemester;
+		ArrayList <String> currentSemester = null;
 		sentMSG.put("msgType", "select");
 		sentMSG.put("query", "SELECT semesterID FROM mat.semester WHERE isCurr='1'");
 		Main.client.sendMessageToServer(sentMSG);
 		synchronized (Main.client) {
-			try { Main.client.wait();
+			try { 
+				Main.client.wait();
+				currentSemester = (ArrayList<String>)Main.client.getMessage();
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
 				System.out.println("Thread cant move to wait()");
 			}
 		}
-		currentSemester = (ArrayList<String>)Main.client.getMessage();
+
 		
 		return Integer.parseInt(currentSemester.get(0));
 		

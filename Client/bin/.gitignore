@@ -1,8 +1,7 @@
-/Communication/
 /Controller/
-/Entity/
 /FXML/
-/application/
-/ocsf/
-/school_icon.png
-/user-login-icon-14.png
+/PRCPL_ViewSysData$DBcourse.class
+/PRCPL_ViewSysData$DBteacher.class
+/PRCPL_ViewSysData$DBuser.class
+/PRCPL_ViewSysData.class
+/PRCPL_ViewSysData.fxml

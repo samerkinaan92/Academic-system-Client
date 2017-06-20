@@ -33,6 +33,7 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 
 /** 	Controller class for: "TCHR_CheckAssignments.fxml"	
  * 		@author Nadav Zrihan
@@ -152,6 +153,10 @@ public class TCHR_CheckAssignments implements Initializable {
     	getCoursesFromDB();
     	setCoursesInComboBox();
     	enableElements(false);
+    	
+    	getBTN.setTooltip(new Tooltip("download submission file"));
+    	sendBTN.setTooltip(new Tooltip("send back submission file"));
+    	saveEvaluationBTN.setTooltip(new Tooltip("save current evaluation and grade"));
     	
     }
     
@@ -287,7 +292,6 @@ public class TCHR_CheckAssignments implements Initializable {
     			String MSG = "Your submission in course: "+currentSelectedCourseName+"\nhas been checked and evaluated.\n\n"
     					+"Grade: "+sub.Grade+"\nEvaluation: "+sub.evaluation;
     			Message.sendMsg(new Message(title,MSG, Integer.parseInt(Main.user.getID()),sub.studentID));
-    			System.out.println(MSG);
     			
     			evaluationTextArea.clear();
     			finalGradeTextField.clear();
@@ -343,14 +347,17 @@ public class TCHR_CheckAssignments implements Initializable {
     	sentMSG.put("query", "SELECT S.AssignmentID, S.StudentStudentID, S.Grade, S.filePath, S.evaluation, S.isLate FROM submission S, assignment A WHERE S.AssignmentID=A.AssignmentID and A.CourseID='"+courseID+"'");
 		Main.client.sendMessageToServer(sentMSG);
 		synchronized (Main.client) {		
-			try {Main.client.wait();}
+			try {
+				Main.client.wait();
+				submissionsFromDB = (ArrayList<String>)Main.client.getMessage();
+				}
 			catch (InterruptedException e) {
 				e.printStackTrace();
 				System.out.println("Thread cant move to wait()");
 			}
 		}
 		
-		submissionsFromDB = (ArrayList<String>)Main.client.getMessage();
+		
 		submissions.clear();
 
 		for (int i=0;i<submissionsFromDB.size();i+=6) {
@@ -378,13 +385,16 @@ public class TCHR_CheckAssignments implements Initializable {
     	sentMSG.put("query", "SELECT DISTINCT CC.CourseID, C.CourseName FROM course C, class_course CC WHERE teacherID = '"+Main.user.getID()+"' and CC.CourseID = C.CourseID;");
 		Main.client.sendMessageToServer(sentMSG);
 		synchronized (Main.client) {		
-			try {Main.client.wait();}
+			try {
+				Main.client.wait();
+				coursesFromDB = (ArrayList<String>)Main.client.getMessage();
+			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
 				System.out.println("Thread cant move to wait()");
 			}
 		}
-		coursesFromDB = (ArrayList<String>)Main.client.getMessage();
+		
 		
 		for (int i=0;i<coursesFromDB.size();i+=2) {
 			DBCourse course = new DBCourse();
