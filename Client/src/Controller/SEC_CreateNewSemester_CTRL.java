@@ -33,6 +33,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -83,7 +84,7 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	/** code to be executed when "create" button is pressed */
     @SuppressWarnings("unchecked")
 	@FXML
-    void createBTNaction(ActionEvent event) {		// need to add current semester replacment in DB in case of a change
+    void createBTNaction(ActionEvent event) {
     	
     	int isCurr = 0;
     	
@@ -116,9 +117,7 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
     		else {
     			showErrorMSG("Semester already exists!","("+selectedSeason+", "+desiredYear+") Already exists.");
     		}
-    	//}
-   // else {
-    //	}
+
     	isCurr = 0;
     }
     	
@@ -148,15 +147,20 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 		seasonCOMBOBOX.getSelectionModel().selectFirst();
 		setcurrentCHECKBOX.setSelected(true);
 		
-        SpinnerValueFactory<Integer> sVf = //
+        SpinnerValueFactory<Integer> sVf = 
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(thisYear, thisYear+10);
         yearSpinner.setValueFactory(sVf);
+        yearSpinner.setEditable(false);
 		
+        createBTN.setTooltip(new Tooltip("create the semester above"));
+        changeCurrentSemesterBTN.setTooltip(new Tooltip("change current semster"));
+        
+        
 	}
 	
 	/** Initialize's this class's existingSemesters ArrayList with all of the existing semester from DB */
 	@SuppressWarnings("unchecked")
-	private void getExistingSemesters (String selectedSeason, int desiredYear) {		// set answer with the server reponse to the select query
+	private void getExistingSemesters (String selectedSeason, int desiredYear) {
 		
 		MSG.put("msgType", "select");
 		MSG.put("query", "SELECT * FROM semester WHERE season='"+selectedSeason+"' and year='"+desiredYear+"'");
@@ -165,6 +169,7 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 		synchronized (Main.client) {
 			try {
 				Main.client.wait();
+				this.existingSemesters = (ArrayList<String>)Main.client.getMessage();	// into arrayList
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
@@ -172,7 +177,7 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 			}
 		}
 		
-		this.existingSemesters = (ArrayList<String>)Main.client.getMessage();	// into arrayList
+		
 		
 	}
 	
@@ -215,19 +220,22 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	@SuppressWarnings("unchecked")
 	private String getCurrentSemester () {
 
-		ArrayList <String> currentSemester;
+		ArrayList <String> currentSemester = null;
 		MSG.put("msgType", "select");
 		MSG.put("query", "SELECT Year,Season,semesterID FROM mat.semester WHERE isCurr='1'");
 		Main.client.sendMessageToServer(MSG);
+		
 		synchronized (Main.client) {
-			try { Main.client.wait();
+			try {
+				Main.client.wait();
+				currentSemester = (ArrayList<String>)Main.client.getMessage();
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
 				System.out.println("Thread cant move to wait()");
 			}
 		}
-		currentSemester = (ArrayList<String>)Main.client.getMessage();
+
 		
 		if (!currentSemester.isEmpty())
 			return " ("+currentSemester.get(0)+","+currentSemester.get(1)+")";
@@ -240,20 +248,20 @@ public class SEC_CreateNewSemester_CTRL implements Initializable {
 	@SuppressWarnings("unchecked")
 	private void clearCurrentSemester () {
 		
-		ArrayList <String> currentSemester;
+		ArrayList <String> currentSemester = null;
 		MSG.put("msgType", "select");		// get id of current semester
 		MSG.put("query", "SELECT semesterID FROM mat.semester WHERE isCurr='1'");
 		Main.client.sendMessageToServer(MSG);
 		synchronized (Main.client) {
-			try { Main.client.wait();
+			try {
+				Main.client.wait();
+				currentSemester = (ArrayList<String>)Main.client.getMessage();
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
 				System.out.println("Thread cant move to wait()");
 			}
 		}
-		
-		currentSemester = (ArrayList<String>)Main.client.getMessage();
 		
 		//UPDATE semester SET isCurr='0' WHERE semesterId='ID'
 		if (!currentSemester.isEmpty())	{

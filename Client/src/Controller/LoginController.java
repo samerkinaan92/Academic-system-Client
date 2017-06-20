@@ -110,10 +110,12 @@ public class LoginController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		// student		String id = "424110", pass="Zd5hq";
-		// teacher
+		// teacher		
 		String id = "211721", pass="4nSfx";		
 		// sec		String id = "176214", pass="9Jr3d";
-		// SM		String id = "454545", pass="787878";
+		// SM			String id = "454545", pass="787878";
+		// principal	String id = "744759", pass="Y1kZa";
+		
 		this.id.setText(id);
 		password.setText(pass);
 		port.setText("1234");

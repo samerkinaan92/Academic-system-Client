@@ -20,6 +20,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.layout.AnchorPane;
 
@@ -74,6 +75,7 @@ public class SEC_DeleteClass implements Initializable {
 		getClassesFromDB();
 		setClassesInComboBox();
 		
+		delBTN.setTooltip(new Tooltip("delete selected class"));
 		
 	}
 	
@@ -260,12 +262,14 @@ public class SEC_DeleteClass implements Initializable {
 	@SuppressWarnings("unchecked")
 	private void getClassesFromDB() {
 		
+		ArrayList<String> classesFromDB = null;
 		sentMSG.put("msgType", "select");
     	sentMSG.put("query", "SELECT * FROM class");
 		Main.client.sendMessageToServer(sentMSG);
 		synchronized (Main.client) {		
 			try {
 				Main.client.wait();
+				classesFromDB = (ArrayList<String>)Main.client.getMessage();
 			}
 			catch (InterruptedException e) {
 				e.printStackTrace();
@@ -273,7 +277,7 @@ public class SEC_DeleteClass implements Initializable {
 			}
 		}
 		
-		ArrayList<String> classesFromDB = (ArrayList<String>)Main.client.getMessage();
+		
 		
 		for (int i=0;i<classesFromDB.size();i++) {
 			DBclass c = new DBclass();

@@ -22,6 +22,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.Tooltip;
 
 /**	Controller class for: "SEC_DefineClasses.fxml"
  * 
@@ -239,6 +240,11 @@ public class SEC_DefineClasses implements Initializable {
 		disableElements(true);
 		initializeSpinners();
 		
+		addBTN.setTooltip(new Tooltip("add student to class"));
+		checkBTN.setTooltip(new Tooltip("check if class already exists"));
+		delBTN.setTooltip(new Tooltip("remove student from class"));
+		saveBTN.setTooltip(new Tooltip("save and create the above class"));
+		
 	}
 	
 	
@@ -274,6 +280,7 @@ public class SEC_DefineClasses implements Initializable {
 		spinner1.setValueFactory(svf1);
 		spinner1.setStyle("-fx-font: 12 arial;");
 		spinner1.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
+		spinner1.setEditable(false);
 		
 		SpinnerValueFactory<Integer> svf2 = // digits spinner
                 new SpinnerValueFactory.IntegerSpinnerValueFactory(1,7);
@@ -281,6 +288,7 @@ public class SEC_DefineClasses implements Initializable {
 		spinner2.setValueFactory(svf2);
 		spinner2.getStyleClass().add(Spinner.STYLE_CLASS_SPLIT_ARROWS_VERTICAL);
 		spinner2.setMaxSize(10, 5);
+		spinner2.setEditable(false);
 
 	}
 	

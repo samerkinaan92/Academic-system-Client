@@ -16,6 +16,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Tooltip;
 import javafx.stage.Stage;
 
 public class SEC_ChangeCurrentSemester implements Initializable{
@@ -95,6 +96,7 @@ public class SEC_ChangeCurrentSemester implements Initializable{
 		setCurrentBTN.setDisable(true);
 		getSimpleSemestersFromDB();
 		setSimpleSemestersInComboBox();
+		setCurrentBTN.setTooltip(new Tooltip("set selected semester as the current one"));
 		
 	}		
 	

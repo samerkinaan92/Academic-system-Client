@@ -1,4 +1,7 @@
 /Controller/
-/Entity/
-/application/
-/ocsf/
+/FXML/
+/PRCPL_ViewSysData$DBcourse.class
+/PRCPL_ViewSysData$DBteacher.class
+/PRCPL_ViewSysData$DBuser.class
+/PRCPL_ViewSysData.class
+/PRCPL_ViewSysData.fxml
