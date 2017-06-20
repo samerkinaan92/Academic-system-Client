@@ -1,14 +1,10 @@
 package Entity;
-import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
 
 public class User {
-
 	private String ID;
 	private String Name;
 	private String Address;
@@ -19,7 +15,11 @@ public class User {
 	public User() {
 	}
 	
-	
+	/**
+	 * Get all user id's with same role.
+	 * @param role Role to compare
+	 * @return List of users with the same role
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getUserIdByRole(String role){ // Get all user id's with same role.
 		
@@ -44,7 +44,6 @@ public class User {
 			return result;
 		return null;			
 	}
-	
 	
 	public User(String iD, String name) {
 		ID = iD;

@@ -65,10 +65,4 @@ public class Parent extends User {
 			return null;
 		return courseResult;
 	}
-	
-	
-	
-	
-
-	
 }

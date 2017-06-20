@@ -8,10 +8,11 @@ import application.Main;
 public class Secretery extends User {
 
 	private String ID;
-	
-	
 	 
-	
+	/**
+	 * Insert to data base in table newstudentassignment student id and course id, for principle to approve
+	 * @param student_course List of student id's & course id's
+	 */
 	public static void sendExceptionStudents(ArrayList<String> student_course){
 		
 		for (int i = 0; i < student_course.size(); i+=2){
@@ -26,19 +27,16 @@ public class Secretery extends User {
 				Main.client.sendMessageToServer(msgServer);
 				}
 				catch(Exception exp){
-					exp.printStackTrace();
+					return;
 				}
 	    	synchronized (Main.client){try {
 				Main.client.wait();
 			} catch (InterruptedException e) {
-				e.printStackTrace();
+				return;
 			}}
-		}
-			
+		}	
 	}
 	
-	
-
 	public String getID() {
 		return ID;
 	}

@@ -12,7 +12,13 @@ public class Semester {
 	private int isCurr;
 	private int year;
 	
-	
+	/**
+	 * 
+	 * @param id Semester id
+	 * @param season Represents first or second semester
+	 * @param isCurr 1 for current semester
+	 * @param year year taken
+	 */
 	public Semester(int id, String season, int isCurr, int year){
 		this.setId(id);
 		this.setSeason(season);
@@ -20,10 +26,13 @@ public class Semester {
 		this.setYear(year);
 	}
 	
+	/**
+	 * Get all semesters from data base
+	 * @return list of all semesters
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Semester> getSemesters(){
 		
-
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
 		msgServer.put("query", "Select * From semester");
@@ -52,7 +61,6 @@ public class Semester {
 		return DBsemester;
 	}
 	
-	
 	public static String currSem(){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -62,10 +70,12 @@ public class Semester {
 		return sendMsg(msgServer).get(0);	
 	}
 	
-	
+	/**
+	 * Get instance of current semester
+	 * @return  instance of current semester
+	 */
 	@SuppressWarnings("unchecked")
 	public static Semester getCurrent(){
-		
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -89,7 +99,6 @@ public class Semester {
 		return null;
 	}
 	
-	
 	/*Return list of semesters*/
 	public static ArrayList<String> semList(){
 		
@@ -101,6 +110,11 @@ public class Semester {
 		
 	}
 	
+	/**
+	 * Send message to server
+	 * @param msgServer The message to be send
+	 * @return Answer from server
+	 */
 	@SuppressWarnings("unchecked")
 	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
 
@@ -120,7 +134,6 @@ public class Semester {
 			return null;
 		return courseResult;
 	}
-	
 	
 	public int getId() {
 		return id;
@@ -153,10 +166,4 @@ public class Semester {
 	public void setYear(int year) {
 		this.year = year;
 	}
-	
-	
-	
-	
-	
-	
 }
