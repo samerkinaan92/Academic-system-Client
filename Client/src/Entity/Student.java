@@ -101,6 +101,54 @@ public class Student extends User {
 		return true;
 	}
 	
+	public static boolean removeStudentsfromCourses(int sID, ArrayList<String> student_course){
+		
+		HashMap <String,String> msgServer;
+		String msg;
+		
+		for (int i = 0; i < student_course.size(); i+=2){
+			
+			msg = "DELETE FROM `mat`.`course_student` WHERE `CourseID`= " + student_course.get(i) + 
+					" and`StudentID`= " + student_course.get(i+1) + " and`semesterId`= " + sID + ";";
+	    	
+	    	msgServer = new HashMap <String,String>();
+	    	msgServer.put("msgType", "delete");
+			msgServer.put("query", msg);
+	    	
+	    	try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					return false;
+				}
+	    	synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				return false;
+			}}
+	    	
+	    	msg = "DELETE FROM `mat`.`newstudentassignment` WHERE `StudentID`= " + 
+	    			student_course.get(i+1) + " and`CourseID`= " + student_course.get(i) + ";";
+	    	
+	    	msgServer = new HashMap <String,String>();
+	    	msgServer.put("msgType", "delete");
+			msgServer.put("query", msg);
+	    	
+	    	try{
+				Main.client.sendMessageToServer(msgServer);
+				}
+				catch(Exception exp){
+					return false;
+				}
+	    	synchronized (Main.client){try {
+				Main.client.wait();
+			} catch (InterruptedException e) {
+				return false;
+			}}
+		}
+		return true;
+	}
+	
 	/**
 	 * Get all student taken courses
 	 * @param sID Student id
