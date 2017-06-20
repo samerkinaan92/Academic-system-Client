@@ -257,6 +257,8 @@ public class SecretaryCourseToClassController implements Initializable {
 		
 		ArrayList<String> addedStudents = new ArrayList<String>();
 		ArrayList<String> exeptionStudents = new ArrayList<String>();
+		ArrayList<String> removedStudents = new ArrayList<String>();
+		
 		String courseId;
 		boolean flag = false;
 		
@@ -294,6 +296,20 @@ public class SecretaryCourseToClassController implements Initializable {
 		}
 		
 		Secretery.sendExceptionStudents(exeptionStudents);
+		
+		if (removed != null){
+			for (int i = 0; i < removed.size(); i++){
+				for (int j = 1; j < students.size(); j+=2){
+					removedStudents.add(removed.get(i).substring(removed.get(i).indexOf('(')+1, removed.get(i).indexOf(')')));
+					removedStudents.add(students.get(j));
+				}
+			}
+			
+			if (!Student.removeStudentsfromCourses(sID, removedStudents)){
+				infoMsg.setContentText("Could not remove students!");
+				infoMsg.showAndWait();
+			}
+		}
 		
 		if (flag){
 			exeptions += "\nStudents waiting for princple aproval";
@@ -340,35 +356,39 @@ public class SecretaryCourseToClassController implements Initializable {
 	 */
 	public void chooseTeacher(ActionEvent e){ // Check if teacher can teach course.
 		  
-		  if (teacherChooser.getSelectionModel().getSelectedItem() == null)
-			  return;
+		  if (teacherChooser.getSelectionModel().getSelectedItem() != null){
+			 
 		  
-		  String selectedCourse = availableCourses.getSelectionModel().getSelectedItem();
-		  String selectedTeacherID = teacherChooser.getSelectionModel().getSelectedItem();
-		  selectedTeacherID = selectedTeacherID.substring(selectedTeacherID.indexOf('(') + 1, selectedTeacherID.indexOf(')'));
-		  int weaklyHours = 0;
-		  int maxHours = 0;
-		  int sum = Teacher.getSumOfHours(selectedTeacherID);
-		  String courseID = selectedCourse.substring(selectedCourse.indexOf('(') + 1, selectedCourse.indexOf(')'));
-		  
-		  for (int i = 0; i < course.size(); i++){
-			  if (course.get(i).getCourseID() == Integer.parseInt(courseID)){
-			  	weaklyHours = course.get(i).getWeeklyHours();
-			  	break;
+			  
+			  String selectedCourse = availableCourses.getSelectionModel().getSelectedItem();
+			  String selectedTeacherID = teacherChooser.getSelectionModel().getSelectedItem();
+			  selectedTeacherID = selectedTeacherID.substring(selectedTeacherID.indexOf('(') + 1, selectedTeacherID.indexOf(')'));
+			  int weaklyHours = 0;
+			  int maxHours = 0;
+			  int sum = Teacher.getSumOfHours(selectedTeacherID);
+			  String courseID = selectedCourse.substring(selectedCourse.indexOf('(') + 1, selectedCourse.indexOf(')'));
+			  
+			  for (int i = 0; i < course.size(); i++){
+				  if (course.get(i).getCourseID() == Integer.parseInt(courseID)){
+				  	weaklyHours = course.get(i).getWeeklyHours();
+				  	break;
+				  }
 			  }
-		  }
-		  
-		  for (int i = 0; i < teacherArr.size(); i++){
-			  if (teacherArr.get(i).getID().equals(selectedTeacherID)){
-				  maxHours = teacherArr.get(i).getMaxWorkHours();
-				  break;
+			  
+			  for (int i = 0; i < teacherArr.size(); i++){
+				  if (teacherArr.get(i).getID().equals(selectedTeacherID)){
+					  maxHours = teacherArr.get(i).getMaxWorkHours();
+					  break;
+				  }
 			  }
+			  if (sum + weaklyHours > maxHours){
+				  infoMsg.setContentText("Teacher Cant be assigned to course: Exceeds max hours limit!");
+				  infoMsg.showAndWait();
+				  teacherChooser.getSelectionModel().clearSelection();
+			  }
+			  attachBtn.setDisable(false);
+			  
 		  }
-		  if (sum + weaklyHours > maxHours){
-			  guiMsg.setText("Teacher Cant be assigned to course: Exceeds max hours limit!");
-			  return;
-		  }
-		  attachBtn.setDisable(false);
 	  }
 	  
 	/**
@@ -546,13 +566,17 @@ public class SecretaryCourseToClassController implements Initializable {
 		
 		if (removed == null)
 			removed = new ArrayList<String>();
-			
+		try{
 		removed.add(selected);
 		available.add(selected);
 		Collections.sort(available);
+		
 		takenCourses.setItems(FXCollections.observableArrayList(taken));
 		availableCourses.setItems(FXCollections.observableArrayList(available));
-		
+		}
+		catch (Exception expt){
+			System.out.println("oops");
+		}
 		if (added != null){
 			for (int i = 0; i < added.size(); i++)
 				if ((added.get(i).substring(0, added.get(i).indexOf('[') - 1)).equals(selected)){
@@ -661,7 +685,7 @@ public class SecretaryCourseToClassController implements Initializable {
 				semesterArr.remove(i);
 			}
 			
-			if (semesterArr.get(i).getYear() < cur.getYear()){
+			else if (semesterArr.get(i).getYear() < cur.getYear()){
 				semesterArr.remove(i);
 			}
 		}
