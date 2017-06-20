@@ -18,7 +18,16 @@ public class Assignment {
 	private int semesterID;
 	
 	
-	
+	/**
+	 * Create new Assignment
+	 * @param Aid Assignment ID
+	 * @param name Assignment name
+	 * @param Cid Course ID
+	 * @param publish publish date of Assignment
+	 * @param dead Dead Line date of Assignment
+	 * @param path Path of the assignment file (server)
+	 * @param Sid Semester id
+	 */
 	public Assignment(int Aid, String name, int Cid, Date publish, Date dead, String path, int Sid){
 		assignmentID = Aid;
 		AssignmentName = name;
@@ -29,6 +38,11 @@ public class Assignment {
 		semesterID = Sid;
 	}
 	
+	/**
+	 * Get the file as byte array from server
+	 * @param path The path the file is stored in server.
+	 * @return Representation of file as byte array.
+	 */
 	public static byte[] getFile(String path){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -48,12 +62,10 @@ public class Assignment {
 		}}
 		byte[] result = (byte[])Main.client.getMessage();
 		
-		return result;
+		if (result != null)
+			return result;
+		return null;
 	}
-	
-	
-	
-	
 	
 	public int getAssignmentID() {
 		return assignmentID;
@@ -109,29 +121,11 @@ public class Assignment {
 		this.filePath = filePath;
 	}
 
-
-
-
-
 	public int getSemesterID() {
 		return semesterID;
 	}
 
-
-
-
-
 	public void setSemesterID(int semesterID) {
 		this.semesterID = semesterID;
-	}
-
-
-	
-	
-
-	
-	
-	
-	
-	
+	}	
 }
