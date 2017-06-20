@@ -18,6 +18,7 @@ import java.util.ResourceBundle;
 
 import Controller.SEC_DefineClasses.DBFreeStudent;
 import Controller.TCHR_CheckAssignments.DBCourse;
+import Entity.Message;
 import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -99,6 +100,8 @@ public class TCHR_DefineAssignments implements Initializable {
     @FXML
     private TextField fileTF;
 
+	private Date Date;
+
     /**	file chooser button event handler */
     @FXML
     void fileBTNaction(ActionEvent event) {
@@ -119,12 +122,12 @@ public class TCHR_DefineAssignments implements Initializable {
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
     	alert.setHeaderText("Confirm your request");
-    	alert.setContentText("This will create the new assignment./nContinue?");
+    	alert.setContentText("This will create the new assignment.\nContinue?");
 
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
     		
-        	DBAssignment ass = new DBAssignment();
+        	DBAssignment ass = new DBAssignment();	/*	create the assignment	*/
         	ass.name = nameTF.getText();
         	ass.courseID = getSelectedCourseFromCB().courseID;
         	ass.publishDate = new SimpleDateFormat("YYYY-MM-dd").format(Calendar.getInstance().getTime());
@@ -133,15 +136,82 @@ public class TCHR_DefineAssignments implements Initializable {
         	sendFileToServer();
         	ass.filePath = "C:/M.A.T files/assignments/"+filename;
         	createNewDBassignment(ass);
-        	showInfoMSG("success", "Assignment created succussfuly!");
         	
-        	getCoursesFromDB();
+        	showInfoMSG("success", "Assignment created succussfuly!\n(Alert message has been sent to users)");
+        	alertAllStudents(ass);	//	alert all students
+        	alertAllTeachers(ass);
+        	
+        	getCoursesFromDB();		/*	init	*/
     		setCoursesInComboBox();
     		datePicker.setValue(LocalDate.now());
     		setItemsDisabled(true);
         	
     	}
     }
+    
+    /** send alert to all teacher's on this course about the new assignment
+     * @param ass	Course ID
+     * */
+    @SuppressWarnings("unchecked")
+	private void alertAllTeachers (DBAssignment ass) {
+    	
+    	//SELECT DISTINCT teacherID FROM class_course CC WHERE CC.CourseID='5'
+    	sentMSG.put("msgType", "select");
+    	sentMSG.put("query", "SELECT DISTINCT teacherID FROM class_course CC WHERE CC.CourseID='"+ass.courseID+"'");
+		Main.client.sendMessageToServer(sentMSG);
+		ArrayList<String> teachers = null;
+		
+		synchronized (Main.client) {		
+			try {
+				Main.client.wait();
+				teachers = (ArrayList<String>)Main.client.getMessage();	
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+				System.out.println("Thread cant move to wait()");
+			}
+		}
+		
+		String title = "New assginemt has been uploaded";
+		String MSG = "Course ID:\t"+ass.courseID+"\n"
+				+"Name:\t\t"+ass.name+"\nPublish Date:\t"+ass.publishDate+"\nDeadLine:\t\t"+ass.deadLine;
+		for (int i=0;i<teachers.size();i++) 
+			Message.sendMsg(new Message(title, MSG, Integer.parseInt(Main.user.getID()), Integer.parseInt(teachers.get(i))));
+		
+    	
+    	
+    }
+    
+    /** send alert to all student's about the new assignment
+     * @param ass	Course ID
+     * */
+    @SuppressWarnings("unchecked")
+	private void alertAllStudents(DBAssignment ass) {
+    	
+    	sentMSG.put("msgType", "select");
+    	sentMSG.put("query", "SELECT StudentID FROM course_student WHERE CourseID='"+ass.courseID+"'");
+		Main.client.sendMessageToServer(sentMSG);
+		ArrayList<String> students = null;
+		
+		synchronized (Main.client) {		
+			try {
+				Main.client.wait();
+				students = (ArrayList<String>)Main.client.getMessage();	
+			}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+				System.out.println("Thread cant move to wait()");
+			}
+		}
+		
+		String title = "New assginemt has been uploaded";
+		String MSG = "Course ID:\t"+ass.courseID+"\n"
+				+"Name:\t\t"+ass.name+"\nPublish Date:\t"+ass.publishDate+"\nDeadLine:\t"+ass.deadLine;
+		for (int i=0;i<students.size();i++) 
+			Message.sendMsg(new Message(title, MSG, Integer.parseInt(Main.user.getID()), Integer.parseInt(students.get(i))));
+		
+    }
+    
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
@@ -200,7 +270,7 @@ public class TCHR_DefineAssignments implements Initializable {
 		courses.clear();
 		
     	sentMSG.put("msgType", "select");
-    	sentMSG.put("query", "SELECT CC.CourseID, C.CourseName FROM course C, class_course CC WHERE teacherID = '"+Main.user.getID()+"' and CC.CourseID = C.CourseID;");
+    	sentMSG.put("query", "SELECT DISTINCT CC.CourseID, C.CourseName FROM course C, class_course CC WHERE teacherID = '"+Main.user.getID()+"' and CC.CourseID = C.CourseID;");
 		Main.client.sendMessageToServer(sentMSG);
 		ArrayList<String> coursesFromDB = null;
 		
@@ -272,7 +342,7 @@ public class TCHR_DefineAssignments implements Initializable {
 		
 	}
 	
-	/**	returns student's obj of the ones shown on the 'free students' list */
+	/**	returns course obj of the one selected in the 'courses' Combo Box */
     private DBCourse getSelectedCourseFromCB() {
     	
     	DBCourse course = new DBCourse();

@@ -122,6 +122,7 @@ public class SystemManegerDefineCourseController implements Initializable {
 				Message.sendMsg(new Message(title, msg, from, Integer.parseInt(Principal.get(i))));
 			}
 		}
+		
 	}
 	
 	 /**
