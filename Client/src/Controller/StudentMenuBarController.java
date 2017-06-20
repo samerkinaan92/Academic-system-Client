@@ -102,7 +102,11 @@ public class StudentMenuBarController {
 		Main.getRoot().setCenter(pane);
 	}
 	
-	
+    @FXML
+    void evaluationEvent(ActionEvent event) {
+
+    }
+
 	
 	
 	/** Private Actions */

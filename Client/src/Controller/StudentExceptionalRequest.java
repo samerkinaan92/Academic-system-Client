@@ -3,12 +3,9 @@ package Controller;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
-import Controller.ChangeTeacherPlacementController.Classes;
-import Entity.Action;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -17,14 +14,30 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+
+/**
+* this controller handles the exceptional student request
+* @author Samer Kinaan
+*
+*/
 public class StudentExceptionalRequest implements Initializable{
 	
+	/**
+	 * current semester id
+	 */
 	private int currSem= -1;
+	
+	/**
+	 * Students Request Info data for request table
+	 */
 	private final ObservableList<StudRequestInfo> data =
 	        FXCollections.observableArrayList();
 	
@@ -49,72 +62,189 @@ public class StudentExceptionalRequest implements Initializable{
     @FXML // fx:id="DisaprvBtn"
     private Button DisaprvBtn; // Value injected by FXMLLoader
 
+    /**
+     * approve the request when the approve button clicks
+     * 
+     * @param event
+     */
     @FXML
     void approve(ActionEvent event) {
     	StudRequestInfo requestInfo = studTbl.getSelectionModel().selectedItemProperty().get();
-    	int dialogButton = JOptionPane.YES_NO_OPTION;
-    	dialogButton = JOptionPane.showConfirmDialog (null, "Are you sure you want to approve it?\nThe change will be permanent","WARNING", dialogButton);
-    	if(dialogButton == JOptionPane.YES_OPTION){
-    		if(requestInfo.getRequest().equals("assign")){
-        		assignToCourse(requestInfo);
-        	}else{
-        		removeFromCourse(requestInfo);
-        	}
+    	
+    	//show confirmation dialog
+    	Alert alert = new Alert(AlertType.CONFIRMATION);
+    	alert.setTitle("Confirmation Dialog");
+    	alert.setHeaderText(null);
+    	alert.setContentText("Are you sure you want to approve it?\nThe change will be permanent");
+
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if (result.get() == ButtonType.OK){
+    		try{
+	    		if(requestInfo.getRequest().equals("assign")){
+					assignToCourse(requestInfo);
+					String title = "The request was approved";
+					String msg = "Hello\nThe request for assigning you to course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, requestInfo.getId(), null, false);
+					msg = "Hello\nThe request for assigning " + requestInfo.getName() + " to course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, null, "Secretary", true);
+	        	}else{
+	        		removeFromCourse(requestInfo);
+	        		String title = "The request was approved";
+					String msg = "Hello\nThe request for removing you from course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, requestInfo.getId(), null, false);
+					msg = "Hello\nThe request for removing " + requestInfo.getName() + " from course " + requestInfo.getCourse() + " was approved";
+					sendMsg(title, msg, null, "Secretary", true);
+	        	}
+	    		
+	    		
+    		}catch (InterruptedException e) {
+				alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+				e.printStackTrace();
+			}
     	}
     }
 
+    /**
+     * disapproves the request when the disapprove button clicks
+     * 
+     * @param event
+     */
     @FXML
     void disapprove(ActionEvent event) {
     	StudRequestInfo requestInfo = studTbl.getSelectionModel().selectedItemProperty().get();
-    	int dialogButton = JOptionPane.YES_NO_OPTION;
-    	dialogButton = JOptionPane.showConfirmDialog (null, "Are you sure you want to disapprove it?\nThe change will be permanent","WARNING", dialogButton);
-    	if(dialogButton == JOptionPane.YES_OPTION){
-    		deleteRow(requestInfo);
+    	
+    	//show confirmation dialog
+    	Alert alert = new Alert(AlertType.CONFIRMATION);
+    	alert.setTitle("Confirmation Dialog");
+    	alert.setHeaderText(null);
+    	alert.setContentText("Are you sure you want to disapprove it?\nThe change will be permanent");
+
+    	Optional<ButtonType> result = alert.showAndWait();
+    	if (result.get() == ButtonType.OK){
+    		try {
+				deleteRow(requestInfo);
+				String title = "The request was disapproved";
+				String msg = "Hello\nThe request for removing you from course " + requestInfo.getCourse() + " was disapproved";
+				sendMsg(title, msg, requestInfo.getId(), null, false);
+				msg = "Hello\nThe request for removing " + requestInfo.getName() + " from course " + requestInfo.getCourse() + " was disapproved";
+				sendMsg(title, msg, null, "Secretary", true);
+			} catch (InterruptedException e) {
+				alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+				e.printStackTrace();
+			}
+    	}
+    }
+ 
+    /**
+     * send message to user
+     * @param title	 the title of the message
+     * @param msg	the message body
+     * @param id	the user id to send to
+     * @param role	the role of the receiver
+     * @param group	false if for 1 receiver, true if for a job type
+     * @throws InterruptedException		if interrupted will waiting for message from the server
+     */
+    private void sendMsg(String title, String msg, String id, String role, boolean group) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	
+    	msgToServer.put("msgType", "insert");
+    	if(!group){
+	    	msgToServer.put("query", "INSERT INTO messages (`sendTime`, `title`, `message`, `from`, `to`) "
+	    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + id + "');");
+	    	
+	    	synchronized (Main.client) {
+	    		Main.client.sendMessageToServer(msgToServer);
+	    		Main.client.wait();
+			}
+    	}else{
+    		ArrayList<String> ids = getUserTypeIds(role);
+    		for(int i = 0; i < ids.size(); i++){
+    			msgToServer.put("query", "INSERT INTO messages(`sendTime`, `title`, `message`, `from`, `to`) "
+		    			+ "VALUES (now(), '" + title + "', '" + msg + "', '" + Main.user.getID() + "', '" + ids.get(i) + "');");
+		    	
+		    	synchronized (Main.client) {
+		    		Main.client.sendMessageToServer(msgToServer);
+		    		Main.client.wait();
+				}
+    		}
     	}
     }
     
-    //remove the student from course
-    private void removeFromCourse(StudRequestInfo requestInfo){
+    /**
+     * gets all the users id with role
+     * @param type	role of the group of user
+     * @return	array list containing all the ids of the role
+     * @throws InterruptedException if interrupted will waiting for message from the server
+     */
+    private ArrayList<String> getUserTypeIds(String type) throws InterruptedException{
+    	HashMap<String, String> msgToServer = new HashMap<>();
+    	ArrayList<String> ids = null;
+    	
+    	msgToServer.put("msgType", "select");
+    	msgToServer.put("query", "SELECT ID FROM users WHERE Role = '" + type + "';");
+    	
+    	synchronized (Main.client) {
+    		Main.client.sendMessageToServer(msgToServer);
+    		Main.client.wait();
+    		ids = (ArrayList<String>) Main.client.getMessage();
+		}
+    	return ids;
+    }
+    
+    /**
+     * remove the student from course.
+     * 
+     * @param requestInfo  requestInfo that has the request details
+     * @throws InterruptedException
+     */
+    private void removeFromCourse(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	//remove from DB
     	msg.put("msgType", "delete");
     	msg.put("query", "DELETE FROM Course_Student WHERE CourseID = " + requestInfo.getCourseId() + " AND StudentID = " + requestInfo.getId() + " AND semesterId = " + getCurrSem() + ";");
     	
-    	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
-			try {
-				Main.client.wait();
-				//delete from table
-				deleteRow(requestInfo);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Main.client.sendMessageToServer(msg);
+			Main.client.wait();
+			//delete from table
+			deleteRow(requestInfo);
 		}
     }
     
-    //Assigns the student to the course
-    private void assignToCourse(StudRequestInfo requestInfo){
+    /**
+     * Assigns the student to the course.
+     * 
+     * @param requestInfo	requestInfo that has the request details
+     * @throws InterruptedException
+     */
+    private void assignToCourse(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	msg.put("msgType", "insert");
     	msg.put("query", "INSERT INTO Course_Student(CourseID, StudentID,semesterId) VALUES (" + requestInfo.getCourseId() + ", " + requestInfo.getId() + ", " + getCurrSem() + ");");
     	
-    	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
-			try {
-				Main.client.wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Main.client.sendMessageToServer(msg);
+			Main.client.wait();
 		}
     	deleteRow(requestInfo);
     }
     
-    //gets the current semester id
-    private int getCurrSem(){
+    /**
+     * gets the current semester id
+     * @return the id of the current semester
+     * @throws InterruptedException
+     */
+    private int getCurrSem() throws InterruptedException{
     	if(currSem != -1){
     		return currSem;
     	}
@@ -124,21 +254,21 @@ public class StudentExceptionalRequest implements Initializable{
     	
     	Main.client.sendMessageToServer(msg);
 		synchronized (Main.client){
-			try {
 			Main.client.wait();
 			ArrayList<String> serverMsg = (ArrayList<String>) Main.client.getMessage();
 	    	if(!serverMsg.isEmpty()){
 	    		currSem = Integer.parseInt(serverMsg.get(0));
 	    	}
-			}catch (InterruptedException e) {
-				e.printStackTrace();
-			}
 		}
 		return currSem;
     }
     
-    // delete row from DB and table
-    private void deleteRow(StudRequestInfo requestInfo){
+    /**
+     *  delete row from DB and table
+     * @param requestInfo  requestInfo that has the request details
+     * @throws InterruptedException
+     */
+    private void deleteRow(StudRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	
     	msg.put("msgType", "delete");
@@ -146,22 +276,24 @@ public class StudentExceptionalRequest implements Initializable{
     	
     	Main.client.sendMessageToServer(msg);
     	synchronized (Main.client) {
-			try {
-				Main.client.wait();
-				int msgFromServer = (int)Main.client.getMessage();
-		    	if(msgFromServer > 0){
-		    		data.remove(requestInfo);
-		    	}else{
-		    		JOptionPane.showMessageDialog(null, 
-							  "Problem with connection to server!!", "ERROR", JOptionPane.ERROR_MESSAGE);
-		    	}
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			Main.client.wait();
+			int msgFromServer = (int)Main.client.getMessage();
+	    	if(msgFromServer > 0){
+	    		data.remove(requestInfo);
+	    	}else{
+	    		Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
+
+	    	}
 		}
     }
     
+    /**
+     * sets all listeners
+     */
     @Override
 	public void initialize(URL location, ResourceBundle resources) {
     	
@@ -189,7 +321,9 @@ public class StudentExceptionalRequest implements Initializable{
     	setStudentsRequestsTbl();
 	}
     
-    //set all the students requests in the table
+    /**
+     * set all the students requests in the table
+     */
     private void setStudentsRequestsTbl(){
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> msgFromServer;
@@ -216,7 +350,11 @@ public class StudentExceptionalRequest implements Initializable{
 		}
     }
 	
-    //class for the students requests table
+    /**
+     * class for the students requests table
+     * @author Samer Kinaan
+     *
+     */
     public static class StudRequestInfo{
     	private StringProperty name;
         public void setName(String value) { nameProperty().set(value); }
