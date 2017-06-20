@@ -53,12 +53,12 @@ public class Assignment {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		byte[] result = (byte[])Main.client.getMessage();
 		

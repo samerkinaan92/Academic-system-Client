@@ -65,12 +65,12 @@ public class Message {
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
-				System.out.println("Server fatal error!");
+				return null;
 			}
 		synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return null;
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		ArrayList<Message> messages = new ArrayList<Message>();
@@ -81,7 +81,7 @@ public class Message {
 			try {
 				date = (Date)formatter.parse(result.get(i+1));
 			} catch (ParseException e) {
-				e.printStackTrace();
+				return null;
 			}
 			messages.add(new Message(Integer.parseInt(result.get(i)), date, result.get(i+2), result.get(i+3), Integer.parseInt(result.get(i+4)), Integer.parseInt(result.get(i+5))));
 		}
@@ -112,7 +112,7 @@ public class Message {
     	synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return 0;
 		}}
 		
 		return (int)Main.client.getMessage();
@@ -139,7 +139,7 @@ public class Message {
     	synchronized (Main.client){try {
 			Main.client.wait();
 		} catch (InterruptedException e) {
-			e.printStackTrace();
+			return -1;
 		}}
     	return (int) Main.client.getMessage();
 	}
