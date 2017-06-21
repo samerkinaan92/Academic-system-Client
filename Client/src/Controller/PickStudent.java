@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javax.swing.JOptionPane;
-
-import Controller.StudentExceptionalRequest.StudRequestInfo;
 import Entity.Student;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,9 +15,11 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.fxml.Initializable;
@@ -73,8 +72,15 @@ public class PickStudent implements Initializable {
     	
     	stdData.clear();
     	
-    	msgToSrv.put("msgType", "select");
-    	msgToSrv.put("query", "select SC.StudentID, U.Name from Student_Class SC, users U where SC.ClassName = '" + classInfo.getName() + "' AND U.ID = SC.StudentID;");
+    	if(!classInfo.getName().equals("Not assigned")){
+	    	msgToSrv.put("msgType", "select");
+	    	msgToSrv.put("query", "select SC.StudentID, U.Name from Student_Class SC, users U "
+	    			+ "where SC.ClassName = '" + classInfo.getName() + "' AND U.ID = SC.StudentID;");
+    	}else{
+    		msgToSrv.put("msgType", "select");
+	    	msgToSrv.put("query", "select S.StudentID, U.Name from Student S, Users U "
+	    			+ "where StudentID not in (select StudentID from Student_Class) AND S.StudentID = U.ID;");
+    	}
     	
     	Main.client.sendMessageToServer(msgToSrv);
     	synchronized (Main.client) {
@@ -86,10 +92,15 @@ public class PickStudent implements Initializable {
 				}
 						
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
 				e.printStackTrace();
 			}
 		}
+    	
     }
 
     /**
@@ -116,7 +127,11 @@ public class PickStudent implements Initializable {
 			controller = (ChangeStudentAssignmentController) loader.getController();
 			controller.setStudent(student);
 		}catch (IOException ex) {
-			//TODO 
+			Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Error Dialog");
+			alert.setHeaderText(null);
+			alert.setContentText("Connection error!!");
+			alert.show();
 			ex.printStackTrace();
 		}
     }
@@ -139,8 +154,13 @@ public class PickStudent implements Initializable {
 				for(int i = 0; i < msgFromSrv.size(); i++){
 					clsData.add(new ClassInfo(msgFromSrv.get(i)));
 				}
+				clsData.add(new ClassInfo("Not assigned"));
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error Dialog");
+				alert.setHeaderText(null);
+				alert.setContentText("Connection error!!");
+				alert.show();
 				e.printStackTrace();
 			}
 		}
@@ -151,7 +171,6 @@ public class PickStudent implements Initializable {
      */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
 		slctClsBtn.setDisable(true);
 		slctStdBtn.setDisable(true);
 		

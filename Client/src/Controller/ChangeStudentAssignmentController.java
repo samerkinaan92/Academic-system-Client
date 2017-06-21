@@ -7,15 +7,12 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javax.naming.spi.DirStateFactory.Result;
-
-import Controller.ChangeTeacherPlacementController.Classes;
 import Entity.Action;
 import Entity.Course;
 import Entity.NewStudenCoursePlacement;
+import Entity.Semester;
 import Entity.Student;
 import Entity.TeachingUnit;
-import Entity.claSS;
 import application.Main;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -36,7 +33,6 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.paint.Color;
 
 /**
  * this controller handles the changing student course or class
@@ -157,12 +153,24 @@ public class ChangeStudentAssignmentController implements Initializable{
     		alert = new Alert(AlertType.CONFIRMATION);
         	alert.setTitle("Confirmation Dialog");
         	alert.setHeaderText(null);
-        	alert.setContentText("Are you sure you want to move student to another class room?");
+        	alert.setContentText("Are you sure you want to move " + student.getName() + " to class room " + newClass + "?");
 
         	Optional<ButtonType> result = alert.showAndWait();
         	if (result.get() == ButtonType.OK){
         		try {
-					moveStudentToClass(newClass);
+					if(!moveStudentToClass(newClass)){
+						alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Failed!!");
+						alert.setHeaderText(null);
+						alert.setContentText("Failed to move student to ");
+						alert.show();
+					}else{
+						alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Success!!");
+						alert.setHeaderText(null);
+						alert.setContentText("student was moved to class successfully");
+						alert.show();
+					}
 				} catch (InterruptedException e) {
 					alert = new Alert(AlertType.ERROR);
 					alert.setTitle("Error Dialog");
@@ -338,13 +346,26 @@ public class ChangeStudentAssignmentController implements Initializable{
     	return ids;
     }
   
-    //TODO move student from class
+    /**
+     * move student to class
+     * @param classRoom The class to move to
+     * @return true if the student was moved;
+     * @throws InterruptedException
+     */
     private boolean moveStudentToClass(String classRoom) throws InterruptedException{
     	boolean moved = false;
     	HashMap<String, String> msg = new HashMap<>();
+    	ArrayList<String> notTakenCourses = new ArrayList<>();
     	
-    	msg.put("msgType", "update");
-    	msg.put("query", "UPDATE Student_Class SET ClassName = '" + classRoom + "' WHERE StudentID = '" + student.getID() + "';");
+    	if(!student.getClassRoom().equals("Not assigned")){
+	    	msg.put("msgType", "update");
+	    	msg.put("query", "UPDATE Student_Class SET ClassName = '" + classRoom + "' "
+	    			+ "WHERE StudentID = '" + student.getID() + "';");
+    	}else{
+    		msg.put("msgType", "insert");
+    		msg.put("query", "INSERT INTO Student_Class(StudentID, ClassName) "
+    				+ "VALUES (" + student.getID() + ", '" + classRoom + "');");
+    	}
     	
     	synchronized (Main.client) {
 			Main.client.sendMessageToServer(msg);
@@ -354,6 +375,62 @@ public class ChangeStudentAssignmentController implements Initializable{
 				moved = true;
 			}
 		}
+    	
+    	if(moved){
+	    	ArrayList<String> courses = Course.getCoursesTakenByClass(classRoom, Semester.currSem());
+	    	boolean isTaken = false;
+	    	for(int i = 0; i < courses.size(); i++){
+	    		String courseId = courses.get(i);
+	    		for(int j = 0; j < data.size(); j++){
+	    			isTaken = false;
+	    			if(courseId.equals(data.get(j).getId())){
+	    				isTaken = true;
+	    				break;
+	    			}
+	    		}
+	    		
+	    		if(!isTaken)
+	    			notTakenCourses.add(courseId);
+	    	}
+	    	
+	    	if(!notTakenCourses.isEmpty()){
+		    	Alert alert = new Alert(AlertType.CONFIRMATION);
+		    	alert.setTitle("Confirmation Dialog");
+		    	alert.setHeaderText("Student is not assign to courses");
+		    	String text = "Student is not assigned to these courses:\n";
+		    	for(int i = 0; i < notTakenCourses.size(); i++){
+		    		text += Course.getCourseName(notTakenCourses.get(i)) + "(" + notTakenCourses.get(i) + ")\n";
+		    	}
+		    	text += "Do you want to sent request to principal to assign the student?";
+		    	alert.setContentText(text);
+		
+		    	Optional<ButtonType> result = alert.showAndWait();
+		    	if (result.get() == ButtonType.OK){
+		    		msg.put("msgType", "insert");
+		    		String query = "";
+		    		for(int i = 0; i < notTakenCourses.size(); i++){
+		    			query = "insert into NewStudentAssignment (action, StudentID, CourseID) "
+		    					+ "values('assign', " + student.getID() + ", " + notTakenCourses.get(i) + ");";
+		    			
+		    			msg.put("query", query);
+			    		
+			    		synchronized (Main.client) {
+							Main.client.sendMessageToServer(msg);
+							Main.client.wait();
+						}
+		    		}
+		    		
+		    		String title = "Request was sent to principal";
+					String MailMsg = "Hello\nRequests for assigning you for new courses was sent to the principal.";
+					sendMsg(title, MailMsg, student.getID(), null, false);
+					
+					MailMsg = "Hello\nRequests for assigning " + student.getName() + " for new courses was sent to the principal.";
+					sendMsg(title, MailMsg, null, "Principal", true);
+		    	}
+	   			
+	    	}
+    	}
+    	
     	return moved;
     }
     

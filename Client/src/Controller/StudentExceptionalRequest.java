@@ -82,21 +82,15 @@ public class StudentExceptionalRequest implements Initializable{
     		try{
 	    		if(requestInfo.getRequest().equals("assign")){
 					assignToCourse(requestInfo);
-					String title = "The request was approved";
-					String msg = "Hello\nThe request for assigning you to course " + requestInfo.getCourse() + " was approved";
-					sendMsg(title, msg, requestInfo.getId(), null, false);
-					msg = "Hello\nThe request for assigning " + requestInfo.getName() + " to course " + requestInfo.getCourse() + " was approved";
-					sendMsg(title, msg, null, "Secretary", true);
 	        	}else{
 	        		removeFromCourse(requestInfo);
-	        		String title = "The request was approved";
-					String msg = "Hello\nThe request for removing you from course " + requestInfo.getCourse() + " was approved";
-					sendMsg(title, msg, requestInfo.getId(), null, false);
-					msg = "Hello\nThe request for removing " + requestInfo.getName() + " from course " + requestInfo.getCourse() + " was approved";
-					sendMsg(title, msg, null, "Secretary", true);
 	        	}
-	    		
-	    		
+	    		//send message to student and secretary
+	    		String title = "The request was approved";
+				String msg = "Hello\nThe request to " + requestInfo.getRequest() + " you to course " + requestInfo.getCourse() + " was approved";
+				sendMsg(title, msg, requestInfo.getId(), null, false);
+				msg = "Hello\nThe request to " + requestInfo.getRequest() + " " + requestInfo.getName() + " to course " + requestInfo.getCourse() + " was approved";
+				sendMsg(title, msg, null, "Secretary", true);	
     		}catch (InterruptedException e) {
 				alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");
@@ -128,9 +122,9 @@ public class StudentExceptionalRequest implements Initializable{
     		try {
 				deleteRow(requestInfo);
 				String title = "The request was disapproved";
-				String msg = "Hello\nThe request for removing you from course " + requestInfo.getCourse() + " was disapproved";
+				String msg = "Hello\nThe request to " + requestInfo.getRequest() + " you from course " + requestInfo.getCourse() + " was disapproved";
 				sendMsg(title, msg, requestInfo.getId(), null, false);
-				msg = "Hello\nThe request for removing " + requestInfo.getName() + " from course " + requestInfo.getCourse() + " was disapproved";
+				msg = "Hello\nThe request to " + requestInfo.getRequest() + " " + requestInfo.getName() + " from course " + requestInfo.getCourse() + " was disapproved";
 				sendMsg(title, msg, null, "Secretary", true);
 			} catch (InterruptedException e) {
 				alert = new Alert(AlertType.ERROR);
