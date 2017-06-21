@@ -26,7 +26,6 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -406,16 +405,16 @@ public class ChangeTeacherPlacementController implements Initializable{
     	
     	msg.put("msgType", "select");
     	msg.put("query", 
-    			"select sum(C.WeeklyHours) from Course C  where C.CourseID IN (SELECT CC.CourseID FROM Class_Course CC WHERE CC.teacherID = '" 
+    			"select sum(C.WeeklyHours) from Course C where C.CourseID IN (SELECT CC.CourseID FROM Class_Course CC WHERE CC.teacherID = '" 
     					+ teacherId + "' AND semesterId = '" + getCurrSem() + "');");
     	synchronized (Main.client) {
     		Main.client.sendMessageToServer(msg);
 			Main.client.wait();
 			msgFromServer = (ArrayList<String>)Main.client.getMessage();
-	    	if(!msgFromServer.isEmpty())
+	    	if(!msgFromServer.isEmpty() && msgFromServer.get(0) != null)
 	    		return Integer.parseInt(msgFromServer.get(0));
 	    	else
-	    		return -1;   	
+	    		return 0;
 		}
     }
     

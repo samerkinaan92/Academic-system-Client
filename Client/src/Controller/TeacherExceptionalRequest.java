@@ -238,7 +238,7 @@ public class TeacherExceptionalRequest implements Initializable {
     	ArrayList<String> msgFromServer;
     	
     	msg.put("msgType", "select");
-    	msg.put("query", "SELECT U1.Name, U2.Name, CR.CourseName, CL.ClassName, R.Class_Courseid, R.newTeacherID "
+    	msg.put("query", "SELECT U1.Name, U2.Name, CR.CourseName, CL.ClassName, R.Class_Courseid, R.newTeacherID, R.currTeacherID "
     			+ "FROM NewTeacherPlacement R, Users U1, Users U2, Course CR, Class CL, Class_Course CLCR "
     			+ "WHERE R.newTeacherID = U2.ID AND R.currTeacherID = U1.ID AND R.Class_Courseid = CLCR.id AND CLCR.CourseID = CR.CourseID AND CLCR.ClassName = CL.ClassName;");
     	
@@ -248,8 +248,8 @@ public class TeacherExceptionalRequest implements Initializable {
 				Main.client.wait();
 				msgFromServer = (ArrayList<String>)Main.client.getMessage();
 		    	
-		    	for(int i = 0; i < msgFromServer.size(); i += 6){
-		    		data.add(new TeacherRequestInfo(msgFromServer.get(i), msgFromServer.get(i + 1), msgFromServer.get(i + 2), msgFromServer.get(i + 3), msgFromServer.get(i + 4), msgFromServer.get(i + 5)));
+		    	for(int i = 0; i < msgFromServer.size(); i += 7){
+		    		data.add(new TeacherRequestInfo(msgFromServer.get(i), msgFromServer.get(i + 1), msgFromServer.get(i + 2), msgFromServer.get(i + 3), msgFromServer.get(i + 4), msgFromServer.get(i + 5), msgFromServer.get(i + 6)));
 		    	}
 		    	
 		    	excepTbl.setItems(data);
@@ -355,13 +355,14 @@ public class TeacherExceptionalRequest implements Initializable {
 			this.newTeacherId = newTeacherId;
 		}
 		
-		public TeacherRequestInfo(String currTeacherName, String newTeacherName, String courseName, String classRoom, String courseClassId, String newTeacherId){
+		public TeacherRequestInfo(String currTeacherName, String newTeacherName, String courseName, String classRoom, String courseClassId, String newTeacherId, String currTeacherId){
         	setCurrTeacherName(currTeacherName);
         	setNewTeacherName(newTeacherName);
         	setCourseName(courseName);
         	setClassRoom(classRoom);
         	setCourseClassId(courseClassId);
         	setNewTeacherId(newTeacherId);
+        	setCurrTeacherId(currTeacherId);
         }
     }
 

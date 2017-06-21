@@ -133,6 +133,31 @@ public class Course extends AcademicActivity {
 		return DBcourses;
 	}
 	
+	
+	/**
+	 * gets courses id taken by class
+	 * 
+	 * @param classRoom The class room you want the courses taken by
+	 * @param semId The semester id of the desired semester
+	 * @return the ids of the courses taken by class in semester
+	 * @throws InterruptedException
+	 */
+	public static ArrayList<String> getCoursesTakenByClass(String classRoom, String semId) throws InterruptedException{
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		ArrayList<String> msgFromServer = null;
+		
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select CourseID From Class_Course where semesterId = " + semId);
+		
+		synchronized (Main.client) {
+			Main.client.sendMessageToServer(msgServer);
+			Main.client.wait();
+			msgFromServer = (ArrayList<String>) Main.client.getMessage();
+		}
+		
+		return msgFromServer;
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getPreCourses(String cID){
 		
