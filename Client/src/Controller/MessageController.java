@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 
 import Entity.Message;
+import Entity.User;
 import application.Main;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -64,10 +65,14 @@ public class MessageController implements Initializable {
      */
     private ArrayList<String> getMessageList(ArrayList<Message> messageArr){ 
     	
+    	User user;
+    	
 		ArrayList<String> temp = new ArrayList<String>();
 		for (int i = 0; i < messageArr.size(); i++){
-			String node = "ID: (" + messageArr.get(i).getID() + ")\tFrom: " + messageArr.get(i).getFrom() + 
-					"\tTitle: " + messageArr.get(i).getTitle() + "\tDate: " + messageArr.get(i).getSendTime();
+			user = User.getUserInfo(String.valueOf(messageArr.get(i).getFrom()));
+			String node = "ID: (" + messageArr.get(i).getID() + ")\tFrom: " + user.getName() + " (" +
+					user.getID() + ")" + "\tTitle: " + messageArr.get(i).getTitle() + "\tDate: " +
+					messageArr.get(i).getSendTime();
 			temp.add(node);
 		}
 		return temp;	
@@ -171,8 +176,14 @@ public class MessageController implements Initializable {
 			    @Override
 			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 		
-			    	deleteBtn.setDisable(false);
-			    	openBtn.setDisable(false);
+			    	if (messageList.getSelectionModel().getSelectedItem() == null){
+			    		deleteBtn.setDisable(true);
+				    	openBtn.setDisable(true);
+			    	}
+			    	else{
+				    	deleteBtn.setDisable(false);
+				    	openBtn.setDisable(false);
+			    	}
 			    }
 			});
 	}
