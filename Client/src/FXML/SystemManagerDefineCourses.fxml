@@ -16,7 +16,7 @@
       <ComboBox fx:id="weaklyHours" layoutX="293.0" layoutY="145.0" prefWidth="150.0" promptText="&lt;&lt;Weakly Hours&gt;&gt;" />
       <ComboBox fx:id="teachingUnit" layoutX="470.0" layoutY="145.0" prefWidth="150.0" promptText="&lt;&lt;Teaching Unit&gt;&gt;" />
       <TextField fx:id="courseId" layoutX="471.0" layoutY="76.0" promptText="&lt;&lt;Course Id&gt;&gt;" />
-      <ListView fx:id="preCourseList" layoutX="371.0" layoutY="218.0" prefHeight="72.0" prefWidth="178.0" />
+      <ListView fx:id="preCourseList" layoutX="371.0" layoutY="218.0" prefHeight="112.0" prefWidth="178.0" />
       <TextField fx:id="courseName" layoutX="297.0" layoutY="76.0" promptText="&lt;&lt;Course Name&gt;&gt;" />
       <Label alignment="CENTER" layoutX="293.0" layoutY="12.0" prefHeight="34.0" prefWidth="330.0" text="Insert Course Info" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
          <font>
@@ -56,7 +56,7 @@
             <Font name="Impact" size="17.0" />
          </font>
       </Label>
-      <Button layoutX="61.0" layoutY="423.0" mnemonicParsing="false" onAction="#addPreCourse" prefHeight="21.0" prefWidth="137.0" text="Add Pre Course" textFill="#6585dd">
+      <Button layoutX="254.0" layoutY="232.0" mnemonicParsing="false" onAction="#addPreCourse" prefHeight="33.0" prefWidth="101.0" text="Add &gt;&gt;" textFill="#6585dd">
          <font>
             <Font name="Impact" size="16.0" />
          </font>
@@ -64,9 +64,9 @@
             <DropShadow height="8.0" radius="3.5" width="8.0" />
          </effect>
       </Button>
-      <Button layoutX="374.0" layoutY="298.0" mnemonicParsing="false" onAction="#removePreCourse" prefHeight="34.0" prefWidth="169.0" text="Remove Pre Course" textFill="#6585dd">
+      <Button layoutX="254.0" layoutY="284.0" mnemonicParsing="false" onAction="#removePreCourse" prefHeight="34.0" prefWidth="101.0" text="&lt;&lt; Remove" textFill="#6585dd">
          <font>
-            <Font name="Impact" size="18.0" />
+            <Font name="Impact" size="16.0" />
          </font>
          <effect>
             <DropShadow height="8.0" radius="3.5" width="8.0" />
