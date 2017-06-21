@@ -182,56 +182,58 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    		// checks if the chosen teacher to replace have enough hours for the course
 	    		if(Integer.parseInt(teacher.getHoursLeft()) < weeklyHours){
 	    			//if not show an error dialog
-		    		alert = new Alert(AlertType.INFORMATION);
+		    		alert = new Alert(AlertType.CONFIRMATION);
 					alert.setTitle("NO HOURS LEFT");
 					alert.setHeaderText(null);
-					alert.setContentText("Invalid input! the teacher you choose doesn't have enough hours left! \nPlaese choose another teacher");
-					alert.show();
-	    		}else{
-	    			//sends a new request to the principal
-	    			newPlacement = new NewTeacherPlacement();
-	    			newPlacement.setCourseID(selClass.getCourseInClassId());
-	    			newPlacement.setCurrTeacherID(selClass.getTeacherId());
-	    			newPlacement.setNewTeacherID(teacher.getTeacherId());
-	    			
-	    			HashMap<String, String> msg = new HashMap<>();
-	    	    	msg.put("msgType", "insert");
-	    	    	msg.put("query", "INSERT INTO NewTeacherPlacement (newTeacherID, currTeacherID, Class_Courseid) VALUES (" + newPlacement.getNewTeacherID() + ", " + newPlacement.getCurrTeacherID() + ", " + newPlacement.getCourseID() + ");");
-	    	    	synchronized (Main.client) {
-	    	    		Main.client.sendMessageToServer(msg);
-	    				try {
-							Main.client.wait();
-							int result = (int)Main.client.getMessage();
-							if(result > 0){
-								String title = "Request was sent to principal";
-								String MailMsg = "Hello\nRequest for changing " + selClass.getTeacherName() + " in class " + selClass.getClassName() + " to " + teacher.getTeacherName() + " was sent to pricipal approval.";
-								sendMsg(title, MailMsg, selClass.getTeacherId(), null, false);
-								sendMsg(title, MailMsg, teacher.getTeacherId(), null, false);
-								MailMsg = "Hello\nYou have a new changing teacher requset to handle.";
-								sendMsg(title, MailMsg, null, "Principal", true);
-			    	    		alert = new Alert(AlertType.INFORMATION);
-								alert.setTitle("Request sent");
-								alert.setHeaderText(null);
-								alert.setContentText("The request has been sent to the principal successfully");
-								alert.show();
-							}else{
-			    	    		alert = new Alert(AlertType.INFORMATION);
-								alert.setTitle("FAILED!");
-								alert.setHeaderText(null);
-								alert.setContentText("Request for changing teacher for this class already exists!");
-								alert.show();
-							}
-						} catch (InterruptedException e) {
-		    	    		alert = new Alert(AlertType.ERROR);
-		    				alert.setTitle("Error Dialog");
-		    				alert.setHeaderText(null);
-		    				alert.setContentText("Connection error!!");
-		    				alert.show();
-							e.printStackTrace();
-						}
-	    	    	}
-	    	    		
+					alert.setContentText("The teacher you choose will exceed the maximum amount of hours allowed!\nDo you want to send the request?");
+					conBtn = alert.showAndWait();
+					
+					if (conBtn.get() == ButtonType.CANCEL){
+						return;
+					}
 	    		}
+    			//sends a new request to the principal
+    			newPlacement = new NewTeacherPlacement();
+    			newPlacement.setCourseID(selClass.getCourseInClassId());
+    			newPlacement.setCurrTeacherID(selClass.getTeacherId());
+    			newPlacement.setNewTeacherID(teacher.getTeacherId());
+    			
+    			HashMap<String, String> msg = new HashMap<>();
+    	    	msg.put("msgType", "insert");
+    	    	msg.put("query", "INSERT INTO NewTeacherPlacement (newTeacherID, currTeacherID, Class_Courseid) VALUES (" + newPlacement.getNewTeacherID() + ", " + newPlacement.getCurrTeacherID() + ", " + newPlacement.getCourseID() + ");");
+    	    	synchronized (Main.client) {
+    	    		Main.client.sendMessageToServer(msg);
+    				try {
+						Main.client.wait();
+						int result = (int)Main.client.getMessage();
+						if(result > 0){
+							String title = "Request was sent to principal";
+							String MailMsg = "Hello\nRequest for changing " + selClass.getTeacherName() + " in class " + selClass.getClassName() + " to " + teacher.getTeacherName() + " was sent to pricipal approval.";
+							sendMsg(title, MailMsg, selClass.getTeacherId(), null, false);
+							sendMsg(title, MailMsg, teacher.getTeacherId(), null, false);
+							MailMsg = "Hello\nYou have a new changing teacher requset to handle.";
+							sendMsg(title, MailMsg, null, "Principal", true);
+		    	    		alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("Request sent");
+							alert.setHeaderText(null);
+							alert.setContentText("The request has been sent to the principal successfully");
+							alert.show();
+						}else{
+		    	    		alert = new Alert(AlertType.INFORMATION);
+							alert.setTitle("FAILED!");
+							alert.setHeaderText(null);
+							alert.setContentText("Request for changing teacher for this class already exists!");
+							alert.show();
+						}
+					} catch (InterruptedException e) {
+	    	    		alert = new Alert(AlertType.ERROR);
+	    				alert.setTitle("Error Dialog");
+	    				alert.setHeaderText(null);
+	    				alert.setContentText("Connection error!!");
+	    				alert.show();
+						e.printStackTrace();
+					}
+    	    	}
 	    	}
     	}
     }

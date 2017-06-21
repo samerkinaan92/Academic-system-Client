@@ -241,15 +241,15 @@ public class ChangeStudentAssignmentController implements Initializable{
     	Course selectedCourse = corsChosBox.getSelectionModel().getSelectedItem();
     	String courseId = Integer.toString(selectedCourse.getCourseID());
     	
-    	//show confirmation dialog
-    	Alert alert = new Alert(AlertType.CONFIRMATION);
-    	alert.setTitle("Confirmation Dialog");
-    	alert.setHeaderText(null);
-    	alert.setContentText("Are you sure you want to assign " + student.getName() + " to course " + selectedCourse.getName() + "?");
-
-    	Optional<ButtonType> result = alert.showAndWait();
-    	if (result.get() == ButtonType.OK){
-	    	if(!isSignedToCourse(courseId)){
+    	if(!isSignedToCourse(courseId)){
+	    	//show confirmation dialog
+	    	Alert alert = new Alert(AlertType.CONFIRMATION);
+	    	alert.setTitle("Confirmation Dialog");
+	    	alert.setHeaderText(null);
+	    	alert.setContentText("Are you sure you want to assign " + student.getName() + " to course " + selectedCourse.getName() + "?");
+	
+	    	Optional<ButtonType> result = alert.showAndWait();
+	    	if (result.get() == ButtonType.OK){
 	    		NewStudenCoursePlacement newPlacement = new NewStudenCoursePlacement(student.getID(), courseId, Action.assign);
 	    		try {
 					if(sendNewRequest(newPlacement) > 0){
@@ -266,7 +266,7 @@ public class ChangeStudentAssignmentController implements Initializable{
 						alert.setContentText("The request has been sent to the principal successfully");
 						alert.show();
 					}else{
-						alert = new Alert(AlertType.INFORMATION);
+						alert = new Alert(AlertType.ERROR);
 						alert.setTitle("Request sent");
 						alert.setHeaderText(null);
 						alert.setContentText("The request has been already sent before!!\nPlease wait for the pricipal.");
@@ -280,13 +280,13 @@ public class ChangeStudentAssignmentController implements Initializable{
 					alert.show();
 					e.printStackTrace();
 				}
-	    	}else{
-	    		alert = new Alert(AlertType.INFORMATION);
-				alert.setTitle("Invalid input");
-				alert.setHeaderText(null);
-				alert.setContentText("Student is already assigned to course!!");
-				alert.show();
 	    	}
+    	}else{
+    		Alert alert = new Alert(AlertType.ERROR);
+			alert.setTitle("Invalid input");
+			alert.setHeaderText(null);
+			alert.setContentText("Student is already assigned to course!!");
+			alert.show();
     	}
     }
     
@@ -455,6 +455,8 @@ public class ChangeStudentAssignmentController implements Initializable{
 		return msgFromServer;
     }
     
+    
+    
     /**
      * checks if the student already signed to the course
      * @param courseId course id
@@ -462,7 +464,7 @@ public class ChangeStudentAssignmentController implements Initializable{
      */
     private boolean isSignedToCourse(String courseId){
     	for(int i = 0; i < data.size(); i++){
-    		if(data.get(i).id.equals(courseId))
+    		if(data.get(i).getId().equals(courseId))
     			return true;
     	}
     	return false;
