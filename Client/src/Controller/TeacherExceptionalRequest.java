@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import Entity.Semester;
+import Entity.Teacher;
 import application.Main;
 import javafx.fxml.Initializable;
 import javafx.beans.property.SimpleStringProperty;
@@ -63,6 +65,7 @@ public class TeacherExceptionalRequest implements Initializable {
     @FXML
     void approve(ActionEvent event) {
     	TeacherRequestInfo requestInfo = excepTbl.getSelectionModel().getSelectedItem();
+    	
     	//show confirmation dialog
     	Alert alert = new Alert(AlertType.CONFIRMATION);
     	alert.setTitle("Confirmation Dialog");
@@ -72,16 +75,42 @@ public class TeacherExceptionalRequest implements Initializable {
     	Optional<ButtonType> result = alert.showAndWait();
     	if (result.get() == ButtonType.OK){
     		try {
-				changeTeacher(requestInfo);
-	    		String title = "The request was approved";
-				String msg = "Hello\nThe request for changing " 
-						+ requestInfo.getCurrTeacherName() + " to " + requestInfo.getNewTeacherName() 
-						+ " in class " + requestInfo.getClassRoom() + " was approved.";
-				sendMsg(title, msg, requestInfo.getCurrTeacherId(), null, false);
-				sendMsg(title, msg, requestInfo.getNewTeacherId(), null, false);
-				sendMsg(title, msg, null, "Secretary", true);
-	    	} catch (InterruptedException e) {
-	    		alert = new Alert(AlertType.ERROR);
+				if(isExceededMaxHours(requestInfo)){
+					//show confirmation dialog
+			    	alert = new Alert(AlertType.CONFIRMATION);
+			    	alert.setTitle("Confirmation Dialog");
+			    	alert.setHeaderText(null);
+			    	alert.setContentText("The teacher will exceed the maximum amount of hours allowed!\nDo you still want to approve it?");
+
+			    	result = alert.showAndWait();
+			    	if(result.get() == ButtonType.CANCEL){
+			    		alert = new Alert(AlertType.INFORMATION);
+						alert.setTitle("Information Dialog");
+						alert.setHeaderText(null);
+						alert.setContentText("No change was made!");
+						alert.show();
+						return;
+			    	}
+				}
+				try {
+					changeTeacher(requestInfo);
+					String title = "The request was approved";
+					String msg = "Hello\nThe request for changing " 
+							+ requestInfo.getCurrTeacherName() + " to " + requestInfo.getNewTeacherName() 
+							+ " in class " + requestInfo.getClassRoom() + " was approved.";
+					sendMsg(title, msg, requestInfo.getCurrTeacherId(), null, false);
+					sendMsg(title, msg, requestInfo.getNewTeacherId(), null, false);
+					sendMsg(title, msg, null, "Secretary", true);
+				} catch (InterruptedException e) {
+					alert = new Alert(AlertType.ERROR);
+					alert.setTitle("Error Dialog");
+					alert.setHeaderText(null);
+					alert.setContentText("Connection error!!");
+					alert.show();
+					e.printStackTrace();
+				}
+			} catch (InterruptedException e) {
+				alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");
 				alert.setHeaderText(null);
 				alert.setContentText("Connection error!!");
@@ -204,6 +233,63 @@ public class TeacherExceptionalRequest implements Initializable {
 			alert.setHeaderText(null);
 			alert.setContentText("The teacher have been changed");
 			alert.show();
+		}
+    }
+    
+    private boolean isExceededMaxHours(TeacherRequestInfo requestInfo) throws InterruptedException{
+    	HashMap<String, String> msg = new HashMap<>();
+    	ArrayList<String> msgFromSrv;
+    	int maxHours = -1, courseHours = -1;
+    	
+    	int sum = getSumHours(requestInfo.getNewTeacherId());
+    	
+    	msg.put("msgType", "select");
+    	msg.put("query", "select MaxWorkHours from Teacher where TeacherID = '" + requestInfo.getNewTeacherId() + "';");
+    	
+    	synchronized (Main.client) {
+			Main.client.sendMessageToServer(msg);
+			Main.client.wait();
+			msgFromSrv = (ArrayList<String>) Main.client.getMessage();
+			maxHours = Integer.parseInt(msgFromSrv.get(0));
+			
+			msg.put("query", "select C.WeeklyHours from Course C, Class_Course CC "
+					+ "where C.CourseID = CC.CourseID AND CC.id = " + requestInfo.getCourseClassId() + ";");
+			
+			Main.client.sendMessageToServer(msg);
+			Main.client.wait();
+			msgFromSrv = (ArrayList<String>) Main.client.getMessage();
+			courseHours = Integer.parseInt(msgFromSrv.get(0));
+		}
+    	
+    	if(sum + courseHours > maxHours){
+    		return true;
+    	}else{
+    		return false;
+    	}
+    }
+    
+    /**
+     * gets the total hours the teacher is working during week
+     * @param teacherId the teacher id
+     * @return	the total hours the teacher is working during week
+     * @throws InterruptedException
+     */
+    private int getSumHours(String teacherId) throws InterruptedException{
+    	HashMap<String, String> msg = new HashMap<>();
+    	ArrayList<String> msgFromServer;
+    	
+    	msg.put("msgType", "select");
+    	msg.put("query", 
+    			"select sum(C.WeeklyHours) from Course C where C.CourseID IN (SELECT CC.CourseID FROM Class_Course CC WHERE CC.teacherID = '" 
+    					+ teacherId + "' AND semesterId = '" + Semester.currSem() + "');");
+    	synchronized (Main.client) {
+    		Main.client.sendMessageToServer(msg);
+			Main.client.wait();
+			msgFromServer = (ArrayList<String>)Main.client.getMessage();
+	    	if(!msgFromServer.isEmpty() && msgFromServer.get(0) != null)
+	    		return Integer.parseInt(msgFromServer.get(0));
+	    	else
+	    		return 0;
 		}
     }
     
