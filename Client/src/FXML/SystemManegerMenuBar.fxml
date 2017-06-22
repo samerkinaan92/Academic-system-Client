@@ -4,7 +4,7 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 
-<MenuBar fx:id="bar" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SystemManegerMenuBarController">
+<MenuBar fx:id="bar" prefHeight="32.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.SystemManegerMenuBarController">
    <menus>
       <Menu mnemonicParsing="false" text="File">
         <items>
@@ -20,6 +20,11 @@
       <Menu mnemonicParsing="false" text="Connection">
         <items>
           <MenuItem mnemonicParsing="false" onAction="#logout" text="Logout" />
+        </items>
+      </Menu>
+      <Menu mnemonicParsing="false" text="View">
+        <items>
+          <MenuItem mnemonicParsing="false" onAction="#ViewPersonalInfo" text="Personal information" />
         </items>
       </Menu>
    </menus>

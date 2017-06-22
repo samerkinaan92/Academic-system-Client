@@ -77,10 +77,12 @@ public class StudentMenuBarController {
     @FXML
     void viewCourseInfo(ActionEvent event) {
     	try {
+    		StudentViewCourseInfoController.setUser(Main.user.getID(), Main.user.getName());
 		   URL paneOneUrl = getClass().getResource("/FXML/StudentViewCourses.fxml");
 		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
 		   BorderPane border = Main.getRoot();			    
 		   border.setCenter(paneOne);
+		   
         } catch (IOException exp) {
         	exp.printStackTrace();
           }       
@@ -88,6 +90,7 @@ public class StudentMenuBarController {
 	
 	public void ViewPersonalInfo(ActionEvent e){
     	try {
+    		UserViewPersonalInfoController.setUser(Main.user.getID());
 		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
 		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
 		   BorderPane border = Main.getRoot();			    
@@ -104,7 +107,15 @@ public class StudentMenuBarController {
 	
     @FXML
     void evaluationEvent(ActionEvent event) {
-
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/StudenViewEvaluation.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+		   StudentViewEvaluations.setUsr(Main.user.getID(), Main.user.getName());
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }       
     }
 
 	

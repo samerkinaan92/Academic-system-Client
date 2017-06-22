@@ -152,6 +152,7 @@ public class PrincipalMenuBarController {
     @FXML
     void viewPerInfo(ActionEvent event) {
     	try {
+    		UserViewPersonalInfoController.setUser(Main.user.getID());
 		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
 		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
 		   BorderPane border = Main.getRoot();			    

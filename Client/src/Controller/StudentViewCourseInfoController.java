@@ -1,22 +1,29 @@
 package Controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import Entity.Semester;
 import Entity.StudentCourse;
+import Entity.User;
 import Entity.claSS;
 import application.Main;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
 /**This controller presenting all the courses information by semesters*/
 public class StudentViewCourseInfoController implements Initializable{
@@ -25,6 +32,12 @@ public class StudentViewCourseInfoController implements Initializable{
     @FXML
     private TableView<StudentCourse> cTable;
 
+    @FXML
+    private Label titleLabel;
+    
+    @FXML
+    private Button backBtn;
+    
     /**Cid - present the course ID in the course table.*/
     @FXML
     private TableColumn<StudentCourse, String> Cid;
@@ -56,10 +69,9 @@ public class StudentViewCourseInfoController implements Initializable{
     /**selectedSem - Chosen semester from the semester combobox*/
     private String selectedSem;
     
+    static User usr;
     
-    
-    /**className - the class name of the student.*/
-    private String className;
+
     
     /**courseArr - Contain the courses of the student.*/
     private ArrayList<StudentCourse>courseArr;
@@ -79,8 +91,11 @@ public class StudentViewCourseInfoController implements Initializable{
 		ArrayList<String> organizedListSem = Semester.semList();
 		semListCB= FXCollections.observableArrayList(organizedListSem);
 		selectedSem=Semester.currSem();
-		className=claSS.getClassByStud(Main.user.getID());
+		if(Main.user.getType().equals("Parent"))
+			backBtn.setVisible(true);
+		titleLabel.setText(usr.getName()+" courses:");
 		cComBox.getSelectionModel().select(selectedSem);
+		Collections.sort(semListCB);
 		cComBox.setItems(semListCB);
 		Cid.setCellValueFactory(new PropertyValueFactory<StudentCourse, String>("courseID"));
 		cName.setCellValueFactory(new PropertyValueFactory<StudentCourse, String>("courseName"));
@@ -91,6 +106,11 @@ public class StudentViewCourseInfoController implements Initializable{
 		setWeekHour();
 	}
     
+	/**setUser() - define the student for the class.*/
+	public static void setUser(String stdID, String stdName)
+	{
+		usr=new User(stdID,stdName);
+	}
 	
 	/**setWeekHour()  - defining the weekly hours for the selected semester.*/
 	public void setWeekHour()
@@ -105,7 +125,7 @@ public class StudentViewCourseInfoController implements Initializable{
 	
 	/**setCourses setting the courses for the selected semester.*/
 	public void setCourses(String sem){		
-		courseArr= StudentCourse.getCoursesBySemStd(sem,Main.user.getID());
+		courseArr= StudentCourse.getCoursesBySemStd(sem,usr.getID());
 		courseForTable = FXCollections.observableArrayList(courseArr);
 		cTable.setItems(courseForTable);
 	}
@@ -118,6 +138,22 @@ public class StudentViewCourseInfoController implements Initializable{
     	setCourses(selectedSem);
     	setWeekHour();
     	
+    }
+	
+
+
+
+    @FXML
+    void backParentScreen(ActionEvent event) {
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/ParentSelectStd.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+		   
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }       
     }
 
 

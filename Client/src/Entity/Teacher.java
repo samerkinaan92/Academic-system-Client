@@ -232,42 +232,6 @@ public class Teacher extends User {
 		return sum;
 	}
 	
-	/**
-	 * Get all teachers assigned classes
-	 * @param ID Teacher id
-	 * @return List of assigned classes
-	 */
-	public static ArrayList<claSS> getTeachersClass(String ID){
-		
-		HashMap <String,String> msgServer = new HashMap <String,String>();
-		msgServer.put("msgType", "select");
-		msgServer.put("query", " select ClassName from class_course where teacherID ="+ID+";");
-		
-		try{
-			Main.client.sendMessageToServer(msgServer);
-			}
-			catch(Exception exp){
-				return null;
-			}
-		synchronized (Main.client){try {
-			Main.client.wait();
-		} catch (InterruptedException e) {
-			return null;
-		}}
-		@SuppressWarnings("unchecked")
-		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-		
-		if (result == null){
-			return null;
-		}
-		
-		ArrayList<claSS> DBclasses = new ArrayList<claSS>();
-		for (int i = 0; i < result.size(); i++)
-			DBclasses.add(new claSS(result.get(i)));
-		return DBclasses;
-		
-	}
-
 	public static ArrayList<String> getTeachersClassAsStringArrList(String ID){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -302,4 +266,62 @@ public class Teacher extends User {
 	public void setMaxWorkHours(int maxWorkHours) {
 		this.maxWorkHours = maxWorkHours;
 	}
+
+	
+
+public static ArrayList<claSS> getTeachersClass(String ID){
+	
+	HashMap <String,String> msgServer = new HashMap <String,String>();
+	msgServer.put("msgType", "select");
+	msgServer.put("query", " select ClassName from class_course where teacherID ="+ID+";");
+	
+	try{
+		Main.client.sendMessageToServer(msgServer);
+		}
+		catch(Exception exp){
+			System.out.println("Server fatal error!");
+		}
+	synchronized (Main.client){try {
+		Main.client.wait();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}}
+	@SuppressWarnings("unchecked")
+	ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+	
+	ArrayList<claSS> DBclasses = new ArrayList<claSS>();
+	for (int i = 0; i < result.size(); i++)
+		DBclasses.add(new claSS(result.get(i)));
+	return DBclasses;
+	
+}
+
+
+
+public static String getTeachersIDbyAssign(String assign, String std,String sem,String courseName){
+	
+	HashMap <String,String> msgServer = new HashMap <String,String>();
+	msgServer.put("msgType", "select");
+	msgServer.put("query", "select teacherid from submission,assignment,class_course,student_class,course where assignment.AssignmentID=submission.AssignmentID and class_course.CourseID=assignment.CourseID and StudentStudentID='"+std+"' and StudentStudentID=studentid and class_course.classname=student_class.ClassName and assignment.AssignmentID='"+assign+"' and class_course.semesterId='"+sem+"' and class_course.CourseID=assignment.CourseID and assignment.CourseID=course.courseid and coursename='"+courseName+"';");
+
+	try{
+		Main.client.sendMessageToServer(msgServer);
+		}
+		catch(Exception exp){
+			System.out.println("Server fatal error!");
+		}
+	synchronized (Main.client){try {
+		Main.client.wait();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}}
+	@SuppressWarnings("unchecked")
+	ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+	return result.get(0);
+	
+}
+
+
+
+
 }

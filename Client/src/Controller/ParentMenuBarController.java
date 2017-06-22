@@ -73,15 +73,25 @@ public class ParentMenuBarController {
 
 	/** Private Actions */
 	
-	public void ViewChildInfo(ActionEvent e){
-		
-	}
+
+    @FXML
+    void viewStdCourses(ActionEvent event) {
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/ParentSelectStd.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }          
+    }
 	
 	/** Private Actions */
 	
     @FXML
     void ViewPerInfo(ActionEvent event) {
     	try {
+    		UserViewPersonalInfoController.setUser(Main.user.getID());
 		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
 		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
 		   BorderPane border = Main.getRoot();			    
