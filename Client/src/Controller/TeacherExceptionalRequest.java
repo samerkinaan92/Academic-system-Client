@@ -236,6 +236,13 @@ public class TeacherExceptionalRequest implements Initializable {
 		}
     }
     
+    
+    /**
+     * this method check if the teacher has exceeded the maximum amount of hours he can teach
+     * @param requestInfo The row selected from the table
+     * @return true if the teacher exceeded the max amount of hour after adding the course hours
+     * @throws InterruptedException
+     */
     private boolean isExceededMaxHours(TeacherRequestInfo requestInfo) throws InterruptedException{
     	HashMap<String, String> msg = new HashMap<>();
     	ArrayList<String> msgFromSrv;

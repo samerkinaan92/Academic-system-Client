@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
@@ -20,6 +21,9 @@
           <TableColumn fx:id="tchrNmCln" prefWidth="102.0" text="Teacher" />
             <TableColumn fx:id="tchrIdCln" prefWidth="75.0" text="Teacher id" />
         </columns>
+         <tooltip>
+            <Tooltip text="Choose the class you want to change the teacher in" />
+         </tooltip>
       </TableView>
       <Label layoutX="14.0" layoutY="127.0" text="Choose class room where you want to change" textFill="#4c6bc5">
          <font>
@@ -47,6 +51,9 @@
           <TableColumn fx:id="tchrNmTcln" prefWidth="109.0" text="Teacher name" />
             <TableColumn fx:id="horsLftTcln" prefWidth="72.0" text="Hours left" />
         </columns>
+         <tooltip>
+            <Tooltip text="Choose the teacher you want him to replace." />
+         </tooltip>
       </TableView>
       <ChoiceBox fx:id="tuChosBox" layoutX="136.0" layoutY="58.0" prefWidth="150.0" />
       <Label layoutX="320.0" layoutY="62.0" text="Choose course" textFill="#4c6bc5">

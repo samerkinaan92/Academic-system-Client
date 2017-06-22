@@ -26,6 +26,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -386,6 +387,8 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    		workHours = getSumHours(teacherId);
 	    		if(maxHours != -1 && workHours != -1){
 	    			sum = maxHours - workHours;
+	    			if(sum < 0)
+	    				sum = 0;
 	    		}else{
 	    			sum = 0;
 	    		}
