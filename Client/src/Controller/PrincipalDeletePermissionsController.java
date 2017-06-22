@@ -138,32 +138,7 @@ public class PrincipalDeletePermissionsController implements Initializable{
     	changeBtn.setDisable(true); 
     }
   
-    /**backBtn - is used for return to the last screen - PrincipalViewParInfo.*/
-    @FXML
-    void backBtn(ActionEvent event) {
-    	try {
-		   URL paneOneUrl = getClass().getResource("/FXML/PrincipalViewParInfo.fxml");
-		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
-		   BorderPane border = Main.getRoot();			    
-		   border.setCenter(paneOne);
-        } catch (IOException e) {
-            e.printStackTrace();
-          }        
-    }
     
-    
-    /**finishBtn - is used for return to the welcome screen - WelcomeScreen.*/
-    @FXML
-    void finishBtn(ActionEvent event) {
-    	try {
-		   URL paneOneUrl = getClass().getResource("/FXML/WelcomeScreen.fxml");
-		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
-		   BorderPane border = Main.getRoot();			    
-		   border.setCenter(paneOne);
-        } catch (IOException e) {
-            e.printStackTrace();
-          }       
-    }
     
     /**Return the static value of Parent - par*/
     public static Parent getPar() {

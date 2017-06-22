@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
@@ -7,22 +8,29 @@ import Entity.Parent;
 import Entity.User;
 import Entity.claSS;
 import application.Main;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 
-/**UserViewPersonalInfoController - Presenting the personal details of the users.*/
+/**UserViewPersonalInfoController - Presenting the personal details of the users.
+ * @author Tal Asulin*/
 public class UserViewPersonalInfoController implements Initializable{
 	
 	
 	private static User usr;
-    @FXML
+    
+	@FXML
     private ResourceBundle resources;
 
     @FXML
     private URL location;
 
-
+    
     /**usrName - user name*/
     @FXML
     private Label usrName;
@@ -58,6 +66,9 @@ public class UserViewPersonalInfoController implements Initializable{
     /**stdClass - student class details*/
     @FXML
     private Label stdClass;
+    
+    @FXML
+    private Button backBtn;
 
     /**stdpar1 - Student parent details.*/
     @FXML
@@ -70,26 +81,37 @@ public class UserViewPersonalInfoController implements Initializable{
     /**stdpar2 - student parent deatils*/
     @FXML
     private Label stdpar2;
+    
+    private static String stdID;
+    
+
+    @FXML
+    private Label titleLabal;
 
     
     /**initialize() - initialize the details according to the current login user.*/
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		usr=User.getUserInfo(Main.user.getID());
+		usr=User.getUserInfo(stdID);
 		usrName.setText(usr.getName());
 		usrID.setText(usr.getID());
 		usrAddr.setText(usr.getAddress());
 		usrPhone.setText(usr.getPhone());
 		usrEmail.setText(usr.getEmail());
 		
+		if(Main.user.getType().equals("Parent")){
+			backBtn.setVisible(true);
+			titleLabal.setText(usr.getName() + " info:");
+		}
+		
 		/*switch case for adding more details according to the user role.*/
 		switch (usr.getType()){
 		
 		case "Student": 
-			stdClass.setText(claSS.getClassByStud(Main.user.getID()));
+			stdClass.setText(claSS.getClassByStud(usr.getID()));
 			sClass.setVisible(true);
 			stdClass.setVisible(true);
-			ArrayList<String> result=Parent.getParNameByStdID(Main.user.getID());
+			ArrayList<String> result=Parent.getParNameByStdID(usr.getID());
 			
 			if(result.size()==1){
 				stdP1.setVisible(true);
@@ -107,11 +129,28 @@ public class UserViewPersonalInfoController implements Initializable{
 			}
 			
 		}
-				
-			
-			
+						
 		
 	}
+	
+	public static void setUser(String ID)
+	{
+		stdID=ID;
+	}
+	
+	
+
+    @FXML
+    void BackStdSelection(ActionEvent event) {
+    	try {
+		   java.net.URL paneOneUrl = getClass().getResource("/FXML/ParentSelectStd.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }  
+    }
 	
 
 }

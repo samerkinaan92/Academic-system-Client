@@ -268,4 +268,30 @@ public static ArrayList<String> getTeachersClassAsStringArrList(String ID){
 	
 }
 
+public static String getTeachersIDbyAssign(String assign, String std,String sem,String courseName){
+	
+	HashMap <String,String> msgServer = new HashMap <String,String>();
+	msgServer.put("msgType", "select");
+	msgServer.put("query", "select teacherid from submission,assignment,class_course,student_class,course where assignment.AssignmentID=submission.AssignmentID and class_course.CourseID=assignment.CourseID and StudentStudentID='"+std+"' and StudentStudentID=studentid and class_course.classname=student_class.ClassName and assignment.AssignmentID='"+assign+"' and class_course.semesterId='"+sem+"' and class_course.CourseID=assignment.CourseID and assignment.CourseID=course.courseid and coursename='"+courseName+"';");
+
+	try{
+		Main.client.sendMessageToServer(msgServer);
+		}
+		catch(Exception exp){
+			System.out.println("Server fatal error!");
+		}
+	synchronized (Main.client){try {
+		Main.client.wait();
+	} catch (InterruptedException e) {
+		e.printStackTrace();
+	}}
+	@SuppressWarnings("unchecked")
+	ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+	return result.get(0);
+	
+}
+
+
+
+
 }

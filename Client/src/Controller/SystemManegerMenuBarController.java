@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JOptionPane;
 
@@ -14,7 +15,7 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 
 import javafx.scene.layout.AnchorPane;
-
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 
@@ -77,6 +78,18 @@ public class SystemManegerMenuBarController {
 	public void define(ActionEvent e) throws IOException{
 		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/SystemManagerDefineCourses.fxml"));
 		Main.getRoot().setCenter(pane);
+	}
+	
+	public void ViewPersonalInfo(ActionEvent e){
+    	try {
+    		UserViewPersonalInfoController.setUser(Main.user.getID());
+		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }       
 	}
 	
 	/** Private Actions */

@@ -14,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class TeacherMenuBarController {
@@ -114,6 +115,19 @@ public class TeacherMenuBarController {
 			ex.printStackTrace();
 		}
 		
+	}
+	
+	
+	public void ViewPersonalInfo(ActionEvent e){
+    	try {
+    		UserViewPersonalInfoController.setUser(Main.user.getID());
+		   URL paneOneUrl = getClass().getResource("/FXML/UserViewPersonalInfo.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException exp) {
+        	exp.printStackTrace();
+          }       
 	}
 	
 	

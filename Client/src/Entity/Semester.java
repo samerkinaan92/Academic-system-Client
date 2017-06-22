@@ -98,6 +98,7 @@ public class Semester {
 		
 	}
 	
+	
 	@SuppressWarnings("unchecked")
 	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
 
