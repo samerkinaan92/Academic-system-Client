@@ -9,11 +9,13 @@ import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import Entity.Course;
+import Entity.Message;
 import Entity.Secretery;
 import Entity.Semester;
 import Entity.Student;
 import Entity.Teacher;
 import Entity.TeachingUnit;
+import Entity.User;
 import Entity.claSS;
 import application.Main;
 import javafx.beans.value.ChangeListener;
@@ -110,6 +112,101 @@ public class SecretaryCourseToClassController implements Initializable {
 	ArrayList<String> removed = null;
 	
 	//-------------------------------------------------------------------------------------------------------------
+	
+	/**
+	* Send message to all relevant users.
+	*/
+	private void sendMsgs(ArrayList<String> students, String cls, int sID){
+		
+		ArrayList<String> Secretary = User.getUserIdByRole("Secretary");
+		ArrayList<String> Principal = User.getUserIdByRole("Principal");
+		String title = "New Course Attachments";
+		String msg;
+		String courses = "";
+		Semester sem = null;
+		
+		if (semesterArr != null){
+			for (int i = 0; i < semesterArr.size(); i++){
+				if (semesterArr.get(i).getId() == sID){
+					sem = semesterArr.get(i);
+					break;
+				}
+			}
+		}
+		
+		if (added != null && !added.isEmpty()){
+			if (sem != null){
+				msg = "Your assinged class been attached new courses " + sem.getYear() + "(" + sem.getSeason() +
+					 ") :\n\n";
+			}
+			else{
+				msg = "Your assinged class been attached new courses:\n\n";
+			}
+			
+			for (int i = 0; i < added.size(); i++){
+				courses += added.get(i).substring(0, added.get(i).indexOf(')')+1) + "\n";
+			}
+			msg += courses;
+			for (int i = 1; i < students.size(); i+=2){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(students.get(i))));
+			}
+			
+			if (sem == null){
+				msg = "Class: " + cls + " been attached new courses:\n\n" + courses;
+			}
+			else{
+				msg = "Class: " + cls +  " been attached new courses " + sem.getYear() + "(" + sem.getSeason() +
+						 ") :\n\n";
+			}
+			
+			msg += courses;
+			for (int i = 0; i < Principal.size(); i++){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Principal.get(i))));
+			}
+			
+			for (int i = 0; i < Principal.size(); i++){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Secretary.get(i))));
+			}
+		}
+		
+		if (removed != null && !removed.isEmpty()){
+			title = "New Removed Courses";
+			courses = "";
+			
+			if (sem != null){
+				msg = "Your assinged class been removed new courses " + sem.getYear() + "(" + sem.getSeason() +
+					 ") :\n\n";
+			}
+			else{
+				msg = "Your assinged class been removed new courses:\n\n";
+			}
+			
+			for (int i = 0; i < removed.size(); i++){
+				courses += removed.get(i).substring(0, removed.get(i).indexOf(')')+1) + "\n";
+			}
+			msg += courses;
+			for (int i = 1; i < students.size(); i+=2){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(students.get(i))));
+			}
+			
+			if (sem == null){
+				msg = "Class: " + cls + " been removed new courses:\n\n" + courses;
+			}
+			else{
+				msg = "Class: " + cls +  " been removed new courses " + sem.getYear() + "(" + sem.getSeason() +
+						 ") :\n\n";
+			}
+			
+			msg += courses;
+			for (int i = 0; i < Principal.size(); i++){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Principal.get(i))));
+			}
+			
+			for (int i = 0; i < Principal.size(); i++){
+				Message.sendMsg(new Message(title, msg, Integer.parseInt(Main.user.getID()), Integer.parseInt(Secretary.get(i))));
+			}
+		}
+	}
 	
 	/**
 	 * get semesters by year & season
@@ -294,6 +391,9 @@ public class SecretaryCourseToClassController implements Initializable {
 			errMsg.setContentText("Can't add students to class courses");
 			errMsg.showAndWait();
 		}
+		else{
+			sendMsgs(students, cls, sID);
+		}
 		
 		Secretery.sendExceptionStudents(exeptionStudents);
 		
@@ -465,7 +565,6 @@ public class SecretaryCourseToClassController implements Initializable {
 		if (available == null && taken == null){
 			errMsg.setContentText("Class Was Not Selected: Please Choose Class");
 			errMsg.showAndWait();
-			return;
 		}
 		
 		String selected = availableCourses.getSelectionModel().getSelectedItem();
@@ -473,7 +572,6 @@ public class SecretaryCourseToClassController implements Initializable {
 		if (selected == null || selected.isEmpty()){
 			errMsg.setContentText("Course Was Not Selected: Please Choose Course");
 			errMsg.showAndWait();
-			return;
 		}
 		
 		String selectedTeacherID = teacherChooser.getSelectionModel().getSelectedItem();
@@ -482,7 +580,6 @@ public class SecretaryCourseToClassController implements Initializable {
 		if (selectedTeacherID == null || selectedTeacherID.isEmpty()){
 			errMsg.setContentText("Teacher Was Not Selected: Please Choose Teacher");
 			errMsg.showAndWait();
-			return;
 		}
 		
 		selectedTeacherID = selectedTeacherID.substring(selectedTeacherID.indexOf('(') + 1, selectedTeacherID.indexOf(')'));
@@ -490,7 +587,6 @@ public class SecretaryCourseToClassController implements Initializable {
 		if (selectedSemester == null || selectedSemester.isEmpty()){
 			errMsg.setContentText("Semester Was Not Selected: Please Choose Semester");
 			errMsg.showAndWait();
-			return;
 		}
 		
 		int semesterYear = Integer.parseInt(selectedSemester.substring(0, selectedSemester.indexOf('(')-1));
@@ -579,6 +675,7 @@ public class SecretaryCourseToClassController implements Initializable {
 			for (int i = 0; i < added.size(); i++)
 				if ((added.get(i).substring(0, added.get(i).indexOf('[') - 1)).equals(selected)){
 					added.remove(i);
+					removed.remove(removed.size()-1);
 					break;
 				}
 			}
@@ -742,11 +839,19 @@ public class SecretaryCourseToClassController implements Initializable {
 		takenCourses.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
 			@Override
 		    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-				removeBtn.setDisable(false);
-				teacherChooser.setDisable(true);
-				teacherChooser.getSelectionModel().clearSelection();
-				attachBtn.setDisable(true);
-				availableCourses.getSelectionModel().clearSelection();
+				
+				if (!takenCourses.getSelectionModel().getSelectedItem().equals("No Courses Taken!")){
+					
+					removeBtn.setDisable(false);
+					teacherChooser.setDisable(true);
+					teacherChooser.getSelectionModel().clearSelection();
+					attachBtn.setDisable(true);
+					availableCourses.getSelectionModel().clearSelection();
+				}
+				else{
+					takenCourses.getSelectionModel().clearSelection();
+				}
+				
 		    }
 		});
 	}
