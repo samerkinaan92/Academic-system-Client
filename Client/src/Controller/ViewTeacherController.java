@@ -130,9 +130,9 @@ public class ViewTeacherController implements Initializable{
 				techertInfo temp = new techertInfo(TeacherArr.get(i).getID(),
 												   TeacherArr.get(i).getName(),
 												   Integer.toString(TeacherArr.get(i).getMaxWorkHours()),
-												   TeacherArr.get(i).getMail(),
+												   TeacherArr.get(i).getEmail(),
 												   TeacherArr.get(i).getAddress(),
-												   TeacherArr.get(i).getPhoneNum());
+												   TeacherArr.get(i).getPhone());
 				data.add(temp);
 			}
 			TeacherTableView.setItems(FXCollections.observableArrayList(data));
