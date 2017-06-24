@@ -15,9 +15,9 @@ public class Student extends User {
 	public Student (String ID, String Name, String Mail, String Address, String Phone){
 		setID(ID);
 		super.setName(Name);
-		super.setMail(Mail);
+		super.setEmail(Mail);
 		super.setAddress(Address);
-		super.setPhoneNum(Phone);
+		super.setPhone(Phone);
 	}
 	
 	public Student(String ID, String stdname){
