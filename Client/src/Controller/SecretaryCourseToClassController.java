@@ -136,7 +136,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		
 		if (added != null && !added.isEmpty()){
 			if (sem != null){
-				msg = "Your assinged class been attached new courses " + sem.getYear() + "(" + sem.getSeason() +
+				msg = "Your class have new courses! " + sem.getYear() + "(" + sem.getSeason() +
 					 ") :\n\n";
 			}
 			else{
@@ -349,7 +349,7 @@ public class SecretaryCourseToClassController implements Initializable {
 	private String addRemoveStudents(){ // Add students to courses Or Remove them as necessary.
 		
 		String cls = classChooser.getSelectionModel().getSelectedItem();
-		String exeptions = "Student/s that can't take course\n\n";
+		String exeptions = "Missing Pre Courses\n\n";
 		ArrayList<String> students = claSS.getStudents(cls);
 		
 		ArrayList<String> addedStudents = new ArrayList<String>();
@@ -412,7 +412,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		}
 		
 		if (flag){
-			exeptions += "\nStudents waiting for princple aproval";
+			exeptions += "\nStudents waiting for principal approval";
 			return exeptions;
 		}
 		return null;

@@ -341,7 +341,9 @@ public class StudentSubmitAssignmentController implements Initializable {
                   new FileChooser.ExtensionFilter("Word Documents", "*.docx")
               );
           String[] fileName = p.split("/");
-          fileChooser.setInitialFileName(fileName[fileName.length - 1]);
+          String type = fileName[fileName.length - 1];
+          type = type.substring(type.indexOf('.'), type.length());
+          fileChooser.setInitialFileName(fileName[fileName.length - 1] + type);
           File pa = fileChooser.showSaveDialog(assignmentListView.getScene().getWindow());
           
           
@@ -584,6 +586,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
 			    	int courseID = -1;
 			    	for (int i = 0; i < organizedCourseList.size(); i++)
+			    		//if (organizedCourseList.get(i).equals(newValue))
 			    		if (organizedCourseList.get(i).equals(courseListView.getSelectionModel().getSelectedItem().toString()))
 			    			courseID = Integer.parseInt
 			    			(courseListView.getSelectionModel().getSelectedItem().toString().substring
