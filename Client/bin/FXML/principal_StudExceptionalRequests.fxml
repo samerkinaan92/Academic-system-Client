@@ -9,12 +9,12 @@
 
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.StudentExceptionalRequest">
    <children>
-      <Label layoutX="14.0" layoutY="14.0" text="Exceptional requests" textFill="#0c59b2">
+      <Label layoutX="193.0" layoutY="14.0" text="Exceptional requests" textFill="#0c59b2">
          <font>
             <Font name="Impact" size="24.0" />
          </font>
       </Label>
-      <TableView fx:id="studTbl" layoutX="14.0" layoutY="83.0" prefHeight="326.0" prefWidth="325.0">
+      <TableView fx:id="studTbl" layoutX="158.0" layoutY="83.0" prefHeight="326.0" prefWidth="325.0">
         <columns>
           <TableColumn fx:id="studIdCln" prefWidth="75.0" text="Student id" />
           <TableColumn fx:id="studNameCln" prefWidth="101.0" text="Student name" />
@@ -22,15 +22,15 @@
             <TableColumn fx:id="requestCln" prefWidth="75.0" text="Requset" />
         </columns>
       </TableView>
-      <Label layoutX="14.0" layoutY="66.0" text="Students course requests:" textFill="#4c6bc5">
+      <Label layoutX="221.0" layoutY="66.0" text="Students course requests:" textFill="#4c6bc5">
          <font>
             <Font name="Impact" size="14.0" />
          </font></Label>
-      <Button fx:id="aprvBtn" layoutX="14.0" layoutY="416.0" mnemonicParsing="false" onAction="#approve" text="Approve" textFill="#6585dd">
+      <Button fx:id="aprvBtn" layoutX="158.0" layoutY="416.0" mnemonicParsing="false" onAction="#approve" text="Approve" textFill="#6585dd">
          <font>
             <Font name="Impact" size="14.0" />
          </font></Button>
-      <Button fx:id="DisaprvBtn" layoutX="253.0" layoutY="416.0" mnemonicParsing="false" onAction="#disapprove" text="Disapprove" textFill="#6585dd">
+      <Button fx:id="DisaprvBtn" layoutX="397.0" layoutY="416.0" mnemonicParsing="false" onAction="#disapprove" text="Disapprove" textFill="#6585dd">
          <font>
             <Font name="Impact" size="14.0" />
          </font></Button>

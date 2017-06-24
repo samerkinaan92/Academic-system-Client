@@ -7,6 +7,8 @@ package application;
 import java.io.*;
 
 import Communication.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * This class constructs the UI for a chat client.  It implements the
@@ -56,13 +58,16 @@ final public static int DEFAULT_PORT = 5555;
   {
     try 
     {
-      client = new ChatClient(host, port, this);
+    	client = new ChatClient(host, port, this);
     } 
     catch(IOException exception) 
     {
-      System.out.println("Error: Can't setup connection!"
-                + " Terminating client.");
-      System.exit(1);
+    	Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error Dialog");
+		alert.setHeaderText(null);
+		alert.setContentText("Connection error!!");
+		alert.showAndWait();
+		System.exit(1);
     }
   }
 

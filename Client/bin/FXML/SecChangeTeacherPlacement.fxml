@@ -25,9 +25,9 @@
             <Tooltip text="Choose the class you want to change the teacher in" />
          </tooltip>
       </TableView>
-      <Label layoutX="14.0" layoutY="127.0" text="Choose class room where you want to change" textFill="#4c6bc5">
+      <Label layoutX="93.0" layoutY="127.0" text="choose current teacher" textFill="#4c6bc5">
          <font>
-            <Font name="Impact" size="14.0" />
+            <Font name="Impact" size="12.0" />
          </font></Label>
       <Label fx:id="crsNmLbl" layoutX="13.0" layoutY="99.0" text="Course name:" textFill="#4c6bc5">
          <font>
@@ -41,7 +41,7 @@
          <font>
             <Font name="Impact" size="14.0" />
          </font></Label>
-      <Button fx:id="changeTchrBtn" layoutX="14.0" layoutY="423.0" mnemonicParsing="false" onAction="#changeTeacher" text="Change teacher" textFill="#6585dd">
+      <Button fx:id="changeTchrBtn" layoutX="272.0" layoutY="428.0" mnemonicParsing="false" onAction="#changeTeacher" text="Send request" textFill="#6585dd">
          <font>
             <Font name="Impact" size="14.0" />
          </font></Button>
@@ -61,9 +61,9 @@
             <Font name="Impact" size="14.0" />
          </font></Label>
       <ChoiceBox fx:id="corsChosBox" layoutX="417.0" layoutY="58.0" prefWidth="150.0" />
-      <Label layoutX="346.0" layoutY="127.0" text="Choose new teacher that will replace" textFill="#4c6bc5">
+      <Label layoutX="424.0" layoutY="127.0" text="Choose new teacher" textFill="#4c6bc5">
          <font>
-            <Font name="Impact" size="14.0" />
+            <Font name="Impact" size="12.0" />
          </font></Label>
       <Label layoutX="13.0" layoutY="14.0" text="Change class teacher" textFill="#0c59b2">
          <font>
