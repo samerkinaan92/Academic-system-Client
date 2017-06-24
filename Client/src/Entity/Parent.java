@@ -8,6 +8,18 @@ import application.Main;
 public class Parent extends User {
 
 	
+	public Parent(String id, String name, String email, String phone, String address, String isBlocked ) {
+		setID(id);
+		super.setName(name);
+		super.setEmail(email);
+		super.setPhone(phone);
+		super.setAddress(address);
+		if(isBlocked.equals("0"))
+		this.isBlocked = false;
+		else this.isBlocked = true;
+	}
+	
+	
 	public Parent(String ID, String name){
 		
 		super(ID,name);
