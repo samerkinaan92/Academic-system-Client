@@ -1,12 +1,16 @@
 package Controller;
 
 import java.io.IOException;
+<<<<<<< HEAD
 import java.net.URL;
 
 import javax.swing.JOptionPane;
+=======
+>>>>>>> refs/remotes/origin/Or
 
 import application.Main;
 import javafx.event.ActionEvent;
+<<<<<<< HEAD
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -25,6 +29,10 @@ import javafx.scene.control.MenuBar;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+=======
+import javafx.fxml.FXMLLoader;
+import javafx.scene.layout.AnchorPane;
+>>>>>>> refs/remotes/origin/Or
 
 public class PrincipalMenuBarController {
 	
@@ -85,12 +93,17 @@ public class PrincipalMenuBarController {
 	/** Private Actions */
 	
 	public void ViewSystemData(ActionEvent e) throws IOException{
+<<<<<<< HEAD
 		
 		AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/PRCPL_ViewSystemData.fxml"));;
 		Main.getRoot().setCenter(pane);
+=======
+>>>>>>> refs/remotes/origin/Or
 		
-	}
+	AnchorPane pane = FXMLLoader.load(getClass().getResource("/FXML/PRCPL_ViewSystemData.fxml"));;
+	Main.getRoot().setCenter(pane);
 	
+	}
 	public void ViewStatisticalReport(ActionEvent e){
 		
 	}
