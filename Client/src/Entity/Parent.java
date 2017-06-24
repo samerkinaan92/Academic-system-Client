@@ -137,4 +137,26 @@ public class Parent extends User {
 			return null;
 		return courseResult;
 	}
+	
+	public String getID() {
+		return this.ID;
+	}
+	
+	public String getIsBlockedStr(){
+		if (isBlocked == true)
+			return "1";
+		else return "0";
+		
+	}
+	public boolean isBlocked() {
+		return isBlocked;
+	}
+	public void setID(String iD) {
+		this.ID = iD;
+	}
+	public void setBlocked(boolean isBlocked) {
+		this.isBlocked = isBlocked;
+	}
+
+	
 }
