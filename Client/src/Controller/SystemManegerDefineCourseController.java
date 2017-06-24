@@ -104,7 +104,7 @@ public class SystemManegerDefineCourseController implements Initializable {
 		ArrayList<String> Secretary = User.getUserIdByRole("Secretary");
 		ArrayList<String> Principal = User.getUserIdByRole("Principal");
 		ArrayList<String> systemManager = User.getUserIdByRole("System Manager");
-		String title = "New course has created by: " + Main.user.getName();
+		String title = "New course has been created by: " + Main.user.getName();
 		String msg = Main.user.getName() + " (" + Main.user.getID() + ") defined new course:\n\n" +
 				"Course Id: " + newCourse.getCourseID() + "\n" +
 				"Course Name: " + newCourse.getName() + "\n" +
