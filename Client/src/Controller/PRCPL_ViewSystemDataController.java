@@ -9,33 +9,40 @@ import java.util.Collections;
 import java.util.ResourceBundle;
 
 import Entity.Course;
+import Entity.Semester;
 import Entity.Teacher;
 import Entity.claSS;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 	public class PRCPL_ViewSystemDataController implements Initializable{
 
-
+/*
+	    @FXML
+	    private ComboBox<String> SemesterCB;
+*/
 	    @FXML
 	    private ComboBox<String> dataCB;
 
 	    @FXML
-	    private Button selectBtn;
+	    private Button SelectBtn;
+
 	  
 	    static int flag;
 
 	    @FXML
 	    private Text txt;
 	    
-	    @FXML
-	    private Button chooseBtn;
 
 	    @FXML
 	    private Text ChooseLabel;
@@ -43,74 +50,35 @@ import javafx.scene.text.Text;
 	    @FXML
 	    private Text secondTxt;
 	    
-	    @FXML
-	    private ListView<String> firstViewList;
-	    
-	    @FXML
-	    private ListView<String> secondViewList;
+	    ArrayList<Semester> semesterArr = Semester.getSemesters();
 
+	    static String semesterID;
+	    
 
-	    ArrayList<Teacher> TeacherArr = new ArrayList<Teacher>();
-	    
-	    ArrayList<String> organizedTeacherNameList = new ArrayList<String>();
-	    
-	    ArrayList<String> organizedTeacherIDList = new ArrayList<String>();
-	    
-	    ArrayList<String> organizedFullTeacherList = new ArrayList<String>();
-	   
-	    ArrayList<String> organizedClassList = new ArrayList<String>();
-	    
-	    ArrayList<claSS> classArr = new ArrayList<claSS>();
 	    //-----------------------------------------------------------------------------------------------------------------------------
 
 	    //-----------------------------------------------------------------------------------------------------------------------------
 
-	    private final String[] dataType = {"Classes Of Teacher","Teachers Of Class","Courses Of Teacher"};
+	    private final String[] dataType = {"Classes & Students & Parents","Teachers","Courses"};
 	    
 	    private final ObservableList<String> boxDataType = FXCollections.observableArrayList(dataType);
 	  //-----------------------------------------------------------------------------------------------------------------------------
-	  
-	    ArrayList<String> getTeacherList(ArrayList<Teacher> teacherArr){
-			
-	    	ArrayList<String> temp = new ArrayList<String>();
-			for (int i = 0; i < teacherArr.size(); i++)
-				temp.add(teacherArr.get(i).getName());
-	    	
-	    	return temp;
-	    	
-	    }
-	    
-	    
 
-
-		private ArrayList<String> getClassList(ArrayList<claSS> classArr){
-			 
-			 ArrayList<String> temp = new ArrayList<String>();
-				for (int i = 0; i < classArr.size(); i++)
-					temp.add(classArr.get(i).getClassName());
-				
-				return temp;	
-		 }
+   
+	    @FXML
+    void WhenChoosed2(ActionEvent event) {
+    	
+    }
 
 
 		//-----------------------------------------------------------------------------------------------------------------------------
 		
+		
 		@Override
 		public void initialize(URL arg0, ResourceBundle arg1) {
-			// TODO Auto-generated method stub
+
 			dataCB.setItems(boxDataType);
 			
-			TeacherArr = Teacher.getTeachers();
-			for (int i = 0 ; i  < TeacherArr.size() ; i++)
-			{
-				organizedTeacherNameList.add(TeacherArr.get(i).getName());
-				organizedTeacherIDList.add(TeacherArr.get(i).getID());
-				organizedFullTeacherList.add(organizedTeacherNameList.get(i)+" - "+organizedTeacherIDList.get(i));
-				
-			}	
-				classArr = claSS.getClasses();
-				organizedClassList = getClassList(classArr);
-				Collections.sort(organizedClassList);
 				
 			
 
@@ -119,102 +87,109 @@ import javafx.scene.text.Text;
 	  
 		
 
-	    
+
 	    
 	    @FXML
-	    void clickSelect(ActionEvent event) throws IOException {
-
+	    void clickChoose(ActionEvent event) throws IOException {
+	    
 	    	String type;
 	    	type = dataCB.getSelectionModel().getSelectedItem();
 			switch (type){
 			
-			case "Classes Of Teacher":
+			case "Teachers":
 				flag = 1;
-				ChooseLabel.setText("Please Choose Teacher");
-				secondTxt.setText("Classes:");
-				firstViewList.setItems(FXCollections.observableArrayList(organizedFullTeacherList)); ;
+				OpenTeachersInfo();
 				break;
-			case "Teachers Of Class":
+			case "Classes & Students & Parents":
 				flag = 2;
-				ChooseLabel.setText("Please Choose Class");
-				secondTxt.setText("Teachers:");
-				firstViewList.setItems(FXCollections.observableArrayList(organizedClassList));;
+				OpenClassesInfo();
 				break;
-			case "Courses Of Teacher": 
+			case "Courses": 
 				flag = 3;
-				ChooseLabel.setText("Please Choose Teacher");
-				secondTxt.setText("Courses:");
-				firstViewList.setItems(FXCollections.observableArrayList(organizedFullTeacherList));;
+				OpenCoursesInfo();
 				break;
 			}
 		    
-			}
-	    @FXML
-	    void ClickChoose(ActionEvent e) throws IOException {
-	    	if (flag == 1)
-	    		handle_Classes_Of_Teacher();
-	    	if (flag == 2)
-	    		handle_Teachers_Of_Class();
-	    	if (flag == 3)	
-	    		handle_Courses_Of_Teacher();
-	    }
+		}
 
 
 
+		void OpenTeachersInfo() throws IOException{
 
+			Stage TeachersInfoStage = new Stage();
+			 
+			    
+			    // constructing our scene
+			    URL url = getClass().getResource("/FXML/ViewTeacherInfo.fxml");
+			    AnchorPane pane = FXMLLoader.load( url );
+			    Scene scene = new Scene( pane );
+			    
+			    // setting the stage
+			    TeachersInfoStage.setScene( scene );
+			    TeachersInfoStage.setTitle( "Teachers Info" );
+			    TeachersInfoStage.show();
 
+    	}
+    	
 
-		void handle_Classes_Of_Teacher(){
+		void OpenParentInfo() throws IOException{
 
-			String techer;
-			String teacherID;
-			techer = firstViewList.getSelectionModel().getSelectedItem();
-			teacherID = techer.substring((techer.lastIndexOf(' ') + 1));
-			ArrayList<String> classesOfTeacher = new ArrayList<String>();	
-			classesOfTeacher = Teacher.getTeachersClassAsStringArrList(teacherID);
-			secondViewList.setItems(FXCollections.observableArrayList(classesOfTeacher));
+			Stage ParentInfoStage = new Stage();
+			 
+			    
+			    // constructing our scene
+			    URL url = getClass().getResource("/FXML/ViewParentInfo.fxml");
+			    AnchorPane pane = FXMLLoader.load( url );
+			    Scene scene = new Scene( pane );
+			    
+			    // setting the stage
+			    ParentInfoStage.setScene( scene );
+			    ParentInfoStage.setTitle( "Parents Info" );
+			    ParentInfoStage.show();
 
-			
+    	}
+    	
+    	void OpenClassesInfo() throws IOException{
+    		
+
+			Stage ClassesInfoStage = new Stage();
+			 
+			    
+			    // constructing our scene
+			    URL url = getClass().getResource("/FXML/ViewInfoClass.fxml");
+			    AnchorPane pane = FXMLLoader.load( url );
+			    Scene scene = new Scene( pane );
+			    
+			    // setting the stage
+			    ClassesInfoStage.setScene( scene );
+			    ClassesInfoStage.setTitle( "Classes Info" );
+			    ClassesInfoStage.show();
+
+    		
     	}
     	
     	
-    	void handle_Teachers_Of_Class(){
+    	void OpenCoursesInfo() throws IOException{
     		
-    		String className;
-    		className = firstViewList.getSelectionModel().getSelectedItem();
-    		ArrayList<String> TeachersOfClass = new ArrayList<String>();
-    		ArrayList<String> TeachersOfClassNameString = new ArrayList<String>();
-    		ArrayList<String> TeachersOfClassFullString = new ArrayList<String>();
-    		TeachersOfClass = claSS.getTeachersOfClass(className);
-    		for (int i = 0 ; i < TeachersOfClass.size() ; i++)
-    		{
-    			TeachersOfClassNameString.add(Teacher.getTeachersByID((TeachersOfClass.get(i))));
-    			TeachersOfClassFullString.add(TeachersOfClassNameString.get(i)+" - "+TeachersOfClass.get(i));
-    		}
-    		
-    		secondViewList.setItems(FXCollections.observableArrayList(TeachersOfClassFullString));
-    		
-    		
-    	}
-    	
-    	
-    	void handle_Courses_Of_Teacher(){
-    		String techer;
-			String teacherID;
-			techer = firstViewList.getSelectionModel().getSelectedItem();
-			teacherID = techer.substring((techer.lastIndexOf(' ') + 1));
-			ArrayList<String> CoursesOfTeacher = new ArrayList<String>();	
-			ArrayList<String> Courses = new ArrayList<String>();	
-			Courses = Teacher.getCoursesOfTeacher(teacherID);
-			for (int i = 0 ; i < Courses.size() ; i++)
-			{
-				CoursesOfTeacher.add(Course.getCourseName(Courses.get(i)));
-			}
-			secondViewList.setItems(FXCollections.observableArrayList(CoursesOfTeacher));
+			Stage CoursesInfoStage = new Stage();
+			 
+		    
+		    // constructing our scene
+		    URL url = getClass().getResource("/FXML/ViewCoursesInfo.fxml");
+		    AnchorPane pane = FXMLLoader.load( url );
+		    Scene scene = new Scene( pane );
+		    
+		    // setting the stage
+		    CoursesInfoStage.setScene( scene );
+		    CoursesInfoStage.setTitle( "Courses Info" );
+		    CoursesInfoStage.show();
+
 
     	}
 	    
-
+    	void StudentsInfo(){
+    		
+    	}
 
 	}
 
