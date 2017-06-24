@@ -10,8 +10,14 @@ public class Student extends User {
 
 	private String classRoom;
 	
-	public Student()
-	{
+	public Student(){}
+	
+	public Student (String ID, String Name, String Mail, String Address, String Phone){
+		setID(ID);
+		super.setName(Name);
+		super.setMail(Mail);
+		super.setAddress(Address);
+		super.setPhoneNum(Phone);
 	}
 	
 	public Student(String ID, String stdname){
