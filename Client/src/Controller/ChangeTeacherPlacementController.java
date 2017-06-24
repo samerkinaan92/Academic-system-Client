@@ -327,6 +327,16 @@ public class ChangeTeacherPlacementController implements Initializable{
     }
     
     /**
+     * set the course fields visibility
+     * @param visible if true sets to visible
+     */
+    private void setLblVisible(boolean visible){
+    	crsNmLbl.setVisible(visible);
+    	tuLbl.setVisible(visible);
+    	wklyHourLbl.setVisible(visible);
+    }
+    
+    /**
      * sets the course fields
      * @param course	the course to set the fields of
      */
@@ -431,6 +441,7 @@ public class ChangeTeacherPlacementController implements Initializable{
     	ArrayList<String> teachingunits;
     	corsChosBox.setDisable(true);
 		changeTchrBtn.setDisable(true);
+		setLblVisible(false);
 		//sets listener for item changed, makes sure that both tables items selected to enable the button
 		classesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 		    if (newSelection != null && teachersTbl.getSelectionModel().getSelectedItem() != null) {
@@ -480,6 +491,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 			@Override
 			public void changed(ObservableValue observable, Course oldValue, Course newValue) {
 				if(newValue != null){
+					setLblVisible(true);
 					setCourseFields(newValue);
 					try {
 						setCourseInClasses(newValue);
@@ -492,6 +504,8 @@ public class ChangeTeacherPlacementController implements Initializable{
 						alert.show();
 						e.printStackTrace();
 					}
+				}else{
+					setLblVisible(false);
 				}
 			}
 		});

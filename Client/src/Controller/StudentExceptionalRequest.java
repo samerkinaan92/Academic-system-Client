@@ -90,7 +90,7 @@ public class StudentExceptionalRequest implements Initializable{
 				String msg = "Hello\nThe request to " + requestInfo.getRequest() + " you to course " + requestInfo.getCourse() + " was approved";
 				sendMsg(title, msg, requestInfo.getId(), null, false);
 				msg = "Hello\nThe request to " + requestInfo.getRequest() + " " + requestInfo.getName() + " to course " + requestInfo.getCourse() + " was approved";
-				sendMsg(title, msg, null, "Secretary", true);	
+				sendMsg(title, msg, null, "Secretary", true);
     		}catch (InterruptedException e) {
 				alert = new Alert(AlertType.ERROR);
 				alert.setTitle("Error Dialog");
