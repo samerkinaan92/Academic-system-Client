@@ -179,6 +179,36 @@ public class Course extends AcademicActivity {
 		return DBcourses;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Course> getCoursesByTU( String TU , String semester){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select  distinct course.CourseID, course.CourseName, course.weeklyHours, course.TUName "
+				+ "From course,class_course WHERE course.TUName = '"+TU+"' and class_course.semesterId = '"+semester+"' and course.CourseID = class_course.CourseID;");
+		/*select  distinct course.CourseID 
+		from course, class_course 
+		where class_course.CourseID = course.CourseID and class_course.semesterId = '4';
+		*/
+		//"select  distinct course.CourseID from course, class_course where class_course.CourseID = course.CourseID and class_course.semesterId = '"+semester+"';"
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<Course> DBcourses = new ArrayList<Course>();
+		
+		for (int i = 0; i < result.size(); i+=4)
+			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
+		return DBcourses;
+	}
+	
 	
 	/**
 	 * gets courses id taken by class
