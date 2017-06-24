@@ -17,6 +17,15 @@ public class Teacher extends User {
 		maxWorkHours = hours;
 	}
 	
+	public Teacher(String name, String id,String phoneNum ,String email,String address,int hours ){
+		super.setID(id);
+		super.setName(name);
+		super.getPhone();
+		super.setEmail(email);
+		super.setAddress(address);
+		maxWorkHours = hours;
+	}
+	
 	/*-------------------------------------  Get Teachers  --------------------------------------*/
 	@SuppressWarnings("unchecked")
 	public static String getTeachersByID(String ID){
