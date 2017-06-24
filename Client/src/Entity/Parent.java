@@ -7,6 +7,8 @@ import application.Main;
 /**	User - Entity of users.*/
 public class Parent extends User {
 
+	private String ID;
+	private boolean isBlocked;
 	
 	public Parent(String id, String name, String email, String phone, String address, String isBlocked ) {
 		setID(id);
