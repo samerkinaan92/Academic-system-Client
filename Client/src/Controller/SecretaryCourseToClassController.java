@@ -220,9 +220,14 @@ public class SecretaryCourseToClassController implements Initializable {
 			return temp;
 		}
 		
-		for (int i = 0; i < semsterArr.size(); i++)
-			temp.add(semsterArr.get(i).getYear() + " (" + semsterArr.get(i).getSeason() + ")");
-			
+		for (int i = 0; i < semsterArr.size(); i++){
+			if (semsterArr.get(i).getIsCurr() == 0){
+				temp.add(semsterArr.get(i).getYear() + " (" + semsterArr.get(i).getSeason() + ")");
+			}
+			else{
+				temp.add(semsterArr.get(i).getYear() + " (" + semsterArr.get(i).getSeason() + ") [Current]");
+			}
+		}
 		return temp;	
 	 }
 	
