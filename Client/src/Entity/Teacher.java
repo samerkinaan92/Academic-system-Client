@@ -20,11 +20,11 @@ public class Teacher extends User {
 	public Teacher(String name, String id,String phoneNum ,String email,String address,int hours ){
 		super.setID(id);
 		super.setName(name);
-		super.getPhone();
+		super.setPhone(phoneNum);
 		super.setEmail(email);
 		super.setAddress(address);
 		maxWorkHours = hours;
-	}
+}
 	
 	/*-------------------------------------  Get Teachers  --------------------------------------*/
 	@SuppressWarnings("unchecked")
@@ -118,6 +118,164 @@ public class Teacher extends User {
 		return result;
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Teacher> getTeachersInSemester(String semesterID){
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", " Select distinct users.Name, users.ID, users.phoneNum, users.email, users.address From users,class_course WHERE users.ID = class_course.teacherID AND class_course.semesterId = '"+semesterID+"';");
+		//, phoneNum, email, address
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select distinct teacher.TeacherID, teacher.MaxWorkHours From class_course, teacher, users WHERE teacher.TeacherID = class_course.teacherID AND class_course.semesterId = '"+semesterID+"';");
+		//Select distinct teacher.TeacherID, teacher.MaxWorkHours From class_course, teacher, users WHERE users.ID = class_course.teacherID AND class_course.semesterId = '"+semesterID+"';
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result2 = (ArrayList<String>)Main.client.getMessage();
+		
+		for (int i = 1; i < result.size(); i+=5)//2
+			for (int j = 0; j < result2.size(); j+=2)//2
+				if (result.get(i).equals(result2.get(j))){
+					result.add(i+4, result2.get(j+1));
+					i++;
+					break;
+				}
+		
+		ArrayList<Teacher> DBteachers = new ArrayList<Teacher>();
+		
+		for (int i = 0; i < result.size(); i+=6)//3
+			DBteachers.add(new Teacher(result.get(i), result.get(i+1), result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,Integer.parseInt(result.get(i+5))));
+		//, result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,
+		return DBteachers;
+
+}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getClassesOfTeacher(String ID){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select  ClassName From class_course WHERE teacherID = '"+ID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		return result;
+}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getTUOfTeacher(String ID){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select distinct TUName From teachingunit_teacher WHERE teacherID = '"+ID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		return result;
+}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getCoursesOfTeacherInSemester(String teacherID , String semesterId){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select  CourseID From class_course WHERE teacherID = '"+teacherID+"' AND semesterId = '"+semesterId+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> res1 = (ArrayList<String>)Main.client.getMessage();
+		return res1;
+}
+	
+	public static ArrayList<String> getClassesOfTeacherInSemester(String teacherID , String semesterId){ // Get list of courses.
+		HashMap <String,String> msgServer2 = new HashMap <String,String>();
+		msgServer2.put("msgType", "select");
+		msgServer2.put("query", "Select  ClassName From class_course WHERE teacherID = '"+teacherID+"' AND semesterId = '"+semesterId+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer2);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+
+		return result;
+}
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getSemesterOfCoursesOfTeacher(String ID){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select  semesterId From class_course WHERE teacherID = '"+ID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		return result;
+}
+	
 	/**
 	 * Get all teachers from data base
 	 * @return List of all teachers
@@ -187,59 +345,6 @@ public class Teacher extends User {
 			DBteachers.add(new Teacher(result.get(i), result.get(i+1), Integer.parseInt(result.get(i+2))));
 		
 		return DBteachers;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static ArrayList<Teacher> getTeachersInSemester(String semesterID){
-		HashMap <String,String> msgServer = new HashMap <String,String>();
-		msgServer.put("msgType", "select");
-		msgServer.put("query", " Select distinct users.Name, users.ID, users.phoneNum, users.email, users.address From users,class_course WHERE users.ID = class_course.teacherID AND class_course.semesterId = '"+semesterID+"';");
-		//, phoneNum, email, address
-		try{
-			Main.client.sendMessageToServer(msgServer);
-			}
-			catch(Exception exp){
-				System.out.println("Server fatal error!");
-			}
-		synchronized (Main.client){try {
-			Main.client.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		}
-		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-		msgServer = new HashMap <String,String>();
-		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select distinct teacher.TeacherID, teacher.MaxWorkHours From class_course, teacher, users WHERE teacher.TeacherID = class_course.teacherID AND class_course.semesterId = '"+semesterID+"';");
-		//Select distinct teacher.TeacherID, teacher.MaxWorkHours From class_course, teacher, users WHERE users.ID = class_course.teacherID AND class_course.semesterId = '"+semesterID+"';
-		try{
-			Main.client.sendMessageToServer(msgServer);
-			}
-			catch(Exception exp){
-				System.out.println("Server fatal error!");
-			}
-		synchronized (Main.client){try {
-			Main.client.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}}
-		ArrayList<String> result2 = (ArrayList<String>)Main.client.getMessage();
-		
-		for (int i = 1; i < result.size(); i+=5)//2
-			for (int j = 0; j < result2.size(); j+=2)//2
-				if (result.get(i).equals(result2.get(j))){
-					result.add(i+4, result2.get(j+1));
-					i++;
-					break;
-				}
-		
-		ArrayList<Teacher> DBteachers = new ArrayList<Teacher>();
-		
-		for (int i = 0; i < result.size(); i+=6)//3
-			DBteachers.add(new Teacher(result.get(i), result.get(i+1), result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,Integer.parseInt(result.get(i+5))));
-		//, result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,
-		return DBteachers;
-
 	}
 	
 	/*-------------------------------------  Get Sum of Hours  --------------------------------------*/
