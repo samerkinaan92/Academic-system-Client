@@ -87,6 +87,37 @@ public class Parent extends User {
 
 	}
 	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Parent> getParentsClass(String ClassName){
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select distinct users.ID, users.Name, users.email ,users.phoneNum, users.address, users.isBlocked From users, parent_student WHERE users.ID IN (select ParentUserID from parent_student Where StudentUserID IN(select StudentID from student_class where student_class.ClassName = '"+ClassName+"'));");        
+		//, phoneNum, email, address
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<Parent> DBparents = new ArrayList<Parent>();
+		
+		for (int i = 0; i < result.size(); i+=6)//3
+		{
+			
+			DBparents.add(new Parent(result.get(i), result.get(i+1), result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,result.get(i+5)));
+		}
+			//, result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,
+		return DBparents;
+
+	}
+	
 	/**sendMsg -Send message to the server*/
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> sendMsg(HashMap <String,String> msgServer){

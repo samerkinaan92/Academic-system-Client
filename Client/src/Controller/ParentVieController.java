@@ -134,8 +134,8 @@ public class ParentVieController implements Initializable {
 					   ParentArr.get(i).getName(),
 					   ParentArr.get(i).getAddress(),
 					   ParentArr.get(i).getIsBlockedStr(),
-					   ParentArr.get(i).getMail(),
-			   		   ParentArr.get(i).getPhoneNum());
+					   ParentArr.get(i).getEmail(),
+			   		   ParentArr.get(i).getPhone());
 			   studData.add(temp);
 					   																							
 		    }
