@@ -165,9 +165,9 @@ public class Class_Student_Info implements Initializable {
 		{
 	 		StudentInfo temp = new StudentInfo(studentsList.get(i).getID(),
 	 										   studentsList.get(i).getName(),
-	 										   studentsList.get(i).getMail(),
+	 										   studentsList.get(i).getEmail(),
 	 										   studentsList.get(i).getAddress(),
-	 										   studentsList.get(i).getPhoneNum());
+	 										   studentsList.get(i).getPhone());
 
 	 		Studentsdata.add(temp);
 		}
