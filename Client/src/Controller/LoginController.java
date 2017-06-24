@@ -39,7 +39,7 @@ public class LoginController implements Initializable {
 	 private Label guiMeg;
 	 
 	 
-	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
+	 private final ObservableList<String> options = FXCollections.observableArrayList("Ort Braude", "Ort Kramim", "Majadim"); // List of schools.
 	 private HashMap <String, String> answer = null;
 	 private HashMap <String, String> msgServer = new HashMap <String,String>();
 	 
@@ -68,7 +68,7 @@ public class LoginController implements Initializable {
 		
 		// Send message to server with an new thread & wait for answer. 
 		
-		if (!id.getText().isEmpty() && !password.getText().isEmpty() && !school.getSelectionModel().getSelectedItem().toString().isEmpty()){
+		if (!id.getText().isEmpty() && !password.getText().isEmpty() && school.getSelectionModel().getSelectedItem() != null){
 			msgServer.put("msgType", "Login");
 			msgServer.put("id", id.getText());
 			msgServer.put("passwrd", password.getText());
