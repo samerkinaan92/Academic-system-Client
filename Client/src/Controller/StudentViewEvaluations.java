@@ -140,7 +140,11 @@ public class StudentViewEvaluations  implements Initializable{
     @FXML
     private TextArea textArea;
     
-    
+    /**
+	 * Value injected by FXMLLoader
+	 */
+    @FXML
+    private Label titleLabel;
 
    /**
     * initialize() - Use to initialize the information on screen.
@@ -151,8 +155,10 @@ public class StudentViewEvaluations  implements Initializable{
     	setSemCbox();
     	courCbox.setDisable(true);
     	assignCbox.setDisable(true);
-    	if(Main.user.getType().equals("Parent"))
+    	if(Main.user.getType().equals("Parent")){
     		backBtn.setVisible(true);
+    		titleLabel.setText(usr.getName() + " Evaluations:");
+    	}
     	
     	semCbox.valueProperty().addListener(new ChangeListener<String>() {
     		@Override
@@ -217,12 +223,9 @@ public class StudentViewEvaluations  implements Initializable{
 		FileChooser fileChooser = new FileChooser();	// create file chooser
 		
         fileChooser.setTitle("Save Evaluation");
-        /*
-        String type = (stdEv.getFilePath()).substring(stdEv.getFilePath().indexOf('.'));
+        
+        String type = (stdEv.getFilePath()).substring(stdEv.getFilePath().length()-4, stdEv.getFilePath().length());
         fileChooser.setInitialFileName(stdEv.getAssignID()+"_"+usr.getID()+type);	// TODO
-        */
-        String type = (stdEv.getFilePath()).substring(stdEv.getFilePath().indexOf('.'));
-        fileChooser.setInitialFileName("BLABLI"+type);
         
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files", "*.*"),

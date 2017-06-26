@@ -34,6 +34,6 @@
          </font></Label>
       <ComboBox fx:id="cComBox" layoutX="127.0" layoutY="106.0" onAction="#cComboBox" prefWidth="150.0" />
       <Label fx:id="weeklyHouLabel" layoutX="320.0" layoutY="111.0" text="weeklyHouLabel" textFill="BLUE" />
-      <Button fx:id="backBtn" layoutX="26.0" layoutY="422.0" mnemonicParsing="false" onAction="#backParentScreen" text="Back" visible="false" />
+      <Button fx:id="backBtn" layoutX="26.0" layoutY="422.0" mnemonicParsing="false" onAction="#backParentScreen" text="Back" textFill="#000064" visible="false" />
    </children>
 </AnchorPane>

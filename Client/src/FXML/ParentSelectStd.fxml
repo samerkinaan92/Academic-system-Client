@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ParentChooseStdController">
    <children>
-      <Label fx:id="titleLabel" layoutX="41.0" layoutY="42.0" prefHeight="58.0" prefWidth="579.0" text="Student courses" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+      <Label fx:id="titleLabel" layoutX="41.0" layoutY="42.0" prefHeight="58.0" prefWidth="579.0" text="Student information" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
          <font>
             <Font name="Copperplate Gothic Light" size="40.0" />
          </font>
