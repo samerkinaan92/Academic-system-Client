@@ -88,6 +88,40 @@ public class Teacher extends User {
 		return DBteachers.get(0).getName();
 	}
 	
+	
+	/*-------------------------------------  Get Teachers Name --------------------------------------*/
+	@SuppressWarnings({ "unchecked", "null" })
+	public static ArrayList<String> getTeachersName(){
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select Name From users WHERE Role = 'Teacher';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		}
+		
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<String> teachArray = new ArrayList<String>();
+		
+		
+		for(int i = 0 ; i< result.size() ; i++)
+			teachArray.add(result.get(i));
+		
+		return teachArray;
+	}
+	
+	
+	
+	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getCoursesOfTeacher(String ID){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();

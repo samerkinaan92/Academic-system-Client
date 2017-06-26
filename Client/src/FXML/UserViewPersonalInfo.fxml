@@ -8,7 +8,7 @@
 
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.UserViewPersonalInfoController">
    <children>
-      <Label fx:id="titleLabal" layoutX="33.0" layoutY="36.0" prefHeight="58.0" prefWidth="595.0" text="Personal informaion" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+      <Label fx:id="titleLabal" layoutX="45.0" layoutY="14.0" prefHeight="58.0" prefWidth="595.0" text="name" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
          <font>
             <Font name="Copperplate Gothic Light" size="40.0" />
          </font>
@@ -58,6 +58,14 @@
             <Font name="System Bold" size="15.0" />
          </font></Label>
       <Label fx:id="stdpar2" layoutX="170.0" layoutY="352.0" text="stdpar2" visible="false" />
-      <Button fx:id="backBtn" layoutX="58.0" layoutY="424.0" mnemonicParsing="false" onAction="#BackStdSelection" text="Back" visible="false" />
+      <Button fx:id="backBtn" layoutX="58.0" layoutY="424.0" mnemonicParsing="false" onAction="#BackStdSelection" text="Back" textFill="#000064" visible="false" />
+      <Label layoutX="45.0" layoutY="63.0" prefHeight="58.0" prefWidth="392.0" text="Personal information:" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+         <font>
+            <Font name="Copperplate Gothic Light" size="40.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
    </children>
 </AnchorPane>

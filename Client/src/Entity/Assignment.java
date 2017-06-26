@@ -93,6 +93,108 @@ public class Assignment {
 		return null;
 		
 	}
+
+	
+	@SuppressWarnings("unchecked")
+	public static  ArrayList<String>  getCourNameID(String assignID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select  distinct assignment.CourseID,CourseName from assignment,course_student,submission,course where course_student.CourseID = assignment.CourseID and course_student.StudentID = submission.StudentStudentID and submission.AssignmentID = assignment.AssignmentID and assignment.CourseID = course.CourseID and assignment.AssignmentID='"+assignID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		return result;
+	}
+	
+	
+	
+	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getAssignDetails(String assignID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select distinct assignment.AssignmentName,semester.year, semester.Season from assignment,semester where assignment.semesterId = semester.semesterId and assignment.AssignmentID='"+assignID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		return result;
+
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static String getClassDetails(String assignID, String stdID, String semID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select distinct assignment.AssignmentName, assignment.semesterId, semester.Season from assignment,semester where assignment.semesterId = semester.semesterId and assignment.AssignmentID='"+assignID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		return result.get(0);
+
+		
+	}
+	
+	@SuppressWarnings("unchecked")
+	public static String getClassName(String studentID){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select ClassName from student_class where StudentID='"+studentID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		
+		return result.get(0);
+
+		
+	}
 	
 	
 	public int getAssignmentID() {

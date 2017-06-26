@@ -92,7 +92,14 @@ public class PrincipalMenuBarController {
 	}
 	
 	public void ViewStatisticalReport(ActionEvent e){
-		
+    	try {
+		   URL paneOneUrl = getClass().getResource("/FXML/PrincipalViewStatisticReport.fxml");
+		   AnchorPane paneOne = FXMLLoader.load( paneOneUrl );
+		   BorderPane border = Main.getRoot();			    
+		   border.setCenter(paneOne);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+          }    
 	}
 	
 	public void ApproveTeacherAssignment(ActionEvent e){

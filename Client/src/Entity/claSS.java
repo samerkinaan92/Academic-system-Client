@@ -54,7 +54,31 @@ public class claSS {
 	 * @param cLass the class the courses will be added to
 	 * @param added the courses to be added to class
 	 * @return -1 error, 0 no changes, 0 > number of changes in data base
-	 */
+	 */	
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getClassesStr(){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select * From class");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+
+		return result;
+		
+	}
+	
 	public static int attachCourses(claSS cLass, ArrayList<String> added){
 	
 		for (int i = 0; i < added.size(); i++){

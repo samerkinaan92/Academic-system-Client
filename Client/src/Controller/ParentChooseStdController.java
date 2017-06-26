@@ -6,12 +6,15 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import Entity.ParentStudent;
 import application.Main;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
@@ -44,6 +47,24 @@ public class ParentChooseStdController implements Initializable{
 	 */
     @FXML
     private Label warnMsg;
+    
+    /**
+	 * Value injected by FXMLLoader
+	 */
+    @FXML
+    private Button parInfoBtn;
+
+    /**
+	 * Value injected by FXMLLoader
+	 */
+    @FXML
+    private Button showEvalBen;
+
+    /**
+	 * Value injected by FXMLLoader
+	 */
+    @FXML
+    private Button showCourBtn;
 
     /**
 	 * Value injected by FXMLLoader
@@ -62,6 +83,19 @@ public class ParentChooseStdController implements Initializable{
 			
 			stdCbox.setItems(stdList);
 		}
+		
+		stdCbox.valueProperty().addListener(new ChangeListener<String>() {
+    		@Override
+			public void changed(ObservableValue<? extends String> arg0, String arg1, String arg2) {
+    			if(stdCbox.getSelectionModel().getSelectedItem().toString()!=null)
+					{
+    				parInfoBtn.setDisable(false);
+    				showEvalBen.setDisable(false);
+    				showCourBtn.setDisable(false);
+    				warnMsg.setVisible(false);
+					}
+    			}
+			});
 		
 	}
 	

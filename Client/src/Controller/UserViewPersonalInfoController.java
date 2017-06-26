@@ -101,7 +101,7 @@ public class UserViewPersonalInfoController implements Initializable{
 		
 		if(Main.user.getType().equals("Parent")){
 			backBtn.setVisible(true);
-			titleLabal.setText(usr.getName() + " info:");
+			titleLabal.setText(usr.getName());
 		}
 		
 		/*switch case for adding more details according to the user role.*/

@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.StudentViewEvaluations">
    <children>
-      <Label layoutX="146.0" layoutY="32.0" prefHeight="45.0" prefWidth="403.0" text="My evalutations" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+      <Label layoutX="14.0" layoutY="32.0" prefHeight="58.0" prefWidth="619.0" text="My evalutations" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
          <font>
             <Font name="Copperplate Gothic Light" size="40.0" />
          </font>
