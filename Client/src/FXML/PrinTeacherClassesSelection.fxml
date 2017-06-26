@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.principalTechClassReport">
+   <children>
+      <Button fx:id="nextBtn" disable="true" layoutX="548.0" layoutY="411.0" mnemonicParsing="false" onAction="#showReport" text="Next" />
+      <Label layoutX="213.0" layoutY="14.0" prefHeight="31.0" prefWidth="321.0" text="Classes selection" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <effect>
+            <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+         </effect>
+      </Label>
+      <ComboBox fx:id="classCbox" layoutX="100.0" layoutY="65.0" prefWidth="150.0" promptText="&lt;Class&gt;" />
+      <Label layoutX="40.0" layoutY="70.0" text="Class" textFill="#000064">
+         <font>
+            <Font name="System Bold" size="15.0" />
+         </font>
+      </Label>
+      <TableView fx:id="sem1Table" layoutX="71.0" layoutY="140.0" onMousePressed="#selectSem" prefHeight="107.0" prefWidth="198.0">
+        <columns>
+          <TableColumn fx:id="semT1Year" prefWidth="101.0" text="Year" />
+            <TableColumn fx:id="semT1Type" prefWidth="96.0" text="type" />
+        </columns>
+      </TableView>
+      <TableView fx:id="sem2Table" layoutX="320.0" layoutY="140.0" onMousePressed="#RemoveSem" prefHeight="107.0" prefWidth="198.0">
+        <columns>
+          <TableColumn fx:id="semT2Year" prefWidth="101.0" text="Year" />
+            <TableColumn fx:id="semT2Type" prefWidth="96.0" text="Type" />
+        </columns>
+      </TableView>
+      <TableView fx:id="courseDetTable" layoutX="71.0" layoutY="276.0" prefHeight="166.0" prefWidth="445.0">
+        <columns>
+          <TableColumn fx:id="courIDLabel" prefWidth="100.0" text="Course ID" />
+          <TableColumn fx:id="courNameLabel" prefWidth="141.0" text="Course name" />
+            <TableColumn fx:id="yearLabel" prefWidth="98.0" text="Year" />
+            <TableColumn fx:id="typeLabel" prefWidth="105.0" text="type" />
+        </columns>
+      </TableView>
+      <Label layoutX="71.0" layoutY="109.0" text="Semesters lise:" textFill="#000064" />
+      <Label layoutX="320.0" layoutY="109.0" text="Semester:" textFill="#000064" />
+   </children>
+</AnchorPane>

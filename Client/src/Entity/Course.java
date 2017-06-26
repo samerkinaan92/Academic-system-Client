@@ -21,6 +21,13 @@ public class Course extends AcademicActivity {
 		this.weeklyHours = weeklyHours;
 	}
 	
+	public Course(int courseID, String courName)
+	{
+		this.CourseID=courseID;
+		this.Name=courName;
+		
+	}
+	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> filterOldCourses(ArrayList<Course> courses){
 		
@@ -300,6 +307,35 @@ public class Course extends AcademicActivity {
 			courseArr.add(new Course(Integer.parseInt(result.get(i)),result.get(i+1),Integer.parseInt(result.get(i+2)),result.get(i+3)));
 		return courseArr;
 	}
+	
+	
+	public static ArrayList<Course> getCoursesByTech(String teachName){
+		HashMap<String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select Distinct class_course.CourseID, course.CourseName  from teachingunit_teacher,class_course,course,users where teachingunit_teacher.TUName = course.TUName and class_course.CourseID = course.CourseID and teachingunit_teacher.teacherid = class_course.teacherID and users.id=teachingunit_teacher.teacherid and users.name='"+teachName+"';");
+		ArrayList<String>result = sendMsg(msgServer);
+		
+		ArrayList<Course>courseArr = new ArrayList<Course>();
+		
+		for(int i=0 ; i<result.size() ; i+=2)
+			courseArr.add(new Course(Integer.parseInt(result.get(i)),result.get(i+1)));
+		return courseArr;
+	}
+	
+	
+	public static ArrayList<Course> getCoursesByClass(String className){
+		HashMap<String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select class_course.courseid,course.coursename from class_course,course where class_course.CourseID=course.CourseID AND className='"+className+"';");
+		ArrayList<String>result = sendMsg(msgServer);
+		
+		ArrayList<Course>courseArr = new ArrayList<Course>();
+		
+		for(int i=0 ; i<result.size() ; i+=2)
+			courseArr.add(new Course(Integer.parseInt(result.get(i)),result.get(i+1)));
+		return courseArr;
+	}
+	
 	
 	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
 		try{

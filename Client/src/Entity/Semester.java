@@ -12,6 +12,11 @@ public class Semester {
 	private int isCurr;
 	private int year;
 	
+	public Semester(int semID)
+	{
+		this.id=semID;		
+	}
+	
 	
 	public Semester(int id, String season, int isCurr, int year){
 		this.setId(id);
@@ -98,6 +103,41 @@ public class Semester {
 		
 	}
 	
+	
+	/*Return list of semesters*/
+	public static ArrayList<Semester> semListByTeachName(String teachName){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select distinct semesterId from class_course,users where users.ID = teacherID and users.Name='"+teachName+"'");
+
+		ArrayList<String> res = sendMsg(msgServer);
+		ArrayList<Semester> sem = new ArrayList<Semester>();
+		
+		for(int i=0; i<res.size() ; i++)			
+			sem.add(new Semester(Integer.parseInt(res.get(i))));
+		
+		return sem;
+			
+		
+	}
+	
+	public static ArrayList<Semester> semListByClass(String className){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select DISTINCT semesterid from class_course where classname='"+className+"';");
+
+		ArrayList<String> res = sendMsg(msgServer);
+		ArrayList<Semester> sem = new ArrayList<Semester>();
+		
+		for(int i=0; i<res.size() ; i++)			
+			sem.add(new Semester(Integer.parseInt(res.get(i))));
+		
+		return sem;
+			
+		
+	}
 	
 	@SuppressWarnings("unchecked")
 	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
