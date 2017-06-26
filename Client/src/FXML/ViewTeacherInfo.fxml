@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ViewTeacherController">
+   <children>
+      <AnchorPane layoutX="-7.0" layoutY="3.0" prefHeight="602.0" prefWidth="777.0">
+         <children>
+            <Text layoutX="92.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="47.99999916553497" />
+            <Text layoutX="63.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <Text layoutX="390.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" />
+            <TableView fx:id="TeacherTableView" layoutX="54.0" layoutY="169.0" prefHeight="210.0" prefWidth="717.0">
+               <columns>
+                  <TableColumn fx:id="IdCollum" prefWidth="75.0" text="ID" />
+                  <TableColumn fx:id="nameCollum" prefWidth="91.0" text="Name" />
+                  <TableColumn fx:id="mailCollum" prefWidth="130.0" text="Mail" />
+                  <TableColumn fx:id="maxWorkHoursCollum" prefWidth="115.0" text="Max Work Hours" />
+                  <TableColumn fx:id="telephoneCollum" prefWidth="115.0" text="Telephone" />
+                  <TableColumn fx:id="addressCollum" prefWidth="190.0" text="Address" />
+               </columns>
+            </TableView>
+            <ListView fx:id="TUView" layoutX="54.0" layoutY="473.0" prefHeight="96.0" prefWidth="172.0" />
+            <ListView fx:id="CoursesOfTeacherView" layoutX="289.0" layoutY="473.0" prefHeight="96.0" prefWidth="441.0" />
+            <Button id="SelectBtn" layoutX="307.0" layoutY="391.0" mnemonicParsing="false" onAction="#ClickOnSelect" text="Select Teacher:" textFill="#4c6bc5">
+               <font>
+                  <Font name="Copperplate Gothic Bold" size="20.0" />
+               </font>
+               <effect>
+                  <DropShadow />
+               </effect></Button>
+            <ComboBox fx:id="semesterCB" layoutX="192.0" layoutY="102.0" onAction="#semesterChoose" prefWidth="150.0" />
+            <Label layoutX="54.0" layoutY="450.0" prefHeight="22.0" prefWidth="104.0" text="Teching Units:" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="289.0" layoutY="450.0" prefHeight="22.0" prefWidth="70.0" text="Courses:" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="57.0" layoutY="103.0" prefHeight="22.0" prefWidth="135.0" text="Choose Semester:" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="17.0" />
+               </font>
+            </Label>
+            <Label layoutX="54.0" layoutY="147.0" prefHeight="22.0" prefWidth="70.0" text="Teachers:" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="17.0" />
+               </font>
+            </Label>
+            <Label alignment="CENTER" layoutX="97.0" layoutY="30.0" prefHeight="45.0" prefWidth="633.0" text="View Teachers Information" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
+               <font>
+                  <Font name="Copperplate Gothic Light" size="40.0" />
+               </font>
+               <effect>
+                  <DropShadow blurType="ONE_PASS_BOX" color="#00000061" height="7.0" radius="2.5" spread="0.44" width="5.0" />
+               </effect>
+            </Label>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

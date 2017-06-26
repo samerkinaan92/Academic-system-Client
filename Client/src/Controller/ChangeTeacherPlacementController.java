@@ -26,6 +26,7 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.Tooltip;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.cell.PropertyValueFactory;
 
@@ -326,6 +327,16 @@ public class ChangeTeacherPlacementController implements Initializable{
     }
     
     /**
+     * set the course fields visibility
+     * @param visible if true sets to visible
+     */
+    private void setLblVisible(boolean visible){
+    	crsNmLbl.setVisible(visible);
+    	tuLbl.setVisible(visible);
+    	wklyHourLbl.setVisible(visible);
+    }
+    
+    /**
      * sets the course fields
      * @param course	the course to set the fields of
      */
@@ -386,6 +397,8 @@ public class ChangeTeacherPlacementController implements Initializable{
 	    		workHours = getSumHours(teacherId);
 	    		if(maxHours != -1 && workHours != -1){
 	    			sum = maxHours - workHours;
+	    			if(sum < 0)
+	    				sum = 0;
 	    		}else{
 	    			sum = 0;
 	    		}
@@ -428,6 +441,7 @@ public class ChangeTeacherPlacementController implements Initializable{
     	ArrayList<String> teachingunits;
     	corsChosBox.setDisable(true);
 		changeTchrBtn.setDisable(true);
+		setLblVisible(false);
 		//sets listener for item changed, makes sure that both tables items selected to enable the button
 		classesTbl.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
 		    if (newSelection != null && teachersTbl.getSelectionModel().getSelectedItem() != null) {
@@ -477,6 +491,7 @@ public class ChangeTeacherPlacementController implements Initializable{
 			@Override
 			public void changed(ObservableValue observable, Course oldValue, Course newValue) {
 				if(newValue != null){
+					setLblVisible(true);
 					setCourseFields(newValue);
 					try {
 						setCourseInClasses(newValue);
@@ -489,6 +504,8 @@ public class ChangeTeacherPlacementController implements Initializable{
 						alert.show();
 						e.printStackTrace();
 					}
+				}else{
+					setLblVisible(false);
 				}
 			}
 		});

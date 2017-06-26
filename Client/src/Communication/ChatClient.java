@@ -8,6 +8,8 @@ import ocsf.client.*;
 import java.io.*;
 
 import application.Main;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 
 /**
  * This class overrides some of the methods defined in the abstract
@@ -80,6 +82,15 @@ public class ChatClient extends AbstractClient
         ("Could not send message to server.  Terminating client.");
       quit();
     }
+  }
+  
+  @Override
+  protected void connectionClosed(){
+	  	Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error Dialog");
+		alert.setHeaderText(null);
+		alert.setContentText("Connection error!!");
+		alert.showAndWait();
   }
   
   /**

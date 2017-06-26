@@ -18,32 +18,47 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 
+/**
+ * This is the controller class for: "SecretaryCourseToClassController.fxml"
+ * @author Idan Agam
+ * */
+
 public class LoginController implements Initializable {
 	
+	/** ComboBox to display school choice */
 	 @FXML
 	 private ComboBox<String> school;
 	
 	 @FXML
 	 private TextField id;
 
+	 /** PasswordField for user password */
 	 @FXML
 	 private PasswordField password;
 
+	 /** TextField For server ip */
 	 @FXML
 	 private TextField ip;
 
+	 /** TextField For server port */
 	 @FXML
 	 private TextField port;
 	 
+	 /** Label to display messages to user */
 	 @FXML
 	 private Label guiMeg;
 	 
+	 /** List o fschools to choose from */
+	 private final ObservableList<String> options = FXCollections.observableArrayList("Ort Braude", "Ort Kramim", "Majadim"); // List of schools.
 	 
-	 private final ObservableList<String> options = FXCollections.observableArrayList("MAT"); // List of schools.
+	 /** Answer from server */
 	 private HashMap <String, String> answer = null;
+	 
+	 /** Message to server */
 	 private HashMap <String, String> msgServer = new HashMap <String,String>();
 	 
-	 
+	 /** Check all input and display user messages accordingly, if all
+	  * Fields are met and valid, the user's specific welcome window open's */
 	 @SuppressWarnings("unchecked")
 	 public void OnLogin(ActionEvent e) throws InterruptedException{
 		
@@ -68,7 +83,7 @@ public class LoginController implements Initializable {
 		
 		// Send message to server with an new thread & wait for answer. 
 		
-		if (!id.getText().isEmpty() && !password.getText().isEmpty() && !school.getSelectionModel().getSelectedItem().toString().isEmpty()){
+		if (!id.getText().isEmpty() && !password.getText().isEmpty() && school.getSelectionModel().getSelectedItem() != null){
 			msgServer.put("msgType", "Login");
 			msgServer.put("id", id.getText());
 			msgServer.put("passwrd", password.getText());

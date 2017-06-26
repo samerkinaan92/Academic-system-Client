@@ -217,9 +217,13 @@ public class StudentViewEvaluations  implements Initializable{
 		FileChooser fileChooser = new FileChooser();	// create file chooser
 		
         fileChooser.setTitle("Save Evaluation");
-        
+        /*
         String type = (stdEv.getFilePath()).substring(stdEv.getFilePath().indexOf('.'));
         fileChooser.setInitialFileName(stdEv.getAssignID()+"_"+usr.getID()+type);	// TODO
+        */
+        String type = (stdEv.getFilePath()).substring(stdEv.getFilePath().indexOf('.'));
+        fileChooser.setInitialFileName("BLABLI"+type);
+        
         fileChooser.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("All Files", "*.*"),
                 new FileChooser.ExtensionFilter("Text Files", "*.txt"),
