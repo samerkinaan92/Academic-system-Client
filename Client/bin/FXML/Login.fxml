@@ -15,7 +15,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<StackPane prefHeight="236.0" prefWidth="231.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
+<StackPane prefHeight="236.0" prefWidth="251.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.LoginController">
   <children>
     <StackPane>
       <children>
@@ -58,7 +58,7 @@
                         </Label>
                      </children>
                   </Pane>
-            <StackPane prefHeight="38.0" prefWidth="211.0">
+           <StackPane prefHeight="38.0" prefWidth="235.0">
                      <children>
                 <Button fx:id="loginButton" alignment="CENTER" defaultButton="true" mnemonicParsing="false" onAction="#OnLogin" text="Login" />
                      </children>
