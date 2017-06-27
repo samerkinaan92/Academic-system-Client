@@ -119,7 +119,9 @@ public class TCHR_DefineAssignments implements Initializable {
     @FXML
     void submitBTNaction(ActionEvent event) {
     	
-    	if (validInput()) {	// check for empty fields
+    	int inputVal = validInput();
+    	
+    	if (inputVal == 0) {	// validate input
     		
     		Alert alert = new Alert(AlertType.CONFIRMATION);
     		alert.setTitle("Confirmation Dialog");
@@ -148,26 +150,19 @@ public class TCHR_DefineAssignments implements Initializable {
     			setCoursesInComboBox();
     			datePicker.setValue(LocalDate.now());
     			setItemsDisabled(true);
+    			
     			nameREDstar.setVisible(false);
     			ddREDstar.setVisible(false);
-        	
     		}
     	}
-    	
-    	else {
-
-    		if (datePicker.getValue() == null)
-    			ddREDstar.setVisible(true);
-    		else ddREDstar.setVisible(false);
-    		
-    		if (nameTF.getText().isEmpty())
-    			nameREDstar.setVisible(true);
-    		else nameREDstar.setVisible(false);
-    		
-    		showErrorMSG("invalid input", "do not leave empty fields");
+    	else if (inputVal == 1){		// name text field in smpty
+    		nameREDstar.setVisible(true);
+    		showErrorMSG("empty name field", "you must pick a name for the assignment");
     	}
-    	
-    	
+    	else if (inputVal == 2) {		// date is in the past
+    		ddREDstar.setVisible(true);
+    		showErrorMSG("chosen deadline is in the past", "please choose a date within the future");
+    	}	
     }
     
     /** send alert to all teacher's on this course about the new assignment
@@ -246,19 +241,20 @@ public class TCHR_DefineAssignments implements Initializable {
 		fileBTN.setTooltip(new Tooltip("upload assignment file"));
 		submitBTN.setTooltip(new Tooltip("create new assignment"));
 		
+		datePicker.setEditable(false);
 	}
 	
 	/**	check for empty name/date fields
-	 * @return	true only if all fields have values
+	 * @return	0 for legal input, 1 if name text field is empty,
+	 *			2 if date picker holds earlier date than today
 	 * */
-	private boolean validInput() {
+	private int validInput() {
 		
 		if (nameTF.getText().isEmpty())
-			return false;
-		if (datePicker.getValue() == null)
-			return false;
-		return true;
-		
+			return 1;
+		if (datePicker.getValue().isBefore(LocalDate.now()))
+			return 2;
+		return 0;
 	}
 	
 	/**	disables items in this scene
