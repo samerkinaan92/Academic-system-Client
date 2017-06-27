@@ -40,6 +40,7 @@ public class User {
 		}}
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		
+		
 		if (result.size() > 0)
 			return result;
 		return null;			
