@@ -133,8 +133,6 @@ public class TCHR_CheckAssignments implements Initializable {
     @FXML
     private Button sendBTN;
     
-    private int statisticReportFlag=0;
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
     		
@@ -254,10 +252,7 @@ public class TCHR_CheckAssignments implements Initializable {
 				  System.out.println("couldnt send file info for the server!");
 				  return;
 			  }
-			  /*	END FILE SENDING	 */
-			  
-			  
-			  
+			  /*	END FILE SENDING	 */ 
 		  }
     	
     }
@@ -467,42 +462,14 @@ public class TCHR_CheckAssignments implements Initializable {
 				e.printStackTrace();
 				System.out.println("Thread cant move to wait()");
 			}
-			//******Update statistical table****//
-			if(statisticReportFlag==0)
-				updateStatistical(studentID,assignmentID,grade);
 		}
-    }
-    
-    
-    private void updateStatistical(int studentID, int assignmentID, float grade){
-    	
-    	ArrayList<String> assignDetails= Assignment.getAssignDetails(String.valueOf(assignmentID));  	
-    	String teacherID= Main.user.getID();
-    	String teachName = Main.user.getName();
-    	ArrayList<String> courseDetails = Assignment.getCourNameID(String.valueOf(assignmentID));
-    	String className = Assignment.getClassName(String.valueOf(studentID));
-    	
-    	sentMSG.put("msgType", "insert");
-		sentMSG.put("query", "INSERT INTO `mat`.`statistical` (`assignID`, `assignName`, `studentID`, `grade`, `teacherID`, `teacherName`,`semYear`, `semName`, `courseName`, `courseID`, `className`) VALUES ('"+assignmentID+"', '"+assignDetails.get(0)+"', '"+studentID+"', '"+String.valueOf(grade)+"', '"+teacherID+"', '"+teachName+"','"+assignDetails.get(1)+"','"+assignDetails.get(2)+"','"+courseDetails.get(1)+"', '"+courseDetails.get(0)+"', '"+className+"')");
-		System.out.println("work");
-		synchronized (Main.client) {	
-			Main.client.sendMessageToServer(sentMSG);
-			try {Main.client.wait();}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-				System.out.println("Thread cant move to wait()");
-			}
-		}
-    
     }
     
     /**		event handler for courses combo box
      * @param	SI	the string selected in courses ComboBox
      * */
     private void coursesCOMBOBOXchangeHandler (String SI) {
-    	
-    	
-    	
+
     	assignmentsCB.getItems().clear();
     	
     	DBCourse course = getSelectedCourse(SI);
@@ -530,14 +497,14 @@ public class TCHR_CheckAssignments implements Initializable {
     	evaluationTextArea.setText("");
     	finalGradeTextField.setText("");
     	
+    	
     	DBSubmission sub = new DBSubmission();
     	for (int i=0;i<submissions.size();i++) {				/* get matching submission */
     		if ((submissions.get(i).toString()).equals(SI)) {
-    			sub = submissions.get(i);
-    			break;
+    			sub = submissions.get(i); break;
     		}
     	}
-    	    	
+    	
     	if (sub.evaluation != null)
     		evaluationTextArea.setPromptText(sub.evaluation);
     	else
@@ -547,7 +514,7 @@ public class TCHR_CheckAssignments implements Initializable {
     		finalGradeTextField.setPromptText(""+sub.Grade);
     	else
     		finalGradeTextField.setPromptText("");
-    		
+    	
   
     	
     }
