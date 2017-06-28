@@ -58,6 +58,5 @@
             </Label>
          </children>
       </Pane>
-      <Button layoutX="119.0" layoutY="431.0" mnemonicParsing="false" onAction="#backBtn" text="Back" />
    </children>
 </AnchorPane>

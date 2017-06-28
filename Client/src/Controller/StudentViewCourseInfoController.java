@@ -102,7 +102,7 @@ public class StudentViewCourseInfoController implements Initializable{
 		CTUname.setCellValueFactory(new PropertyValueFactory<StudentCourse, String>("TUname"));
 		cWH.setCellValueFactory(new PropertyValueFactory<StudentCourse, String>("weeklyHours"));
 		teacClumn.setCellValueFactory(new PropertyValueFactory<StudentCourse, String>("teacherID"));
-		setCourses(selectedSem);
+		setCourses(Semester.semID(selectedSem.substring(0, 4), selectedSem.substring(5,6)));
 		setWeekHour();
 	}
     
