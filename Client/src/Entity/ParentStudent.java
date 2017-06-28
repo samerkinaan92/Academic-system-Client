@@ -21,8 +21,8 @@ public class ParentStudent{
 	/**ParentStudent() - ParentStudent constructor.*/
 	public ParentStudent(String stdID, String stdName,String isParBloc,String parID, String parName )
 	{
-		setStd(new Student(stdID,stdName));
-		setPar(new Parent(parID,parName));
+		std= new Student(stdID,stdName);
+		par= new Parent(parID,parName);
 		setIsParBloc(isParBloc);
 		
 	}

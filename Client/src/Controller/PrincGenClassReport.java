@@ -57,8 +57,14 @@ public class PrincGenClassReport implements Initializable{
 		chart.getYAxis().setLabel(yAx);
 		XYChart.Series series1 = new XYChart.Series();
 		series1.setName("Avarage grade");
+		XYChart.Series series2 = new XYChart.Series();
+		series2.setName("");
+		XYChart.Series series3 = new XYChart.Series();
+		series3.setName("");
+		XYChart.Series series4 = new XYChart.Series();
+		series4.setName("");
 		
-		
+
 		/*
 		* 1- Generate report by course name.
 		* 2- Generate report by teacher name.
@@ -71,6 +77,7 @@ public class PrincGenClassReport implements Initializable{
 				for(int j=0; j<statArg.size();j++)
 					if(statArg.get(j).getSemYear().equals(String.valueOf(i)))
 						series1.getData().add(new XYChart.Data(statArg.get(j).getSemYear()+"-"+statArg.get(j).getSemName() + "-"+statArg.get(j).getCourseName(),Double.parseDouble(statArg.get(j).getGrade())));		
+			chart.getData().add(series1);
 			break;
 			
 		}
@@ -81,21 +88,35 @@ public class PrincGenClassReport implements Initializable{
 				for(int j=0; j<statArg.size();j++)
 					if(statArg.get(j).getSemYear().equals(String.valueOf(i)))
 						series1.getData().add(new XYChart.Data(statArg.get(j).getSemYear()+"-"+statArg.get(j).getSemName() + "-"+statArg.get(j).getTeachName(),Double.parseDouble(statArg.get(j).getGrade())));		
+			chart.getData().add(series1);
 			break;
 		}
 		case 3:
 		{
-			for(int i = 2014 ; i< 2018 ; i++)
+				
 				for(int j=0; j<statArg.size();j++)
-					if(statArg.get(j).getSemYear().equals(String.valueOf(i)))
-						series1.getData().add(new XYChart.Data(statArg.get(j).getSemYear()+"-"+statArg.get(j).getSemName() + "-"+statArg.get(j).getClassName(),Double.parseDouble(statArg.get(j).getGrade())));				
-			break;
+					if(statArg.get(j).getClassName().equals("B1"))
+						series1.getData().add(new XYChart.Data(statArg.get(j).getSemYear()+"-"+statArg.get(j).getSemName(),Double.parseDouble(statArg.get(j).getGrade())));				
+				series1.setName("B1");
+				
+				for(int j=0; j<statArg.size();j++)
+					if(statArg.get(j).getClassName().equals("C1"))
+						series2.getData().add(new XYChart.Data(statArg.get(j).getSemYear()+"-"+statArg.get(j).getSemName(),Double.parseDouble(statArg.get(j).getGrade())));				
+				series2.setName("C1");
+				
+				for(int j=0; j<statArg.size();j++)
+					if(statArg.get(j).getClassName().equals("D1"))
+						series3.getData().add(new XYChart.Data(statArg.get(j).getSemYear()+"-"+statArg.get(j).getSemName(),Double.parseDouble(statArg.get(j).getGrade())));				
+				series3.setName("D1");	
+				
+				chart.getData().addAll(series1,series2,series3);
+				break;
 		}
 		}
 
 		
 		
-		chart.getData().add(series1);
+		
 		
 	}
 		

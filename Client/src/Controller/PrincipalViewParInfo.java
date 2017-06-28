@@ -140,7 +140,7 @@ public class PrincipalViewParInfo implements Initializable{
 	    	parForTable.clear();
 	    	parLabel.setText("Parents of "+std.getStudName()+":");    	
 	    	for(int i = 0 ; i < parArr.size() ; i++ )
-	    			parForTable.add(new Parent(parArr.get(i).getParID(),parArr.get(i).getParName()));
+	    			parForTable.add(parArr.get(i).getPar());
 	    	
 	    	parTable.setItems(parForTable);		
 	    	infoBtn.setDisable(true);

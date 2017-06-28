@@ -67,13 +67,34 @@ public class Semester {
 		return DBsemester;
 	}
 	
+	/**
+	 * Get the current semester
+	 * @return the year and type of the current semester
+	 * */
 	public static String currSem(){
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select 	semesterid From semester WHERE isCurr='1';");
-				
-		return sendMsg(msgServer).get(0);	
+		msgServer.put("query", "Select 	semester.Year,semester.Season From semester WHERE isCurr='1';");
+		ArrayList<String> res = sendMsg(msgServer);
+		String semRes= res.get(0) + "-" + res.get(1);
+		return semRes;
+	}
+	
+	/**
+	 * semID() - Return the semester ID
+	 * @param year
+	 * @param type
+	 * @return semester ID
+	 * */
+	public static String semID(String year, String type){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select 	semesterId From semester WHERE Year='"+year+"' and season='"+type+"';");
+		ArrayList<String> res = sendMsg(msgServer);
+
+		return res.get(0);
 	}
 	
 	/**
@@ -110,9 +131,15 @@ public class Semester {
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select 	semesterid From semester");
+		msgServer.put("query", "select year,Season from semester");
 			
-		return sendMsg(msgServer);
+		ArrayList<String> resault = sendMsg(msgServer);
+		ArrayList<String> semArr = new ArrayList<String>();
+		
+		for(int i=0; i<resault.size() ; i+=2)
+			semArr.add(resault.get(i)+"-"+resault.get(i+1));
+		
+		return semArr;
 		
 	}
 	

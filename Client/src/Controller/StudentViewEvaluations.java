@@ -280,7 +280,10 @@ public class StudentViewEvaluations  implements Initializable{
 	void setCourses() {
     	
     	ArrayList<StudentCourse> courL;
-    	selecterSem=semCbox.getSelectionModel().getSelectedItem().toString();
+    	String sem=semCbox.getSelectionModel().getSelectedItem().toString();
+    	
+    	selecterSem=(Semester.getSemesterID(sem.substring(0,4),sem.substring(5,6))).get(0);
+    	
     	
     	try{
 	    	courL=StudentCourse.getCoursesBySemStd(selecterSem,usr.getID());
@@ -322,7 +325,7 @@ public class StudentViewEvaluations  implements Initializable{
     	assignL=Assignment.getAssignByCourse(selecterSem,Course.getCourseIDbyName(selecterCour),usr.getID());
     	
     	
-    	if (assignL.isEmpty()){
+    	if (assignL==null){
     		showErrorMSG("No assignments found.","No assignments found for USER ID: "+usr.getID() +" for course "+selecterCour);
     		assignCbox.setDisable(true);
     		assignPane.setVisible(false);

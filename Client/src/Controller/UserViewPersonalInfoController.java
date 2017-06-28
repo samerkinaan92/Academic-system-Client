@@ -99,7 +99,7 @@ public class UserViewPersonalInfoController implements Initializable{
 		usrPhone.setText(usr.getPhone());
 		usrEmail.setText(usr.getEmail());
 		
-		if(Main.user.getType().equals("Parent")){
+		if(Main.user.getType().equals("Parent")&& !usr.getType().equals("Parent")){
 			backBtn.setVisible(true);
 		}
 		

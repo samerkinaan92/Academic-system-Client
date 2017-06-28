@@ -1,7 +1,11 @@
 package Entity;
 
+/**AcademicActivity  - Entity which define the type of academic activity type.
+ * @author Tal Asulin
+ * */
 public class AcademicActivity {
 
+	
 	private int ActivityID;
 	private String semName;
 	private String acName;

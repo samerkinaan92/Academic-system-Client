@@ -135,7 +135,7 @@ public class StudentViewCourseInfoController implements Initializable{
     void cComboBox(ActionEvent event) {
     	String selectedSem = cComBox.getSelectionModel().getSelectedItem().toString();
     	this.selectedSem=selectedSem;
-    	setCourses(selectedSem);
+    	setCourses(Semester.semID(selectedSem.substring(0, 4), selectedSem.substring(5,6)));
     	setWeekHour();
     	
     }

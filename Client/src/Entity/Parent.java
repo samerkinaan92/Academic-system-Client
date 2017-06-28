@@ -7,9 +7,18 @@ import application.Main;
 /**	User - Entity of users.*/
 public class Parent extends User {
 
-	private String ID;
+	/**isBlocked - indicate if the parent is blocked*/
 	private boolean isBlocked;
 	
+	
+	/**Parent()
+	 * @param id - Parent ID
+	 * @param name- Parent Name
+	 * @param email - Parent email
+	 * @param phone - Parent phone
+	 * @param address - Parent address
+	 * @param isBlocked - Parent blocked flag
+	 * */
 	public Parent(String id, String name, String email, String phone, String address, String isBlocked ) {
 		setID(id);
 		super.setName(name);
@@ -50,6 +59,10 @@ public class Parent extends User {
 		return par;
 	}
 	
+	
+	/**getParNameByStdID() - get list of parents ID by student ID
+	 * @param ID - Student ID
+	 * */
 	public static ArrayList<String> getParNameByStdID(String ID)
 	{
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -60,6 +73,10 @@ public class Parent extends User {
 		 
 	}
 	
+	
+	/**getParentsOfStudent() - get Parent array list by student ID.
+	 * @param StudentID - Student ID
+	 * */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Parent> getParentsOfStudent(String StudentID){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -87,6 +104,10 @@ public class Parent extends User {
 
 	}
 	
+	
+	/**getParentsClass() - return Parent array list
+	 * @param ClassName - Class name
+	 * */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Parent> getParentsClass(String ClassName){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -138,9 +159,7 @@ public class Parent extends User {
 		return courseResult;
 	}
 	
-	public String getID() {
-		return this.ID;
-	}
+
 	
 	public String getIsBlockedStr(){
 		if (isBlocked == true)
@@ -151,9 +170,7 @@ public class Parent extends User {
 	public boolean isBlocked() {
 		return isBlocked;
 	}
-	public void setID(String iD) {
-		this.ID = iD;
-	}
+
 	public void setBlocked(boolean isBlocked) {
 		this.isBlocked = isBlocked;
 	}
