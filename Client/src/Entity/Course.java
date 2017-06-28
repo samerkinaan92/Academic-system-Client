@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import application.Main;
 
-public class Course extends AcademicActivity {
+public class Course {
 
 
 	private int CourseID;
