@@ -275,11 +275,19 @@ public class SecretaryCourseToClassController implements Initializable {
 	 */
 	@SuppressWarnings("unchecked")
 	private ArrayList<String> getTaken(String clas, ArrayList<String> courses){ // Get taken courses for class.
-		  
+		  int sem = 0;
+		  String str = semesterChooser.getSelectionModel().getSelectedItem();
+		for (int i = 0; i < semesterArr.size(); i++){
+			if ((semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")").equals(str)){
+				sem = semesterArr.get(i).getId();
+			}
+		}
+		
+		
 		  HashMap <String,String> msgServer = new HashMap <String,String>();
 		  msgServer.put("msgType", "select");
 		  msgServer.put("query", "Select c.CourseID,c.CourseName From class_course cc, course c WHERE cc.ClassName = '" + clas + "'" +
-				  "AND cc.CourseID = c.CourseID");
+				  "AND cc.CourseID = c.CourseID AND semesterId =" + sem);
 		  
 		  try{
 				Main.client.sendMessageToServer(msgServer);
