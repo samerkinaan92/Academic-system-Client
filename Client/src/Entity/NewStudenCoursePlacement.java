@@ -1,5 +1,10 @@
 package Entity;
 
+/**
+ * class for sending requests for changing students courses assignment
+ * @author Samer Kinaan
+ *
+ */
 public class NewStudenCoursePlacement {
 
 	private String studentID;
