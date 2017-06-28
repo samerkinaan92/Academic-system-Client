@@ -1,5 +1,11 @@
 package Entity;
 
+
+/**
+ * class for sending requests to change teacher in class
+ * @author Samer Kinaan
+ *
+ */
 public class NewTeacherPlacement {
 
 	private String currTeacherID;

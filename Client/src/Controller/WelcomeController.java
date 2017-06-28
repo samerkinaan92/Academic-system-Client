@@ -8,6 +8,11 @@ import javafx.fxml.FXML;
 import javafx.scene.text.Text;
 import javafx.fxml.Initializable;
 
+/**
+ * controller with welcome screen
+ * @author SAM
+ *
+ */
 public class WelcomeController implements Initializable{
     @FXML
     private Text welcomeTxt;
@@ -18,7 +23,6 @@ public class WelcomeController implements Initializable{
 		String stri;
 		stri = Main.user.getName();
 		welcomeTxt.setText("Welcome "+stri );
-
 	}
 
 }
