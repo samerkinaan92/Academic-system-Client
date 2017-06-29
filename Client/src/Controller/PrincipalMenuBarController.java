@@ -20,6 +20,11 @@ import javafx.stage.Stage;
 import javafx.scene.Parent;
 
 
+/**
+ * This is the controller class for: "PrincipalMenuBar.fxml"
+ * @author Idan Agam
+ */
+
 public class PrincipalMenuBarController {
 	
 	

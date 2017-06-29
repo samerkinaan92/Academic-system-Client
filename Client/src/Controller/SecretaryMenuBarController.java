@@ -17,6 +17,11 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+/**
+ * This is the controller class for: "SecretaryMenuBar.fxml"
+ * @author Idan Agam
+ */
+
 public class SecretaryMenuBarController {
 
 	

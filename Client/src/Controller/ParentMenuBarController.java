@@ -16,10 +16,14 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 import javafx.scene.Parent;
 
+/**
+ * This is the controller class for: "ParentMenuBar.fxml"
+ * @author Idan Agam
+ */
 
 public class ParentMenuBarController {
 
-	/** Common Actions */
+	// Common Actions
 	
 	@FXML
 	private MenuBar bar;
@@ -88,12 +92,12 @@ public class ParentMenuBarController {
 	}
 	
 	
-	/** Common Actions */
+	// Common Actions 
 	
 	
 	
 
-	/** Private Actions */
+	// Private Actions 
 	
 
 	/**
@@ -112,7 +116,7 @@ public class ParentMenuBarController {
           }          
     }
 	
-	/** Private Actions */
+	// Private Actions 
 	
     /**
      * opens view personal info controller
