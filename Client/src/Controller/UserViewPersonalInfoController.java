@@ -125,7 +125,7 @@ public class UserViewPersonalInfoController implements Initializable{
 				stdpar1.setText(result.get(0));
 				stdpar1.setVisible(true);
 				stdP2.setVisible(true);
-				stdpar2.setText(result.get(0));
+				stdpar2.setText(result.get(1));
 				stdpar2.setVisible(true);
 			}
 			
