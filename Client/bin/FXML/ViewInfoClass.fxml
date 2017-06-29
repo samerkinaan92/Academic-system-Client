@@ -13,7 +13,7 @@
 
 <AnchorPane prefHeight="651.0" prefWidth="1039.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.Class_Student_Info">
    <children>
-      <AnchorPane fx:id="Select" layoutX="73.0" layoutY="147.0" prefHeight="504.0" prefWidth="777.0">
+      <AnchorPane fx:id="Select" layoutX="73.0" layoutY="142.0" prefHeight="509.0" prefWidth="909.0">
          <children>
             <Text layoutX="92.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="47.99999916553497" />
             <Text layoutX="63.0" layoutY="201.0" strokeType="OUTSIDE" strokeWidth="0.0" />
@@ -27,7 +27,7 @@
                   <TableColumn fx:id="PhoneColum" prefWidth="104.0" text="Phone" />
                </columns>
             </TableView>
-            <ComboBox fx:id="ClassChooser" layoutX="159.0" layoutY="35.0" onAction="#ClichOnClass" prefWidth="150.0" />
+            <ComboBox fx:id="ClassChooser" layoutX="207.0" layoutY="36.0" onAction="#ClichOnClass" prefHeight="25.0" prefWidth="187.0" />
             <Button fx:id="SelectBtn" layoutX="195.0" layoutY="129.0" mnemonicParsing="false" onAction="#ClickSelect" text="Select" textFill="#4c6bc5">
                <font>
                   <Font name="Copperplate Gothic Bold" size="15.0" />
@@ -35,8 +35,8 @@
                <effect>
                   <DropShadow />
                </effect></Button>
-            <ListView fx:id="CoursesOfClassVL" layoutX="516.0" layoutY="60.0" prefHeight="138.0" prefWidth="200.0" />
-            <ComboBox fx:id="SemesterCB" layoutX="159.0" layoutY="90.0" onAction="#ClickOnSemester" prefWidth="150.0" />
+            <ListView fx:id="CoursesOfClassVL" layoutX="564.0" layoutY="90.0" prefHeight="107.0" prefWidth="260.0" />
+            <ComboBox fx:id="SemesterCB" layoutX="708.0" layoutY="58.0" onAction="#ClickOnSemester" prefHeight="25.0" prefWidth="115.0" />
             <Button fx:id="ShowAllParents" layoutX="300.0" layoutY="438.0" mnemonicParsing="false" onAction="#ClickShowAll" prefHeight="37.0" prefWidth="231.0" text="Show All Parents Of Class" textFill="#4c6bc5">
                <font>
                   <Font name="Copperplate Gothic Bold" size="12.0" />
@@ -44,22 +44,22 @@
                <effect>
                   <DropShadow />
                </effect></Button>
-            <Label layoutX="48.0" layoutY="37.0" prefHeight="22.0" prefWidth="101.0" text="Choose Class:" textFill="#4c6bc5cf">
+            <Label layoutX="57.0" layoutY="30.0" prefHeight="37.0" prefWidth="150.0" text="Choose Class:" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="25.0" />
+               </font>
+            </Label>
+            <Label layoutX="564.0" layoutY="59.0" prefHeight="22.0" prefWidth="134.0" text="Choose Semester:" textFill="#4c6bc5cf">
                <font>
                   <Font name="Impact" size="17.0" />
                </font>
             </Label>
-            <Label layoutX="25.0" layoutY="92.0" prefHeight="22.0" prefWidth="134.0" text="Choose Semester:" textFill="#4c6bc5cf">
+            <Label layoutX="564.0" layoutY="21.0" prefHeight="32.0" prefWidth="200.0" text="Courses Of Class:" textFill="#4c6bc5cf">
                <font>
-                  <Font name="Impact" size="17.0" />
+                  <Font name="Impact" size="25.0" />
                </font>
             </Label>
-            <Label layoutX="516.0" layoutY="26.0" prefHeight="22.0" prefWidth="123.0" text="Courses Of Class:" textFill="#4c6bc5cf">
-               <font>
-                  <Font name="Impact" size="17.0" />
-               </font>
-            </Label>
-            <Button id="SelectBtn" fx:id="ShowParentsBtn" layoutX="689.0" layoutY="290.0" mnemonicParsing="false" onAction="#ClickOnShowParents" prefHeight="45.0" prefWidth="134.0" text="Show Parents" textFill="#4c6bc5">
+            <Button id="SelectBtn" fx:id="ShowParentsBtn" layoutX="689.0" layoutY="265.0" mnemonicParsing="false" onAction="#ClickOnShowParents" prefHeight="37.0" prefWidth="150.0" text="Show Parents" textFill="#4c6bc5">
                <font>
                   <Font name="Copperplate Gothic Bold" size="12.0" />
                </font>
@@ -68,6 +68,19 @@
                </effect>
             </Button>
             <Label layoutX="40.0" layoutY="201.0" prefHeight="22.0" prefWidth="134.0" text="Students:" textFill="#4c6bc5cf">
+               <font>
+                  <Font name="Impact" size="17.0" />
+               </font>
+            </Label>
+            <Button id="SelectBtn" fx:id="SubBtn" layoutX="689.0" layoutY="321.0" mnemonicParsing="false" onAction="#ClickOnShowSub" prefHeight="37.0" prefWidth="150.0" text="Show Submitions" textFill="#4c6bc5">
+               <font>
+                  <Font name="Copperplate Gothic Bold" size="12.0" />
+               </font>
+               <effect>
+                  <DropShadow blurType="ONE_PASS_BOX" />
+               </effect>
+            </Button>
+            <Label layoutX="689.0" layoutY="229.0" prefHeight="22.0" prefWidth="134.0" text="Info Of Sudent:" textFill="#4c6bc5cf">
                <font>
                   <Font name="Impact" size="17.0" />
                </font>

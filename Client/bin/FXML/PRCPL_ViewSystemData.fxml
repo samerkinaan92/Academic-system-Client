@@ -10,7 +10,7 @@
 
 <AnchorPane prefHeight="283.0" prefWidth="563.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PRCPL_ViewSystemDataController">
    <children>
-      <ComboBox fx:id="dataCB" layoutX="189.0" layoutY="138.0" onAction="#WhenChoosed2" prefHeight="25.0" prefWidth="222.0" />
+      <ComboBox fx:id="dataCB" layoutX="189.0" layoutY="138.0"  prefHeight="25.0" prefWidth="222.0" />
       <Button layoutX="242.0" layoutY="192.0" mnemonicParsing="false" onAction="#clickChoose" text="Select" textFill="#2d74b5">
          <font>
             <Font name="Copperplate Gothic Bold" size="22.0" />

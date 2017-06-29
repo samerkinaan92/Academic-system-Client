@@ -11,7 +11,11 @@ public class Student_Class{
 	private String StudName;
 	private String semID;
 
-	
+	/**Student_Class()
+	 * @param StudentID - Student ID
+	 * @param StudName- Student Name
+	 * @param semID - Semester ID
+	 * */
 	public Student_Class(int StudentID, String StudName, String semID)
 	{
 		this.StudentID=StudentID;
@@ -19,7 +23,11 @@ public class Student_Class{
 		this.semID=semID;
 	}
 	
-	
+	/**
+	 * returns all students of class
+	 * @param className
+	 * @return ArrayList<Student_Class> 
+	 */
 	public static ArrayList<Student_Class> getStudentsByClass(String className){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -34,7 +42,11 @@ public class Student_Class{
 		return DBassignment;
 	}
 	
-	
+	/**
+	 * 
+	 * @param msgServer
+	 * @return ArrayList<String> 
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
 		try{
@@ -54,7 +66,7 @@ public class Student_Class{
 		return courseResult;
 	}
 
-	
+	/** getters & Setters */
 	public int getStudentID() {
 		return StudentID;
 	}

@@ -7,17 +7,19 @@
 
 <AnchorPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.ParentVieController">
    <children>
-      <AnchorPane layoutX="-7.0" layoutY="-11.0" prefHeight="294.0" prefWidth="806.0">
+      <AnchorPane layoutX="-158.0" layoutY="-11.0" prefHeight="294.0" prefWidth="1170.0">
          <children>
             <Label layoutX="38.0" layoutY="25.0" text="Parents:" />
-            <TableView fx:id="ParentTable" layoutX="24.0" layoutY="49.0" prefHeight="197.0" prefWidth="768.0">
+            <TableView fx:id="ParentTable" layoutX="178.0" layoutY="49.0" prefHeight="197.0" prefWidth="959.0">
                <columns>
-                  <TableColumn fx:id="IdCollum" prefWidth="75.0" text="ID" />
-                  <TableColumn fx:id="NameCollum" prefWidth="142.0" text="Name" />
-                  <TableColumn fx:id="MailCollum" prefWidth="198.0" text="Mail" />
-                  <TableColumn fx:id="TelephoneCollum" prefWidth="112.0" text="Telephone" />
-                  <TableColumn fx:id="AddressCollum" prefWidth="89.0" text="Address" />
-                  <TableColumn fx:id="isBlockedCollum" prefWidth="151.0" text="isBlocked" />
+                  <TableColumn fx:id="IdCollum" prefWidth="61.0" text="ID" />
+                  <TableColumn fx:id="NameCollum" prefWidth="113.0" text="Name" />
+                  <TableColumn fx:id="MailCollum" prefWidth="185.0" text="Mail" />
+                  <TableColumn fx:id="TelephoneCollum" prefWidth="103.0" text="Telephone" />
+                  <TableColumn fx:id="AddressCollum" prefWidth="234.0" text="Address" />
+                  <TableColumn fx:id="isBlockedCollum" prefWidth="71.0" text="isBlocked" />
+                  <TableColumn fx:id="studentIDColum" prefWidth="96.0" text="Student ID" />
+                  <TableColumn fx:id="studNamecolum" prefWidth="96.0" text="Student Name" />
                </columns>
             </TableView>
          </children>

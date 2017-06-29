@@ -90,7 +90,7 @@ public class ParentStudent{
 	
 	}
 	
-	
+	/** Getters & Setters */
 	public String getIsParBloc() {
 		return isParBloc;
 	}

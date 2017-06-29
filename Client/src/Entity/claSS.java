@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 public class claSS {
 	
@@ -106,13 +104,17 @@ public class claSS {
 		}
 		return (int) Main.client.getMessage();
 	}
-	
+	/**
+	 * returns students of selected class
+	 * @param ClassName
+	 * @return ArrayList<Student>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Student> getStudentsOfClass(String ClassName){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
 		msgServer.put("query", "Select users.ID, users.Name, users.email, users.address, users.phoneNum From users, student_class WHERE Role = 'Student' and users.ID = student_class.StudentID and student_class.ClassName = '"+ClassName+"';");
-		//, phoneNum, email, address
+		
 		try{
 			Main.client.sendMessageToServer(msgServer);
 			}
@@ -132,10 +134,14 @@ public class claSS {
 		
 		for (int i = 0; i < result.size(); i+=5)//3
 			DBstudent.add(new Student(result.get(i), result.get(i+1), result.get(i+2) ,result.get(i+3) ,result.get(i+4) ));
-		//, result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,
 		return DBstudent;
 	}
-	
+	/**
+	 * returns classes studying a course
+	 * @param CourseId
+	 * @param SemesterID
+	 * @return ArrayList<String>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getClassesOfCourse(String CourseId, String SemesterID){
 		

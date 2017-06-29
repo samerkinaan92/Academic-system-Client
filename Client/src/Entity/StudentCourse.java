@@ -4,9 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
-
+/**
+ * Class of Student
+ * @author Or Cohen
+ *
+ */
 public class StudentCourse {
-	
+	/** StudentCourse()
+	 * @param courseID - Course ID
+	 * @param teacherID- teacher ID
+	 * @param TUname - Teaching Unit
+	 * @param courseName - course Name
+	 * @param weeklyHours - weekly Hours
+	 * */
 	private String courseID;
 	private String teacherID;
 	private String TUname;
@@ -22,11 +32,16 @@ public class StudentCourse {
 		this.setTeacherID(cTeacherID);
 	}
 
-	
+	/**
+	 * get courses studied in semester
+	 * @param sem
+	 * @param stdID
+	 * @return  ArrayList<StudentCourse>
+	 */
 	public static ArrayList<StudentCourse> getCoursesBySemStd(String sem, String stdID){
 		HashMap<String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "select course.courseid,CourseName,WeeklyHours,teachingunit.tuname,users.name from course_student,course,teachingunit,users,semester where course_student.CourseID = course.CourseID and StudentID='"+stdID+"' and course.TUName = teachingunit.TUName and users.id = course_student.StudentID and semester.semesterId = course_student.semesterId and semester.semesterId='"+sem+"';");
+		msgServer.put("query", "select course.courseid,CourseName,WeeklyHours,tuname,users.name from class_course,course,semester,course_student,users where class_course.CourseID=course.CourseID and class_course.semesterId=semester.semesterid and semester.semesterid='"+sem+"' and classname='A1' and semester.semesterid=course_student.semesterid and course.courseid=course_student.courseid and course_student.StudentID='"+stdID+"' and class_course.teacherID=users.ID;");
 		ArrayList<String>result = sendMsg(msgServer);
 		
 		ArrayList<StudentCourse>courseArr = new ArrayList<StudentCourse>();
@@ -55,7 +70,7 @@ public class StudentCourse {
 			return null;
 		return courseResult;
 	}
-	
+	/** Getters & Setters */
 	public String getCourseID() {
 		return courseID;
 	}

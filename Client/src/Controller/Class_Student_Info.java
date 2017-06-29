@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import Controller.ParentViewInfoController.ParentInfo;
+import Controller.ViewCoursesDataController.coursetInfo;
 import Controller.ViewTeacherController.techertInfo;
 import Entity.Course;
 import Entity.Semester;
@@ -28,73 +29,79 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-
+/**
+ * This is the controller class for: "ViewInfoClass.fxml"
+ * @author Or Cohen
+ *
+ */
 public class Class_Student_Info implements Initializable {
-	//final ObservableList<String> classes = FXCollections.observableArrayList();
+	/** list for Student info */
 	private final ObservableList<StudentInfo> Studentsdata = FXCollections.observableArrayList();
+	/** list for courses info */
 	final ObservableList<String> classCoursesData = FXCollections.observableArrayList();
-	 final ObservableList<String> classNames = FXCollections.observableArrayList(); 
-	
+	/** list of class names  */
+	final ObservableList<String> classNames = FXCollections.observableArrayList(); 
+	/** flag to choose if show parents of specific student or all students*/
 	public static int flag;
+/** button to show all parents of class */
 	 @FXML
-    private AnchorPane Select;
-	 
-
-	    @FXML
-	    private Button ShowAllParents;
+	 private Button ShowAllParents;
 
 	    
-
+	 /** Table view to be show students Info*/
     @FXML
     private TableView<StudentInfo> StudentsTableView;
-
+    /** Colum in CoursesTableView to view student ID*/
     @FXML
     private TableColumn<StudentInfo, String> IDCollum;
-
+    /** Colum in CoursesTableView to view student name*/
     @FXML
     private TableColumn<StudentInfo, String> NameCollum;
-
+    /** Colum in CoursesTableView to view student email*/
     @FXML
     private TableColumn<StudentInfo, String> MailCollum;
-
+    /** Colum in CoursesTableView to view student address*/
     @FXML
     private TableColumn<StudentInfo, String> AddressNum;
-
+    /** Colum in CoursesTableView to view student phone number*/
     @FXML
     private TableColumn<StudentInfo, String> PhoneColum;
-/*
+    /** button to show submittion of selected student */
     @FXML
-    private TableColumn<StudentInfo, String> AverageColum;
-*/
-
+    private Button SubBtn;
+    /** button to show parents of selected student */
     @FXML
     private Button ShowParentsBtn;
 
-   // ArrayList<claSS> classlist = claSS.getClasses();
+  /** combobox to choose class */
 
     @FXML
     private ComboBox<String> ClassChooser;
-
+/** button to show student of selected class */
     @FXML
     private Button SelectBtn;
-
+/** listView for courses studied in selected course */
     @FXML
     private ListView<String> CoursesOfClassVL;
-
+/** combobox to choose semester */
     @FXML
     private ComboBox<String> SemesterCB;
-
+/** arraylist to holds all semesters */
     ArrayList<Semester> semesterArr = Semester.getSemesters();
+    /** arraylist to holds all classes */
     ArrayList<claSS> ClassArr = claSS.getClasses();
+    /** String to holds Choosed Class */
     public static String ChoosedClass = new String();
+    /** String to holds Choosed Semester*/
     public static String ChoosedSemester = new String();
+    /** String to holds Selected Student*/
     public static String SelectedStudent = new String();
     
 
     
 	@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		
+	public void initialize(URL arg0, ResourceBundle arg1) {// Initialize window.
+		SubBtn.setDisable(true);
 		ShowParentsBtn.setDisable(true);
     	ArrayList<String> semesterIdArr = new ArrayList<String>();
     	ArrayList<String> ClassNamesArr = new ArrayList<String>();
@@ -113,13 +120,16 @@ public class Class_Student_Info implements Initializable {
 		IDCollum.setCellValueFactory(new PropertyValueFactory<StudentInfo, String>("id"));
 		NameCollum.setCellValueFactory(new PropertyValueFactory<StudentInfo, String>("name"));
 		MailCollum.setCellValueFactory(new PropertyValueFactory<StudentInfo, String>("mail"));
-		//AverageColum.setCellValueFactory(new PropertyValueFactory<StudentInfo, String>("Average"));
 		PhoneColum.setCellValueFactory(new PropertyValueFactory<StudentInfo, String>("telephone"));
 		AddressNum.setCellValueFactory(new PropertyValueFactory<StudentInfo, String>("address"));
 		
     }
     
-	
+	/**
+	 * handdle choose class combobox
+	 * @param event
+	 * @throws IOException
+	 */
     @FXML
     void ClichOnClass(ActionEvent event) throws IOException  {
     	SemesterCB.setDisable(false);
@@ -130,7 +140,11 @@ public class Class_Student_Info implements Initializable {
     	ChoosedClass = ClassChooser.getSelectionModel().getSelectedItem();
     	//System.out.println(ChoosedClass);
     }
-
+/**
+ * handdle choose semester combobox
+ * @param event
+ * @throws IOException
+ */
     @FXML
     void ClickOnSemester(ActionEvent event) throws IOException  {
     	classCoursesData.clear();
@@ -141,26 +155,34 @@ public class Class_Student_Info implements Initializable {
 
     	   String Season = ChoosedSemester.substring(j+1); // after the space to the rest of the line
     	 ChoosedSemester = Semester.getSemesterID(Year, Season).get(0);
-    	// System.out.println(Year+" "+Season);
-
+    	 ArrayList<String> courseList = new ArrayList<String>();
+    	 ArrayList<Course> courseArray = Course.getCoursesofClass(ChoosedClass, ChoosedSemester);
+    	 for (int i = 0 ; i < courseArray.size() ; i++)
+ 	 	{
+ 	 	courseList.add(courseArray.get(i).getName());
+ 	 	classCoursesData.add(courseList.get(i));
+ 	 	//System.out.println(courseList.get(i));
+ 	 	
+ 	 	}
+    	 CoursesOfClassVL.setItems(classCoursesData);
     }
     
-
+/**
+ * handle click on select button to show students info
+ * @param event
+ * @throws IOException
+ */
     @FXML
     void ClickSelect(ActionEvent event)  throws IOException {
     	classCoursesData.clear();
     	Studentsdata.clear();
-	 	ArrayList<Course> courseArray = Course.getCoursesofClass(ChoosedClass, ChoosedSemester);
-	 	ArrayList<String> courseList = new ArrayList<String>();
-	 	for (int i = 0 ; i < courseArray.size() ; i++)
-	 	{
-	 	courseList.add(courseArray.get(i).getName());
-	 	classCoursesData.add(courseList.get(i));
-	 	//System.out.println(courseList.get(i));
-	 	}
-	 	CoursesOfClassVL.setItems(classCoursesData);
+	 	
+	 	
+	 	
+	 	
 	 	ArrayList<Student> studentsList = claSS.getStudentsOfClass(ChoosedClass);
 	 	ShowParentsBtn.setDisable(false);
+	 	SubBtn.setDisable(false);
 	 	for (int i = 0 ; i < studentsList.size() ; i++)
 		{
 	 		StudentInfo temp = new StudentInfo(studentsList.get(i).getID(),
@@ -173,7 +195,11 @@ public class Class_Student_Info implements Initializable {
 		}
 	 	StudentsTableView.setItems((FXCollections.observableArrayList(Studentsdata)));//.setItems(FXCollections.observableArrayList(Studentsdata));
     }
-    
+    /**
+     * handle click on show parents button to show parents of selected student info
+     * @param event
+     * @throws IOException
+     */
     @FXML
     void ClickOnShowParents(ActionEvent event) throws IOException {
     	SelectedStudent = StudentsTableView.getSelectionModel().selectedItemProperty().get().getId();
@@ -196,7 +222,11 @@ public class Class_Student_Info implements Initializable {
 
 }
     
-
+/**
+ * handle click on show all parents button to show all parents info
+ * @param event
+ * @throws IOException
+ */
     @FXML
     void ClickShowAll(ActionEvent event)  throws IOException {
        
@@ -217,20 +247,42 @@ public class Class_Student_Info implements Initializable {
         ViewParentsStage.setTitle( "Parents Info" );
         ViewParentsStage.show();
 
+    }
+/**
+ * handle click on show submitionsbutton to show all submittions of selected student
+ * @param event
+ * @throws IOException
+ */
+    @FXML
+    void ClickOnShowSub(ActionEvent event)  throws IOException {
+    	StudentInfo ChoosenStudent = StudentsTableView.getSelectionModel().selectedItemProperty().get();  // Choosed Course
+    	SelectedStudent = ChoosenStudent.getId();												// Choosed Course ID
+    	
+    	Stage ViewAssignmentsStage = new Stage();
+    	 
         
-
-    
+        // constructing our scene
+        URL url = getClass().getResource("/FXML/ViewSubmition.fxml");
+        AnchorPane pane = FXMLLoader.load( url );
+        Scene scene = new Scene( pane );
+        
+        // setting the stage
+        ViewAssignmentsStage.setScene( scene );
+        ViewAssignmentsStage.setTitle( "Submition Info" );
+        ViewAssignmentsStage.show();
     }
 
-	 
 
 
 
-
-	
+	/**
+	 * Class to present Student Info
+	 * @author Or Cohen
+	 *
+	 */
 	 public static class StudentInfo{
 
-		    
+		    /** getters & setters */
 	        private StringProperty id;
 	        public void setId(String value) { idProperty().set(value); }
 	        public String getId() { return idProperty().get(); }
@@ -271,19 +323,10 @@ public class Class_Student_Info implements Initializable {
 	            return telephone; 
 	        } 
 	        
-	      /*  
-	        private StringProperty Average;
-	        public void setAverage(String value) { AverageProperty().set(value); }
-	        public String getAverage() { return AverageProperty().get(); }
-	        public StringProperty AverageProperty() { 
-	            if (Average == null) Average = new SimpleStringProperty(this, "Average");
-	            return Average; 
-	        }
-	        */
+/** constructor */
 	        public StudentInfo(String id, String name, String mail, String address, String telephone){
 	        	setId(id);
 	        	setName(name);
-	        	//setAverage(Average);
 	        	setMail(mail);
 	        	setAddress(address);
 	        	setTelephone(telephone);

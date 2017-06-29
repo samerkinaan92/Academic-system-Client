@@ -10,6 +10,7 @@ public class Parent extends User {
 	/**isBlocked - indicate if the parent is blocked*/
 	private boolean isBlocked;
 	
+	private String ID;
 	
 	/**Parent()
 	 * @param id - Parent ID
@@ -30,13 +31,22 @@ public class Parent extends User {
 		else this.isBlocked = true;
 	}
 	
-	
+	/**Parent()
+	 * @param id - Parent ID
+	 * @param name- Parent Name
+	 * */
 	public Parent(String ID, String name){
 		
 		super(ID,name);
 	}
 	
-
+	/**Parent()
+	 * @param id - Parent ID
+	 * @param name- Parent Name
+	 * @param email - Parent email
+	 * @param phone - Parent phone
+	 * @param address - Parent address
+	 * */
 	public Parent(String ID, String name,String mail, String address, String phone){
 		
 		super(ID,name,mail,address,phone,"Parent");
@@ -78,11 +88,10 @@ public class Parent extends User {
 	 * @param StudentID - Student ID
 	 * */
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Parent> getParentsOfStudent(String StudentID){
+	public static ArrayList<String> getParentsOfStudent(String StudentID){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select distinct users.ID, users.Name, users.email ,users.phoneNum, users.address, users.isBlocked From users WHERE users.ID IN (Select ParentUserID from parent_student Where StudentUserID = '"+StudentID+"');");
-		//, phoneNum, email, address
+		msgServer.put("query", "select parent_student.ParentUserID, users.Name, users.email ,users.phoneNum, users.address, users.isBlocked ,parent_student.StudentUserID from parent_student, users  Where users.ID = parent_student.ParentUserID and StudentUserID = '"+StudentID+"';	");	//, phoneNum, email, address
 		try{
 			Main.client.sendMessageToServer(msgServer);
 			}
@@ -98,9 +107,9 @@ public class Parent extends User {
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		ArrayList<Parent> DBparents = new ArrayList<Parent>();
 		
-		for (int i = 0; i < result.size(); i+=6)//3
+		for (int i = 0; i < result.size(); i+=7)//3
 			DBparents.add(new Parent(result.get(i), result.get(i+1), result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,result.get(i+5)));
-		return DBparents;
+		return result;
 
 	}
 	
@@ -109,11 +118,10 @@ public class Parent extends User {
 	 * @param ClassName - Class name
 	 * */
 	@SuppressWarnings("unchecked")
-	public static ArrayList<Parent> getParentsClass(String ClassName){
+	public static ArrayList<String> getParentsClass(String ClassName){
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select distinct users.ID, users.Name, users.email ,users.phoneNum, users.address, users.isBlocked From users, parent_student WHERE users.ID IN (select ParentUserID from parent_student Where StudentUserID IN(select StudentID from student_class where student_class.ClassName = '"+ClassName+"'));");        
-		//, phoneNum, email, address
+		msgServer.put("query", "select ParentUserID, users.Name, users.email ,users.phoneNum, users.address, users.isBlocked ,parent_student.StudentUserID from parent_student, users  Where users.ID = parent_student.ParentUserID and StudentUserID IN (select StudentID from student_class where student_class.ClassName = '"+ClassName+"') ;");     		//, phoneNum, email, address
 		try{
 			Main.client.sendMessageToServer(msgServer);
 			}
@@ -129,13 +137,13 @@ public class Parent extends User {
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		ArrayList<Parent> DBparents = new ArrayList<Parent>();
 		
-		for (int i = 0; i < result.size(); i+=6)//3
+		for (int i = 0; i < result.size(); i+=7)//3
 		{
 			
 			DBparents.add(new Parent(result.get(i), result.get(i+1), result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,result.get(i+5)));
 		}
-			//, result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,
-		return DBparents;
+
+		return result;
 
 	}
 	
@@ -159,7 +167,7 @@ public class Parent extends User {
 		return courseResult;
 	}
 	
-
+/** Getters & Setters */
 	
 	public String getIsBlockedStr(){
 		if (isBlocked == true)

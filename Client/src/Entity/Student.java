@@ -226,7 +226,7 @@ public class Student extends User {
 			return null;
 		return courseResult;
 	}
-	
+	/** Getters & Setters */
 	public String getClassRoom() {
 		return classRoom;
 	}

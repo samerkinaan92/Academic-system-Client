@@ -30,7 +30,7 @@
             </TableView>
             <ListView fx:id="TUView" layoutX="54.0" layoutY="473.0" prefHeight="96.0" prefWidth="172.0" />
             <ListView fx:id="CoursesOfTeacherView" layoutX="289.0" layoutY="473.0" prefHeight="96.0" prefWidth="441.0" />
-            <Button id="SelectBtn" layoutX="307.0" layoutY="391.0" mnemonicParsing="false" onAction="#ClickOnSelect" text="Select Teacher:" textFill="#4c6bc5">
+            <Button id="SelectBtn"  layoutX="307.0" layoutY="391.0" mnemonicParsing="false" onAction="#ClickOnSelect" text="Select Teacher:" textFill="#4c6bc5">
                <font>
                   <Font name="Copperplate Gothic Bold" size="20.0" />
                </font>

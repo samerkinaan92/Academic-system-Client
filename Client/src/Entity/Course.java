@@ -134,7 +134,11 @@ public class Course {
 			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
 		return DBcourses;
 	}
-	
+	/**
+	 * return all courses in semester
+	 * @param semester
+	 * @return ArrayList<Course>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCoursesofSemester(String semester){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -159,7 +163,11 @@ public class Course {
 			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
 		return DBcourses;
 	}
-	
+	/**
+	 * return all pre-courses of a course
+	 * @param ID
+	 * @return ArrayList<String>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getPreCoursesId(String ID){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -208,7 +216,11 @@ public class Course {
 		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
 		return result.get(0);
 	}
-	
+	/**
+	 * returns all courses of teaching unit
+	 * @param teachingUnit
+	 * @return ArrayList<Course>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCourses(String teachingUnit){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
@@ -233,19 +245,18 @@ public class Course {
 			DBcourses.add(new Course(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3)));
 		return DBcourses;
 	}
-	
+	/**
+	 * returns all courses of teaching unit
+	 * @param teachingUnit
+	 * @return ArrayList<Course>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<Course> getCoursesByTU( String TU , String semester){ // Get list of courses.
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
 		msgServer.put("query", "select  distinct course.CourseID, course.CourseName, course.weeklyHours, course.TUName "
 				+ "From course,class_course WHERE course.TUName = '"+TU+"' and class_course.semesterId = '"+semester+"' and course.CourseID = class_course.CourseID;");
-		/*select  distinct course.CourseID 
-		from course, class_course 
-		where class_course.CourseID = course.CourseID and class_course.semesterId = '4';
-		*/
-		//"select  distinct course.CourseID from course, class_course where class_course.CourseID = course.CourseID and class_course.semesterId = '"+semester+"';"
-		try{
+			try{
 			Main.client.sendMessageToServer(msgServer);
 			}
 			catch(Exception exp){
@@ -288,7 +299,11 @@ public class Course {
 		
 		return msgFromServer;
 	}
-	
+	/**
+	 * 
+	 * @param cID
+	 * @return ArrayList<String> 
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getPreCourses(String cID){
 		
@@ -502,7 +517,11 @@ public class Course {
 		return courseArr;
 	}
 	
-	
+	/**
+	 * returns courses studied by class
+	 * @param className
+	 * @return ArrayList<Course>
+	 */
 	public static ArrayList<Course> getCoursesByClass(String className){
 		HashMap<String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -541,7 +560,8 @@ public class Course {
 		return getName() + " (" + getCourseID() + ")";
 	}
 
-	
+	/** Getters & Setters */
+	 
 	public int getCourseID() {
 		return CourseID;
 	}

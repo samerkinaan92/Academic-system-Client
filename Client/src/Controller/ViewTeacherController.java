@@ -6,17 +6,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.awt.Button;
-//import Controller.StudentExceptionalRequest.StudRequestInfo;
 import Entity.Course;
 import Entity.Semester;
 import Entity.Teacher;
-//import Entity.claSS;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-//import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.ComboBox;
@@ -25,61 +22,61 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-
+/**
+ * This is the controller class for: "ViewTeacherInfo.fxml"
+ * @author Or Cohen
+ * */
 public class ViewTeacherController implements Initializable{
+	/** List to be viewd on teachers table */
 	private final ObservableList<techertInfo> data = FXCollections.observableArrayList();
-	private final ObservableList<String> datacourse = FXCollections.observableArrayList();
+	/** List to be viewd on course view list */
 	private final ObservableList<String> dataclass = FXCollections.observableArrayList();
+	/** List to be viewd on teaching unit view list */
 	private final ObservableList<String> dataTU = FXCollections.observableArrayList();
 	
-
+	/** Button to show teachers info */
     @FXML
     private Button SelectBtn;
-   
+    /** Table view to be show teachers Info*/
     @FXML
     private TableView<techertInfo> TeacherTableView;
-
+    /** Colum in TableView to view ID of teacher */
     @FXML
     private TableColumn<techertInfo, String> IdCollum;
-
+    /** Colum in TableView to view Name of teacher */
     @FXML
     private TableColumn<techertInfo, String> nameCollum;
-
+    /** Colum in TableView to email Name of teacher */
     @FXML
     private TableColumn<techertInfo, String> mailCollum;
-
+    /** Colum in TableView to view Max Work Hours of teacher */
     @FXML
     private TableColumn<techertInfo, String> maxWorkHoursCollum;
-
+    /** Colum in TableView to view Telephone number of teacher */
     @FXML
     private TableColumn<techertInfo, String> telephoneCollum;
-
+    /** Colum in TableView to view address of teacher */
     @FXML
     private TableColumn<techertInfo, String> addressCollum;
     
-
+    /** combobox to choose semester */
     @FXML
     private ComboBox<String> semesterCB;
-
+    /** List View to view teaching unit */
     @FXML
     private ListView<String> TUView;
 
-    @FXML
-    private Button temp;
-
+    /** Array for all the semesters */
     ArrayList<Semester> semesterArr = Semester.getSemesters();
-
+    /** String to hold choosed semester */
     String ChoosedSemester = new String();
-
+    /** List View to view courses of teacher */
     @FXML
     private ListView<String> CoursesOfTeacherView;
 
-    @FXML
-    private ListView<String> ClassesOfteacherView;
-
     
 	@Override
-	public void initialize(URL location, ResourceBundle resources) {
+	public void initialize(URL location, ResourceBundle resources) {// Initialize window.
 		TeacherTableView.setDisable(true);
 		ArrayList<String> semesterIdArr = new ArrayList<String>();
 	    for (int i = 0 ; i < semesterArr.size() ; i++)
@@ -105,7 +102,10 @@ public class ViewTeacherController implements Initializable{
 		
 	
 	}
-	
+	/**
+	 * select and update the selected semester for the teacher info
+	 * @param event
+	 */
     @FXML
     void semesterChoose(ActionEvent event) {
     	TeacherTableView.setDisable(false);
@@ -136,13 +136,17 @@ public class ViewTeacherController implements Initializable{
 				data.add(temp);
 			}
 			TeacherTableView.setItems(FXCollections.observableArrayList(data));
+			if(TeacherTableView.getSelectionModel().isEmpty())
+				SelectBtn.setEnabled(false);
     }
-
+    		
+    /**
+     * button to show information of teachers in chosen semester
+     * @param event
+     * @throws IOException
+     */
 	 @FXML
-    
-	
     void ClickOnSelect(ActionEvent event) throws IOException { 
-		 datacourse.clear();
 		 dataclass.clear();
 		 dataTU.clear();
 		
@@ -195,10 +199,14 @@ public class ViewTeacherController implements Initializable{
     	TUView.setItems(FXCollections.observableArrayList(dataTU));
 	 }
     
-    
+    /**
+     * 
+     * @author Or Cohen
+     * class to represent teacher info
+     */
 	 public static class techertInfo{
 
-	    
+	    /** gettters and setters */
 	        private StringProperty id;
 	        public void setId(String value) { idProperty().set(value); }
 	        public String getId() { return idProperty().get(); }
@@ -206,7 +214,7 @@ public class ViewTeacherController implements Initializable{
 	            if (id == null) id = new SimpleStringProperty(this, "id");
 	            return id; 
 	        } 
-	        
+	       /** gettters and setters */
 	    	private StringProperty name;
 	        public void setName(String value) { nameProperty().set(value); }
 	        public String getName() { return nameProperty().get(); }
@@ -214,7 +222,7 @@ public class ViewTeacherController implements Initializable{
 	            if (name == null) name = new SimpleStringProperty(this, "name");
 	            return name; 
 	        }
-	        
+	        /** gettters and setters */   
 	        private StringProperty address;
 	        public void setAddress(String value) { addressProperty().set(value); }
 	        public String getAddress() { return addressProperty().get(); }
@@ -222,7 +230,7 @@ public class ViewTeacherController implements Initializable{
 	            if (address == null) address = new SimpleStringProperty(this, "address");
 	            return address; 
 	        } 
-	        
+	        /** gettters and setters */    
 	        private StringProperty maxWorkHours;
 	        public void setMaxWorkHours(String value) { maxWorkHoursProperty().set(value); }
 	        public String getMaxWorkHours() { return maxWorkHoursProperty().get(); }
@@ -230,7 +238,7 @@ public class ViewTeacherController implements Initializable{
 	            if (maxWorkHours == null) maxWorkHours = new SimpleStringProperty(this, "Max Work Hours");
 	            return maxWorkHours; 
 	        }
-	        
+	        /** gettters and setters */   
 	        private StringProperty mail;
 	        public void setMail(String value) { mailProperty().set(value); }
 	        public String getMail() { return mailProperty().get(); }
@@ -238,7 +246,7 @@ public class ViewTeacherController implements Initializable{
 	            if (mail == null) mail = new SimpleStringProperty(this, "mail");
 	            return mail; 
 	        }
-	        
+	        /** gettters and setters */   
 	        private StringProperty telephone;
 	        public void setTelephone(String value) { telephoneProperty().set(value); }
 	        public String getTelephone() { return telephoneProperty().get(); }
@@ -246,7 +254,7 @@ public class ViewTeacherController implements Initializable{
 	            if (telephone == null) telephone = new SimpleStringProperty(this, "telephone");
 	            return telephone; 
 	        } 
-	        
+	      /** contructor */  
 	        public techertInfo(String id, String teachertName, String maxWH, String mail, String address, String telephone){
 	        	setId(id);
 	        	setName(teachertName);
