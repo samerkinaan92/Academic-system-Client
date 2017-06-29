@@ -16,7 +16,8 @@ public class Assignment {
 	private Date deadLine;
 	private String filePath;
 	private int semesterID;
-	
+	private String publishDateinString;
+	private String deadLineString;
 	
 	/**
 	 * Create new Assignment
@@ -37,7 +38,38 @@ public class Assignment {
 		filePath = path;
 		semesterID = Sid;
 	}
-	
+	/**
+	 * Create new Assignment
+	 * @param Aid Assignment ID
+	 * @param name Assignment name
+	 * @param Cid Course ID
+	 * @param publish publish date of Assignment represented as String
+	 * @param dead Dead Line date of Assignment represented as String
+	 * @param path Path of the assignment file (server)
+	 */
+	public Assignment(int Aid, String name, int Cid, String publish, String dead, String path){
+		assignmentID = Aid;
+		AssignmentName = name;
+		CourseID = Cid;
+		publishDateinString = publish;
+		deadLineString = dead;
+		setFilePath(path);
+	}
+	/**
+	 * Create new Assignment
+	 * @param Aid Assignment ID
+	 * @param name Assignment name
+	 * @param Cid Course ID
+	 * @param publish publish date of Assignment represented as String
+	 * @param dead Dead Line date of Assignment represented as String
+	 */
+	public Assignment(int Aid, String name, int Cid, String publish, String dead){
+		assignmentID = Aid;
+		AssignmentName = name;
+		CourseID = Cid;
+		publishDateinString = publish;
+		deadLineString = dead;
+	}
 	/**
 	 * Get the file as byte array from server
 	 * @param path The path the file is stored in server.
@@ -67,6 +99,93 @@ public class Assignment {
 		return null;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Assignment> getAssignments(String CourseID, String SemesterId){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select AssignmentID, AssignmentName,CourseID, publishDate, deadLine,filePath from assignment where CourseID = '"+CourseID+"' and semesterId = '"+SemesterId+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<Assignment> DBAssignment = new ArrayList<Assignment>();
+		
+		for (int i = 0; i < result.size(); i+=6)
+			DBAssignment.add(new Assignment(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3),result.get(i+4),result.get(i+5) ));
+		return DBAssignment;
+	}
+
+	/**
+	 * get all assignments of specific Stdent
+	 * @param StudentId
+	 * @return ArrayList<String>
+	 */
+	@SuppressWarnings("unchecked")
+	public static ArrayList<String> getAssignmentsOfStudent(String StudentId){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "select assignment.AssignmentID from assignment, submission Where assignment.AssignmentID = submission.AssignmentID and submission.StudentStudentID = '"+StudentId+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+	return result;
+	}
+	/**
+	 * get all information on specific Assignment
+	 * @param AssID
+	 * @return ArrayList<Assignment>
+	 */
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Assignment> getAssignments(String AssID){ // Get list of courses.
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", "Select AssignmentID, AssignmentName,CourseID, publishDate, deadLine,filePath from assignment where AssignmentID = '"+AssID+"';");
+		
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				System.out.println("Server fatal error!");
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		ArrayList<Assignment> DBAssignment = new ArrayList<Assignment>();
+		
+		for (int i = 0; i < result.size(); i+=6)
+			DBAssignment.add(new Assignment(Integer.parseInt(result.get(i)), result.get(i+1), Integer.parseInt(result.get(i+2)), result.get(i+3),result.get(i+4),result.get(i+5) ));
+		return DBAssignment;
+	}
+	
+	/**
+	 * get all assignments of student in a course
+	 * @param sem
+	 * @param courseID
+	 * @param stdID
+	 * @return ArrayList<String>
+	 */
 	
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getAssignByCourse(String sem , String courseID, String stdID){
@@ -94,7 +213,11 @@ public class Assignment {
 		
 	}
 
-	
+	/**
+	 * get course name by ID
+	 * @param assignID
+	 * @return ArrayList<String>
+	 */
 	@SuppressWarnings("unchecked")
 	public static  ArrayList<String>  getCourNameID(String assignID){
 		
@@ -120,7 +243,11 @@ public class Assignment {
 	
 	
 	
-	
+	/**
+	 * show all information of selected assignment id
+	 * @param assignID
+	 * @return ArrayList<String>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getAssignDetails(String assignID){
 		
@@ -145,31 +272,11 @@ public class Assignment {
 
 		
 	}
-	
-	@SuppressWarnings("unchecked")
-	public static String getClassDetails(String assignID, String stdID, String semID){
-		
-		HashMap <String,String> msgServer = new HashMap <String,String>();
-		msgServer.put("msgType", "select");
-		msgServer.put("query", "select distinct assignment.AssignmentName, assignment.semesterId, semester.Season from assignment,semester where assignment.semesterId = semester.semesterId and assignment.AssignmentID='"+assignID+"';");
-		
-		try{
-			Main.client.sendMessageToServer(msgServer);
-			}
-			catch(Exception exp){
-				System.out.println("Server fatal error!");
-			}
-		synchronized (Main.client){try {
-			Main.client.wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}}
-		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
-		
-		return result.get(0);
-
-		
-	}
+	/**
+	 * return Class name of student
+	 * @param studentID
+	 * @return String
+	 */
 	
 	@SuppressWarnings("unchecked")
 	public static String getClassName(String studentID){
@@ -196,7 +303,7 @@ public class Assignment {
 		
 	}
 	
-	
+	/** Getters & Setters */
 	public int getAssignmentID() {
 		return assignmentID;
 	}
@@ -237,6 +344,14 @@ public class Assignment {
 	}
 
 
+	public String getDeadLineAsString(){
+		return deadLineString;
+	}
+	
+	public String getPublishDateAsString(){
+		return publishDateinString;
+	}
+	
 	public void setDeadLine(Date deadLine) {
 		this.deadLine = deadLine;
 	}

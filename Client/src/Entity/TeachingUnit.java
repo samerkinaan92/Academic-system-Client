@@ -4,12 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
-
+/**
+ * Class of Teaching Unit Entity
+ * @author Or Cohen
+ *
+ */
 public class TeachingUnit {
 
 	private int TUName;
 	
-	
+	/**
+	 * get all teaching unit in ArrayList
+	 * @return ArrayList<String> 
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getTeachingUnit(){
 		
@@ -35,7 +42,11 @@ public class TeachingUnit {
 		return null;
 		
 	}
-	
+	/**
+	 * get all teachers of Teaching Unit
+	 * @param TU
+	 * @return ArrayList<String>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getTeachers(String TU){
 		
@@ -60,7 +71,7 @@ public class TeachingUnit {
 			return result;
 		return null;
 	}
-	
+	/** Getters & Setters */
 
 	public int getTUName() {
 		return TUName;

@@ -24,71 +24,66 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-
+/**
+ * This is the controller class for: "PRCPL_ViewSystemData.fxml"
+ * @author Or Cohen
+ *
+ */
 	public class PRCPL_ViewSystemDataController implements Initializable{
-
-/*
-	    @FXML
-	    private ComboBox<String> SemesterCB;
-*/
+/** combobox to Choose data type */
 	    @FXML
 	    private ComboBox<String> dataCB;
-
+/** button to present chosen data type */
 	    @FXML
 	    private Button SelectBtn;
 
-	  
+	  /* falg to mark which data type selected */
 	    static int flag;
-
 	    @FXML
 	    private Text txt;
-	    
-
+	    /** text of lable */
 	    @FXML
 	    private Text ChooseLabel;
-	    
+	    /** text of lable */
 	    @FXML
 	    private Text secondTxt;
-	    
+	    /** ArrayList of Semesters */
 	    ArrayList<Semester> semesterArr = Semester.getSemesters();
-
+/** String of choosen semester */
 	    static String semesterID;
 	    
 
 	    //-----------------------------------------------------------------------------------------------------------------------------
 
 	    //-----------------------------------------------------------------------------------------------------------------------------
-
+/** array of data types */
 	    private final String[] dataType = {"Classes & Students & Parents","Teachers","Courses"};
-	    
+	    /** list to show array of data types */
 	    private final ObservableList<String> boxDataType = FXCollections.observableArrayList(dataType);
 	  //-----------------------------------------------------------------------------------------------------------------------------
 
-   
+   /*
 	    @FXML
     void WhenChoosed2(ActionEvent event) {
     	
     }
-
+*/
 
 		//-----------------------------------------------------------------------------------------------------------------------------
 		
 		
 		@Override
-		public void initialize(URL arg0, ResourceBundle arg1) {
+		public void initialize(URL arg0, ResourceBundle arg1) {// Initialize window.
 
 			dataCB.setItems(boxDataType);
-			
-				
-			
 
 			}  
 		
-	  
-		
-
-
-	    
+/**
+ * handle button to show choosed data type window 
+ * @param event
+ * @throws IOException
+ */
 	    @FXML
 	    void clickChoose(ActionEvent event) throws IOException {
 	    
@@ -113,7 +108,10 @@ import javafx.stage.Stage;
 		}
 
 
-
+/**
+ * open window of Teachers Info
+ * @throws IOException
+ */
 		void OpenTeachersInfo() throws IOException{
 
 			Stage TeachersInfoStage = new Stage();
@@ -131,24 +129,10 @@ import javafx.stage.Stage;
 
     	}
     	
-
-		void OpenParentInfo() throws IOException{
-
-			Stage ParentInfoStage = new Stage();
-			 
-			    
-			    // constructing our scene
-			    URL url = getClass().getResource("/FXML/ViewParentInfo.fxml");
-			    AnchorPane pane = FXMLLoader.load( url );
-			    Scene scene = new Scene( pane );
-			    
-			    // setting the stage
-			    ParentInfoStage.setScene( scene );
-			    ParentInfoStage.setTitle( "Parents Info" );
-			    ParentInfoStage.show();
-
-    	}
-    	
+    	/**
+    	 * open window of classes, students & parents Info
+    	 * @throws IOException
+    	 */
     	void OpenClassesInfo() throws IOException{
     		
 
@@ -168,7 +152,10 @@ import javafx.stage.Stage;
     		
     	}
     	
-    	
+    	/**
+    	 * open window of Courses Info
+    	 * @throws IOException
+    	 */
     	void OpenCoursesInfo() throws IOException{
     		
 			Stage CoursesInfoStage = new Stage();
@@ -186,10 +173,7 @@ import javafx.stage.Stage;
 
 
     	}
-	    
-    	void StudentsInfo(){
-    		
-    	}
+
 
 	}
 

@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import Controller.ViewTeacherController.techertInfo;
 import Entity.Assignment;
 import Entity.Parent;
+import Entity.User;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -23,6 +24,12 @@ public class ParentVieController implements Initializable {
     @FXML
     private TableView<ParentInfo> ParentTable;
 
+    @FXML
+    private TableColumn<ParentInfo, String> studentIDColum;
+
+    @FXML
+    private TableColumn<ParentInfo, String> studNamecolum;
+    
     @FXML
     private TableColumn<ParentInfo, String> IdCollum;
 
@@ -43,7 +50,6 @@ public class ParentVieController implements Initializable {
 /*
     @FXML
     void ChoosedParent(MouseEvent event) {
-
     }
 */
     
@@ -98,20 +104,37 @@ public class ParentVieController implements Initializable {
 	            return telephone; 
 	        } 
 	        
-	        public ParentInfo(String id, String teachertName,String address ,String isBlocked, String mail, String telephone){
+	        private StringProperty studentId;
+	        public void setstudentId(String value) { studentIdProperty().set(value); }
+	        public String getstudentId() { return studentIdProperty().get(); }
+	        public StringProperty studentIdProperty() { 
+	            if (studentId == null) studentId = new SimpleStringProperty(this, "studentId");
+	            return studentId; 
+	        } 
+
+	        private StringProperty studentName;
+	        public void setstudentName(String value) { studentNameProperty().set(value); }
+	        public String getstudentName() { return studentNameProperty().get(); }
+	        public StringProperty studentNameProperty() { 
+	            if (studentName == null) studentName = new SimpleStringProperty(this, "studentName");
+	            return studentName; 
+	        } 
+	        public ParentInfo(String id, String teachertName,String address ,String isBlocked, String mail, String telephone, String studentId, String studentName){
 	        	setId(id);
 	        	setName(teachertName);
 	        	setisBlocked(isBlocked);
 	        	setMail(mail);
 	        	setAddress(address);
 	        	setTelephone(telephone);
+	        	setstudentId(studentId);
+	        	setstudentName(studentName);
 	        }
 	    }
 
 	  
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		 ArrayList<Parent> ParentArr = new ArrayList<Parent>();
+		 ArrayList<String> ParentArr = new ArrayList<String>();
 		 if (Class_Student_Info.flag == 1)
 			 ParentArr = Parent.getParentsOfStudent(Class_Student_Info.SelectedStudent);	 
 		 else ParentArr = Parent.getParentsClass(Class_Student_Info.ChoosedClass);
@@ -124,18 +147,23 @@ public class ParentVieController implements Initializable {
 		isBlockedCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("isBlocked"));
 		MailCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("mail"));
 		TelephoneCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("telephone"));
+		studentIDColum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("studentId"));
+		studNamecolum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("studentName"));
 
 
 
-
-		   for (int i = 0 ; i < ParentArr.size() ; i++)
+		   for (int i = 0 ; i < ParentArr.size() ; i+=7)
 		    {
-			   ParentInfo temp = new ParentInfo(ParentArr.get(i).getID(),
-					   ParentArr.get(i).getName(),
-					   ParentArr.get(i).getAddress(),
-					   ParentArr.get(i).getIsBlockedStr(),
-					   ParentArr.get(i).getEmail(),
-			   		   ParentArr.get(i).getPhone());
+			   ParentInfo temp = new ParentInfo(ParentArr.get(i),
+					   ParentArr.get(i+1),
+					   ParentArr.get(i+4),
+			   		   ParentArr.get(i+5),
+			   		   ParentArr.get(i+2),
+			   		   ParentArr.get(i+3),
+			   		   ParentArr.get(i+6),
+			   		   User.getUserInfo(ParentArr.get(i+6)).getName());
+			   
+			   		   					System.out.println(ParentArr.get(i+1)+" - "+User.getUserInfo(ParentArr.get(i+6)).getName());		 
 			   studData.add(temp);
 					   																							
 		    }

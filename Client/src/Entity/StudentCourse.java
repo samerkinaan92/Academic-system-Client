@@ -4,9 +4,19 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
-
+/**
+ * Class of Student
+ * @author Or Cohen
+ *
+ */
 public class StudentCourse {
-	
+	/** StudentCourse()
+	 * @param courseID - Course ID
+	 * @param teacherID- teacher ID
+	 * @param TUname - Teaching Unit
+	 * @param courseName - course Name
+	 * @param weeklyHours - weekly Hours
+	 * */
 	private String courseID;
 	private String teacherID;
 	private String TUname;
@@ -22,7 +32,12 @@ public class StudentCourse {
 		this.setTeacherID(cTeacherID);
 	}
 
-	
+	/**
+	 * get courses studied in semester
+	 * @param sem
+	 * @param stdID
+	 * @return  ArrayList<StudentCourse>
+	 */
 	public static ArrayList<StudentCourse> getCoursesBySemStd(String sem, String stdID){
 		HashMap<String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -55,7 +70,7 @@ public class StudentCourse {
 			return null;
 		return courseResult;
 	}
-	
+	/** Getters & Setters */
 	public String getCourseID() {
 		return courseID;
 	}

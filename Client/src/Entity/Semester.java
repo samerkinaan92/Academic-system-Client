@@ -13,7 +13,7 @@ public class Semester {
 	private int year;
 	
 	/**
-	 * 
+	 * Semester()
 	 * @param id Semester id
 	 * @param season Represents first or second semester
 	 * @param isCurr 1 for current semester
@@ -142,7 +142,12 @@ public class Semester {
 		return semArr;
 		
 	}
-	
+	/**
+	 * returns semester ID of Year and Season
+	 * @param Year
+	 * @param Season
+	 * @return ArrayList<String>
+	 */
 	@SuppressWarnings("unchecked")
 	public static ArrayList<String> getSemesterID(String Year, String Season){
 		
