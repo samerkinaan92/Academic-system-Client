@@ -431,33 +431,7 @@ public class TCHR_CheckAssignments implements Initializable {
     	return 0;
     }
     
-    
-    /**updateStatistical() - Updating statistical table in DB.
-     * @param studentID - Student ID
-     * @param assignmentID - Assignment ID
-     * @param grade - Assignment grade
-     * */
-	private void updateStatistical(int studentID, int assignmentID, float grade){
-    	
-    	ArrayList<String> assignDetails= Assignment.getAssignDetails(String.valueOf(assignmentID));  	
-    	String teacherID= Main.user.getID();
-    	String teachName = Main.user.getName();
-    	ArrayList<String> courseDetails = Assignment.getCourNameID(String.valueOf(assignmentID));
-    	String className = Assignment.getClassName(String.valueOf(studentID));
-    	
-    	sentMSG.put("msgType", "insert");
-		sentMSG.put("query", "INSERT INTO `mat`.`statistical` (`assignID`, `assignName`, `studentID`, `grade`, `teacherID`, `teacherName`,`semYear`, `semName`, `courseName`, `courseID`, `className`) VALUES ('"+assignmentID+"', '"+assignDetails.get(0)+"', '"+studentID+"', '"+String.valueOf(grade)+"', '"+teacherID+"', '"+teachName+"','"+assignDetails.get(1)+"','"+assignDetails.get(2)+"','"+courseDetails.get(1)+"', '"+courseDetails.get(0)+"', '"+className+"')");
-		System.out.println("work");
-		synchronized (Main.client) {	
-			Main.client.sendMessageToServer(sentMSG);
-			try {Main.client.wait();}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-				System.out.println("Thread cant move to wait()");
-			}
-		}
-    
-    }
+
     
     
     /**		get the submission object who matches the selection in the combobox	*/
@@ -493,9 +467,38 @@ public class TCHR_CheckAssignments implements Initializable {
 			}
 			
 			//******Update statistical table****//
-				updateStatistical(studentID,assignmentID,grade);
+				updateStatistical(String.valueOf(studentID),String.valueOf(assignmentID),String.valueOf(grade));
 			
 		}
+    }
+    
+    
+    /**updateStatistical() - Updating statistical table in DB.
+     * @param studentID - Student ID
+     * @param assignmentID - Assignment ID
+     * @param grade - Assignment grade
+     * */
+	private void updateStatistical(String studentID, String assignmentID,String grade){
+    	
+		HashMap<String, String >sentMSG = new HashMap <String,String>();
+    	ArrayList<String> assignDetails= Assignment.getAssignDetails(assignmentID);  	
+    	String teacherID= Main.user.getID();
+    	String teachName = Main.user.getName();
+    	ArrayList<String> courseDetails = Assignment.getCourNameID(assignmentID);
+    	String className = Assignment.getClassName(String.valueOf(studentID));
+    	
+    	sentMSG.put("msgType", "update");
+    	sentMSG.put("query", "UPDATE `mat`.`statistical` SET `grade`='"+grade+"', `teacherID`='"+teacherID+"', `teacherName`='"+teachName+"', `semYear`='"+assignDetails.get(1)+"', `semName`='"+assignDetails.get(2)+"', `courseName`='"+courseDetails.get(1)+"', `courseID`='"+courseDetails.get(0)+"', `className`='"+className+"' WHERE `assignID`='"+assignmentID+"' and`assignName`='"+assignDetails.get(0)+"' and`studentID`='"+studentID+"';");
+		synchronized (Main.client) {	
+			Main.client.sendMessageToServer(sentMSG);
+			try {Main.client.wait();}
+			catch (InterruptedException e) {
+				e.printStackTrace();
+				System.out.println("Thread cant move to wait()");
+			}
+			
+		}
+    
     }
     
     /**		event handler for courses combo box
