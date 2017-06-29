@@ -62,10 +62,11 @@ public class SEC_DeleteClass implements Initializable {
     	
     	String selectedClass = classesCB.getSelectionModel().getSelectedItem().toString();
     	
-    	if ( showsDetails(selectedClass) ) 	// if user is sure he wants to delete the class
+    	if ( showsDetails(selectedClass) ){ 	// if user is sure he wants to delete the class
     		alertAllStudentsInClass(selectedClass);
     		alertAllTeachersInClass(selectedClass);
     		deleteClass(selectedClass);
+    	}
     	
     }
 

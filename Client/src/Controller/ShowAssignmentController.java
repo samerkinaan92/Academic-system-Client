@@ -9,11 +9,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import Controller.ParentViewInfoController.ParentInfo;
-import Controller.ViewTeacherController.techertInfo;
 import Entity.Assignment;
 import Entity.Course;
-import Entity.EvaluationForm;
 import Entity.Student;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;

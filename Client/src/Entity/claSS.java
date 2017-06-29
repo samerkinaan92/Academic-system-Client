@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
 
 public class claSS {
 	

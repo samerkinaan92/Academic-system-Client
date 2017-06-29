@@ -535,7 +535,33 @@ public class StudentSubmitAssignmentController implements Initializable {
 	    		errMsg.showAndWait();
 	    	}
 	    	clearScreen();
+	    	updateStatistical(Main.user.getID(),assignmentID);
 	  }
+	  
+	    
+	    /**insertStatistical() - Updating statistical table in DB.
+	     * @param studentID - Student ID
+	     * @param assignmentID - Assignment ID
+	     * @param grade - Assignment grade
+	     * */
+		private void updateStatistical(String studentID, String assignmentID){
+	    	
+			HashMap<String, String >sentMSG = new HashMap <String,String>();
+	    	ArrayList<String> assignDetails= Assignment.getAssignDetails(assignmentID);  	
+	    	
+	    	sentMSG.put("msgType", "insert");
+			sentMSG.put("query", "INSERT INTO `mat`.`statistical` (`assignID`, `assignName`, `studentID`) VALUES ('"+assignmentID+"', '"+assignDetails.get(0)+"', '"+studentID+"');");
+			synchronized (Main.client) {	
+				Main.client.sendMessageToServer(sentMSG);
+				try {Main.client.wait();}
+				catch (InterruptedException e) {
+					e.printStackTrace();
+					System.out.println("Thread cant move to wait()");
+				}
+				
+			}
+	    
+	    }
 	  
 	  /**
 	   * Open file explorer for upload file.

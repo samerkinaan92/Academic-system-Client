@@ -5,11 +5,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import Controller.ViewTeacherController.techertInfo;
-import Entity.Assignment;
 import Entity.Course;
 import Entity.Semester;
-import Entity.Teacher;
 import Entity.TeachingUnit;
 import Entity.claSS;
 import javafx.beans.property.SimpleStringProperty;
