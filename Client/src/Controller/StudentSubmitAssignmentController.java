@@ -18,7 +18,6 @@ import java.util.ResourceBundle;
 import Entity.Assignment;
 import Entity.Course;
 import Entity.Message;
-import Entity.Semester;
 import Entity.Student;
 import Entity.SubmittedAssignment;
 import application.Main;
@@ -241,14 +240,9 @@ public class StudentSubmitAssignmentController implements Initializable {
 			
 			selectedCourseID = selectedCourseID.substring(selectedCourseID.indexOf('(')+1, selectedCourseID.indexOf(')'));
 			
-			int semesterID = Semester.getCurrent().getId();
-			
-			String className = Student.getStudentClass(Main.user.getID());
-			
 			HashMap <String,String> msgServer = new HashMap <String,String>();
 			msgServer.put("msgType", "select");
-			msgServer.put("query", "SELECT teacherID FROM class_course where class_course.ClassName = '"
-					+ className + "' AND class_course.semesterId = " + semesterID + " AND class_course.CourseID = " +
+			msgServer.put("query", "SELECT teacherID FROM mat.class_course WHERE class_course.CourseID = " +
 					selectedCourseID +";");
 			
 			try{
