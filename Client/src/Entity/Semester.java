@@ -5,6 +5,9 @@ import java.util.HashMap;
 
 import application.Main;
 
+/**Semester - Semester entity
+ * @author Tal Asulin
+ * */
 public class Semester {
 
 	private int id;

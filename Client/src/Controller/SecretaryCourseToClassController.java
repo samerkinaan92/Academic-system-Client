@@ -1,13 +1,11 @@
 package Controller;
 
 import java.io.IOException;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
 import Entity.Course;
 import Entity.Message;
 import Entity.Secretery;

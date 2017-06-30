@@ -7,6 +7,7 @@ import application.Main;
 
 /**
  * EvaluationForm - Entity which contain the student evaluation for the assignment.
+ * @author Tal Asulin
  * */
 public class EvaluationForm {
 

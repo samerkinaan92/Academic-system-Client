@@ -5,14 +5,30 @@ import java.util.HashMap;
 
 import application.Main;
 
+/**ClassCourse - ClassCourse Entity presenting the many to many relationship
+ * @author Tal Asulin
+ * */
 public class ClassCourse {
+	
+	/**
+	 * className - Class name
+	 * SemesterID - Semester ID
+	 * courseID - Course ID
+	 * teacherID - Teacher ID
+	 * */
+	
 	private String className;
 	private String SemesterID;
 	private String courseID;
 	private String teacherID;
 	
 	
-	
+	/**Constractor
+	 * @param cName - Class name
+	 * @param semID -Semester
+	 * @param cID - Course ID
+	 * @param teacID - Teacher ID
+	 * */ 
 	public ClassCourse(String cName, String semID, String cID, String teacID)
 	{
 		this.className=cName;
@@ -21,6 +37,11 @@ public class ClassCourse {
 		this.teacherID=teacID;
 	}
 	
+	
+	/**getTeacherByCourse() - Static funcation for getting array list of teacher details by the parameters:
+	 * @param courseID - course ID
+	 * @param clasName - Class name
+	 * */
 	public static  ArrayList<Teacher> getTeacherByCourse(String courseID, String clasName){
 		HashMap<String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
@@ -40,6 +61,8 @@ public class ClassCourse {
 	}
 	
 	
+	
+	/**sendMsg - Static function which send message to the server*/
 	private static ArrayList<String> sendMsg(HashMap <String,String> msgServer){
 		synchronized (Main.client){try {
 			try{

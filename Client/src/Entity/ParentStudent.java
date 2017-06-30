@@ -5,7 +5,9 @@ import java.util.HashMap;
 
 import application.Main;
 
-/**Entity - ParentStudent, describing the many to many relationship contraint.*/
+/**Entity - ParentStudent, describing the many to many relationship constraint.
+ * @author Tal Asulin
+ * */
 public class ParentStudent{
 	
 	/**isParBloc - value that indicate if the parent is blocked.*/

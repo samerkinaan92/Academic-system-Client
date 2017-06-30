@@ -136,7 +136,7 @@ public class ViewCoursesDataController  implements Initializable {
     }
 
 /**
- * 	handle teching unit combobox selection
+ * 	handle teaching unit combobox selection
  * @param event
  */
 

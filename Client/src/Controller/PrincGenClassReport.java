@@ -65,7 +65,7 @@ public class PrincGenClassReport implements Initializable{
 		series4.setName("");
 		
 
-		/*
+		/**
 		* 1- Generate report by course name.
 		* 2- Generate report by teacher name.
 		* 3- Generate report by class name. 
@@ -122,8 +122,8 @@ public class PrincGenClassReport implements Initializable{
 		
 
 	/**setCourseList() - setting the argument for the chart and the selected option to present.
-	 * @param courL
-	 * @param op
+	 * @param courL - course list
+	 * @param op - operation number
 	 * */
 	public static void setCourseList(ObservableList<Statistical> courL, int op)
 	{
@@ -133,9 +133,9 @@ public class PrincGenClassReport implements Initializable{
 	
 	
 	/**initializeChart()  = use for initialize the bar chart properties name.
-	 * @param cTitle
-	 * @param xAxis
-	 * @param yAxis
+	 * @param cTitle - Class room name
+	 * @param xAxis - name of x Axis
+	 * @param yAxis - name of y Axis
 	 * */
 	public static void initializeChart(String cTitle, String xAxis, String yAxis)
 	{

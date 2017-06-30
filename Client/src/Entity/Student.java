@@ -6,12 +6,23 @@ import java.util.HashMap;
 
 import application.Main;
 
+/**Student - Student Class which extend the User entity
+ * @author Tal Asulin
+ * */
 public class Student extends User {
 
+	/**classRoom - Class room of the student*/
 	private String classRoom;
 	
 	public Student(){}
 	
+	/**
+	 * @param ID - Student ID
+	 * @param Name - Student name
+	 * @param Mail - Student mail
+	 * @param Address - Student address
+	 * @param Phone - Student phone
+	 * */
 	public Student (String ID, String Name, String Mail, String Address, String Phone){
 		setID(ID);
 		super.setName(Name);

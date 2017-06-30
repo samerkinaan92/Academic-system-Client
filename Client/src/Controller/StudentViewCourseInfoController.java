@@ -25,7 +25,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 
-/**This controller presenting all the courses information by semesters*/
+/**This controller presenting all the courses information by semesters
+ *@author Tal Asulin
+ */
 public class StudentViewCourseInfoController implements Initializable{
 
 	/**cTable - Table that presents the course information.*/

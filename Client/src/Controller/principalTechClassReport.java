@@ -223,8 +223,8 @@ public class principalTechClassReport implements Initializable{
     
     
     /**showErrorMSG() - will present an error/warning message to the principal.
-     * @param title
-     * @param MSG
+     * @param title - message title
+     * @param MSG - message content
      * */
     private void showErrorMSG(String title, String MSG) {
 		

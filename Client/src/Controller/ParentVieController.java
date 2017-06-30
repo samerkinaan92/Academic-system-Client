@@ -20,39 +20,48 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 public class ParentVieController implements Initializable {
 	
+	
+	/**studData - student information stored in observable lisT from DB.*/
 	private final ObservableList<ParentInfo> studData = FXCollections.observableArrayList();
+	
+	/**ParentTable - Parent table*/
     @FXML
     private TableView<ParentInfo> ParentTable;
 
+    /**studentIDColum - Student ID column */
     @FXML
     private TableColumn<ParentInfo, String> studentIDColum;
 
+    /**studNamecolum - Student name column*/
     @FXML
     private TableColumn<ParentInfo, String> studNamecolum;
     
+    /**IdCollum - Parent ID column*/
     @FXML
     private TableColumn<ParentInfo, String> IdCollum;
 
+    /**NameCollum - Parent ID column*/
     @FXML
     private TableColumn<ParentInfo, String> NameCollum;
 
+    /**MailCollum - Mail column*/
     @FXML
     private TableColumn<ParentInfo, String> MailCollum;
 
+    /**TelephoneCollum - Phone number column*/
     @FXML
     private TableColumn<ParentInfo, String> TelephoneCollum;
 
+    /**AddressCollum - Address column*/
     @FXML
     private TableColumn<ParentInfo, String> AddressCollum;
 
+    /**isBlockedCollum - indicating if the parent is blocked for specific student*/
     @FXML
     private TableColumn<ParentInfo, String> isBlockedCollum;
-/*
-    @FXML
-    void ChoosedParent(MouseEvent event) {
-    }
-*/
+
     
+    /**ParentInfo - Creating new class for the Table view */
 	 public static class ParentInfo{
 
 	    

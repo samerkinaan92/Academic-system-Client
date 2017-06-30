@@ -8,8 +8,13 @@ package Entity;
  */
 public class NewTeacherPlacement {
 
+	/**currTeacherID - Current teacher ID*/
 	private String currTeacherID;
+	
+	/**newTeacherID - New teacher ID*/
 	private String newTeacherID;
+	
+	/**courseID - Course ID*/
 	private String courseID;
 	
 	

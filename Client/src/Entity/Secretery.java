@@ -5,8 +5,13 @@ import java.util.HashMap;
 
 import application.Main;
 
+/**Secretery - Secretary entity which extends the User entity.
+ * @author Tal Asulin
+ * */
 public class Secretery extends User {
 
+	
+	/**Secretary ID*/
 	private String ID;
 	 
 	/**
@@ -36,7 +41,9 @@ public class Secretery extends User {
 			}}
 		}	
 	}
+
 	
+	/**Getters and setters*/
 	public String getID() {
 		return ID;
 	}

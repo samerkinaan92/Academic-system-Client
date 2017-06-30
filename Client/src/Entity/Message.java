@@ -9,6 +9,9 @@ import java.util.HashMap;
 
 import application.Main;
 
+/**Message Entity
+ * @author Tal Asulin
+ * */
 public class Message {
 	
 	private int ID;

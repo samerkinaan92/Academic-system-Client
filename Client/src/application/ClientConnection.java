@@ -51,9 +51,6 @@ final public static int DEFAULT_PORT = 5555;
    * @param host The host to connect to.
    * @param port The port to connect on.
    */
-  
-
-  
   public ClientConnection(String host, int port) 
   {
     try 

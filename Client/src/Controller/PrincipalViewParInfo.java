@@ -30,6 +30,7 @@ import javafx.scene.layout.Pane;
 
 /**
  * This controller is to select a parent to get the parent permissions and general data.
+ * @author Tal Asulin
  */
 public class PrincipalViewParInfo implements Initializable{
 
@@ -242,6 +243,7 @@ public class PrincipalViewParInfo implements Initializable{
     }
     
     
+    /**ViewPerInfo - Event for prestnting the parent info*/
     @FXML
     void ViewPerInfo(ActionEvent event) {
     	try {

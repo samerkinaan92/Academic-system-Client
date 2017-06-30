@@ -30,7 +30,7 @@ import javafx.scene.layout.BorderPane;
 
 /**
  * This controller is used to change the parent permissions for student and display general data.
- * 
+ * @author Tal Asulin
  */
 public class PrincipalDeletePermissionsController implements Initializable{
 	

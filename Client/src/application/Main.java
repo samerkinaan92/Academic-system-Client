@@ -31,7 +31,6 @@ public class Main extends Application{
 	/**
 	 * Just a root getter for the controllers to use
 	 */
-	
 	public static BorderPane getRoot() {
 		return root;
 	}
@@ -50,6 +49,10 @@ public class Main extends Application{
 	    stage.show();
 	    }
 	
+	
+	/**openMain()- Main function of the program
+	 * @param type - indicate the role of the user.
+	 * */
 	public static void openMain(String type){
 		
 		String fxml_url = "/FXML/";
@@ -100,6 +103,11 @@ public class Main extends Application{
 		    primaryStage.show(); 
 	}
 	
+	
+	/**logOut() - log out function by the user. close the main scene and replace it with the login screen.
+	 * Also sending log out message for updating the DB.
+	 * @return - 1: operation succeeded. 0: operation failed.
+	 * */
 	public static int logOut(){
 		HashMap<String, String> msg = new HashMap<>();
 		msg.put("msgType", "update");

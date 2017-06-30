@@ -4,12 +4,27 @@ import java.util.HashMap;
 
 import application.Main;
 
+/**User - User entity
+ * @author Tal Asulin
+ * */
 public class User {
+	
+	/**ID - User ID*/
 	private String ID;
+	
+	/**Name - User name*/
 	private String Name;
+	
+	/**Address - User address*/
 	private String Address;
+	
+	/**Phone - User phone*/
 	private String Phone;
+	
+	/**Email - User Email */
 	private String Email;
+	
+	/**Type - User type*/
 	private String Type;
 	
 	public User() {
@@ -56,6 +71,7 @@ public class User {
 		this.Name=Name;
 	}
 	
+	/**Contractor*/
 	public User(String iD, String name,String email, String address, String phone,String Type) {
 		this.ID = iD;
 		this.Name = name;
@@ -65,6 +81,10 @@ public class User {
 		this.Type=Type;
 	}
 	
+	
+	/**getUserInfo () - getting user info
+	 * @param ID - User ID
+	 * */
 	public static User getUserInfo(String ID) {
 		User usr;
 		HashMap <String,String> msgServer = new HashMap <String,String>();

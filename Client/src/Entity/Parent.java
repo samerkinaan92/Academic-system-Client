@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import application.Main;
-/**	User - Entity of users.*/
+/**	User - Entity of users.
+ * @author Tal Asulin
+ * */
 public class Parent extends User {
 
 	/**isBlocked - indicate if the parent is blocked*/

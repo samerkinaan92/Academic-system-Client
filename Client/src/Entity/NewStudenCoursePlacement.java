@@ -7,12 +7,21 @@ package Entity;
  */
 public class NewStudenCoursePlacement {
 
+	/**studentID - Student ID*/
 	private String studentID;
+	
+	/**courseID - Course ID*/
 	private String courseID;
+	
+	/**action - Action the will be performed*/
 	private Action action;
 	
 	
-	
+	/**NewStudenCoursePlacement() - Contractor
+	 * @param studentID - Student ID
+	 * @param courseID - Course ID
+	 * @param action Action type
+	 * */
 	public NewStudenCoursePlacement(String studentID, String courseID, Action action) {
 		this.studentID = studentID;
 		this.courseID = courseID;

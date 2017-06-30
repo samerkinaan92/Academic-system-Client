@@ -24,6 +24,9 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.fxml.Initializable;
 
+/**PickStudent - Controller for choosing a student by the principal
+ * @author Samer Kinan
+ * */
 public class PickStudent implements Initializable {
 	
 	/**
@@ -38,24 +41,31 @@ public class PickStudent implements Initializable {
 	private final ObservableList<StudInfo> stdData =
 	        FXCollections.observableArrayList();
 	
+	/**clsRomTbl - Class room table*/
 	@FXML // fx:id="clsRomTbl"
     private TableView<ClassInfo> clsRomTbl; // Value injected by FXMLLoader
 
+	/**clsRomCln - Class room column for the class table */
     @FXML // fx:id="clsRomCln"
     private TableColumn<ClassInfo, String> clsRomCln; // Value injected by FXMLLoader
 
+    /**stdTbl - Student table*/
     @FXML // fx:id="stdTbl"
     private TableView<StudInfo> stdTbl; // Value injected by FXMLLoader
 
+    /**stdNmCln - Student name column*/
     @FXML // fx:id="stdNmCln"
     private TableColumn<StudInfo, String> stdNmCln; // Value injected by FXMLLoader
 
+    /**stdIdCln - Student ID column*/
     @FXML // fx:id="stdIdCln"
     private TableColumn<StudInfo, String> stdIdCln; // Value injected by FXMLLoader
 
+    /**slctClsBtn - Select class room button*/
     @FXML // fx:id="slctClsBtn"
     private Button slctClsBtn; // Value injected by FXMLLoader
 
+    /**slctStdBtn - Select student button*/
     @FXML // fx:id="slctStdBtn"
     private Button slctStdBtn; // Value injected by FXMLLoader
 
@@ -217,7 +227,7 @@ public class PickStudent implements Initializable {
         }
     }
 	
-	/*
+	/**
 	 * class for the students table
 	 */
     public static class StudInfo{

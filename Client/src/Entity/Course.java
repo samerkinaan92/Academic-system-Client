@@ -2,9 +2,10 @@ package Entity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-
 import application.Main;
 
+
+/**Course - Course Entity*/
 public class Course {
 
 

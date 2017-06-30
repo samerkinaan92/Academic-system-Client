@@ -21,21 +21,29 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
+/**
+ * ParentViewInfoController - Controller for presenting the student information for the principal.
+ * @author Or cohen
+ * */
 public class ParentViewInfoController implements Initializable{
 	
-	//private final ObservableList<AssignmentInfo> classdata = FXCollections.observableArrayList();
+	/**ClassCB - Class list combo box*/
     @FXML
     private ComboBox<String> ClassCB;
     
+    /**SelectBtn - Select button*/
     @FXML
     private Button SelectBtn;
     
+    /**ParentTable - Parent table view*/
     @FXML
     private TableView<ParentInfo> ParentTable;
 
+    /**CildrenVL - Student ID*/
     @FXML
     private ListView<String> CildrenVL;
 
+    /**IdCollum - Parent ID column*/
     @FXML
     private TableColumn<ParentInfo, String> IdCollum;
 
@@ -59,56 +67,18 @@ public class ParentViewInfoController implements Initializable{
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-	    ArrayList<claSS> classArr = claSS.getClasses();
-	    ArrayList<String> classlist = new ArrayList<String>();
-	/*    
-	    for(int i = 0 ; i < classArr.size() ; i++)
-	    	classlist.add(classArr.get(i).getClassName());
-	    
-
-	    ClassCB.setItems(FXCollections.observableArrayList(classlist));
-	    	*/
 		IdCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("id"));
 		NameCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("name"));
 		MailCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("mail"));
 		isBlockedCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("isBlocked"));
 		TelephoneCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("telephone"));
 		AddressCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("address"));
-
-  final ObservableList<ParentInfo> Parentdata = FXCollections.observableArrayList();
-  		
-  		
-  		
-  		
-  		
+		
 	}
-  		/*
-		ArrayList<String> classNameArr = new ArrayList<String>();
-		//classNameArr = 
-	    for (int i = 0 ; i < classArr.size() ; i++)
-	    	classNameArr.add((classArr.get(i).getClassName()));
-	    classNameArr.add("<< All Classes >>");
-		    for(int i = 0 ; i < classNameArr.size() ; i++)
-		    {
-		    	//YearList.add(Integer.toString(semesterArr.get(i).getYear()));
-		    	System.out.println(classNameArr.get(i));
-		    }
-		    final ObservableList<String> Classes = FXCollections.observableArrayList(classNameArr); 
-		    ClassCB.setItems(Classes);
-			IdCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("id"));
-			NameCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("name"));
-			MailCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("mail"));
-			isBlockedCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("isBlocked"));
-			TelephoneCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("telephone"));
-			AddressCollum.setCellValueFactory(new PropertyValueFactory<ParentInfo, String>("address"));
-			
-			ParentTable.setDisable(true);
-			*/
-	
 
-
-    
-    //ArrayList<claSS> classArr = claSS.getClasses();
+	/**
+	 * ParentInfo  - Special class which created for the Parent Student relationship table view
+	 * */
     public static class ParentInfo{
 
 	    
