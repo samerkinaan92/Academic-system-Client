@@ -310,14 +310,6 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  
 		  String p = ass.getFilePath();
 		  
-		  /*
-		  if (!Files.exists(Paths.get(p))){
-			  warMsg.setContentText("File Is Not In Server File Path!");
-			  warMsg.showAndWait();
-			  return;
-		  }
-		  */
-		  
 		  byte[] file = Assignment.getFile(p);
 		  
 		  if (file == null){
