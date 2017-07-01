@@ -276,7 +276,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		  int sem = 0;
 		  String str = semesterChooser.getSelectionModel().getSelectedItem();
 		for (int i = 0; i < semesterArr.size(); i++){
-			if ((semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")").equals(str)){
+			if ((semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")").equals(str.substring(0, str.indexOf(')')+1))){
 				sem = semesterArr.get(i).getId();
 			}
 		}
@@ -392,13 +392,13 @@ public class SecretaryCourseToClassController implements Initializable {
 		String selected = semesterChooser.getSelectionModel().getSelectedItem();
 		int sID = 0;
 		for (int i = 0; i < semesterArr.size(); i++){
-			if (selected.equals(semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")")){
+			if (selected.substring(0, selected.indexOf(')')+1).equals(semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")")){
 				sID = semesterArr.get(i).getId();
 				break;
 			}
 		}
 		
-		if (!Student.attachStudentsToCourses(sID, addedStudents)){
+		if (sID == 0 || !Student.attachStudentsToCourses(sID, addedStudents)){
 			errMsg.setContentText("Can't add students to class courses");
 			errMsg.showAndWait();
 		}
@@ -416,7 +416,7 @@ public class SecretaryCourseToClassController implements Initializable {
 				}
 			}
 			
-			if (!Student.removeStudentsfromCourses(sID, removedStudents)){
+			if (sID == 0 || !Student.removeStudentsfromCourses(sID, removedStudents)){
 				infoMsg.setContentText("Could not remove students!");
 				infoMsg.showAndWait();
 			}
@@ -797,7 +797,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		}
 		
 		
-		teacherArr = Teacher.getTeachers();
+		teacherArr = Teacher.getAllTeachers();
 		
 		if (teacherArr == null){
 			infoMsg.setContentText("No Teachers defined in data base!");

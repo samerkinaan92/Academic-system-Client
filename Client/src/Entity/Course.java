@@ -465,7 +465,7 @@ public class Course {
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select TUName From course Where CourseID = '" + coursID + "'");
+		msgServer.put("query", "Select TUName From mat.course Where CourseID = '" + coursID + "'");
 		
 		try{
 			Main.client.sendMessageToServer(msgServer);
