@@ -11,7 +11,7 @@
 
 <AnchorPane prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller.PrinTeachSemController">
    <children>
-      <Button fx:id="nextBtn" disable="true" layoutX="548.0" layoutY="411.0" mnemonicParsing="false" onAction="#showReport" text="Next" />
+      <Button fx:id="nextBtn" disable="true" layoutX="548.0" layoutY="427.0" mnemonicParsing="false" onAction="#showReport" text="Next" />
       <Label layoutX="192.0" layoutY="14.0" prefHeight="31.0" prefWidth="321.0" text="Teachers selection" textAlignment="CENTER" textFill="#0c59b2cc" underline="true">
          <font>
             <Font size="24.0" />
@@ -38,7 +38,7 @@
             <TableColumn fx:id="semT2Type" prefWidth="96.0" text="Type" />
         </columns>
       </TableView>
-      <TableView fx:id="teachTable" layoutX="63.0" layoutY="289.0" prefHeight="166.0" prefWidth="461.0">
+      <TableView fx:id="teachTable" layoutX="71.0" layoutY="289.0" prefHeight="163.0" prefWidth="453.0">
         <columns>
           <TableColumn fx:id="teachIDLabel" prefWidth="128.0" text="Teachr ID" />
           <TableColumn fx:id="teachNameLabel" prefWidth="143.0" text="Teacher Name" />
@@ -48,5 +48,6 @@
       </TableView>
       <Label layoutX="71.0" layoutY="109.0" text="Semesters lise:" textFill="#000064" />
       <Label layoutX="320.0" layoutY="109.0" text="Semester:" textFill="#000064" />
+      <Label layoutX="71.0" layoutY="266.0" text="Teachers that will be added to the report:" textFill="#000064" />
    </children>
 </AnchorPane>
