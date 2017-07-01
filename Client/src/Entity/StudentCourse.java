@@ -41,7 +41,7 @@ public class StudentCourse {
 	public static ArrayList<StudentCourse> getCoursesBySemStd(String sem, String stdID){
 		HashMap<String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "select course.courseid,CourseName,WeeklyHours,tuname,users.name from class_course,course,semester,course_student,users where class_course.CourseID=course.CourseID and class_course.semesterId=semester.semesterid and semester.semesterid='"+sem+"' and classname='A1' and semester.semesterid=course_student.semesterid and course.courseid=course_student.courseid and course_student.StudentID='"+stdID+"' and class_course.teacherID=users.ID;");
+		msgServer.put("query", "select course.courseid,CourseName,WeeklyHours,tuname,U1.name from class_course,course,semester,course_student,users U1,student_class where class_course.CourseID=course.CourseID and class_course.semesterId=semester.semesterid and semester.semesterid='"+sem+"'  and semester.semesterid=course_student.semesterid and course.courseid=course_student.courseid and course_student.StudentID='"+stdID+"' and class_course.teacherID=U1.ID and student_class.StudentID = course_student.StudentID and student_class.StudentID = course_student.StudentID and class_course.ClassName = student_class.ClassName");
 		ArrayList<String>result = sendMsg(msgServer);
 		
 		ArrayList<StudentCourse>courseArr = new ArrayList<StudentCourse>();
