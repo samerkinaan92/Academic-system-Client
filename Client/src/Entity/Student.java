@@ -64,7 +64,7 @@ public class Student extends User {
 		
 		HashMap <String,String> msgServer = new HashMap <String,String>();
 		msgServer.put("msgType", "select");
-		msgServer.put("query", "Select CourseID From course_student WHERE course_student.StudentID =" + 
+		msgServer.put("query", "Select distinct CourseID From course_student WHERE course_student.StudentID =" + 
 					Main.user.getID());
 		
 		ArrayList<String> courseResult = sendMsg(msgServer);

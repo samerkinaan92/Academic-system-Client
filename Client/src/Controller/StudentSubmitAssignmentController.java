@@ -587,7 +587,7 @@ public class StudentSubmitAssignmentController implements Initializable {
 		  warMsg.setHeaderText(null);
 		  file = null;
 		  courseArr = Student.getCourse();
-		  // courseArr = Course.filterOldCourses(courseArr);
+		  courseArr = Course.filterOldCourses(courseArr);
 		  
 		  organizedCourseList = getCourseList(courseArr);
 		  Collections.sort(organizedCourseList);
