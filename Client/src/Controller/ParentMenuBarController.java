@@ -76,7 +76,6 @@ public class ParentMenuBarController {
 		}
 	}
 	
-
 	/**
 	 * open user messages
 	 * @param e
@@ -87,15 +86,10 @@ public class ParentMenuBarController {
 		Main.getRoot().setCenter(pane);
 	}
 	
-	
 	/** Common Actions */
-	
-	
 	
 
 	/** Private Actions */
-	
-
 	/**
 	 * opens parent sons courses controller
 	 * @param event

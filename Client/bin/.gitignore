@@ -1,8 +1,8 @@
-/Communication/
-/Controller/
+/FitResults/
+/FitTests/
+/Fixtures/
 /Entity/
-/FXML/
 /application/
 /ocsf/
-/school_icon.png
-/user-login-icon-14.png
+/FitTestClass.class
+/Controller/

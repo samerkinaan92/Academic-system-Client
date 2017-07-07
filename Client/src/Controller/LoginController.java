@@ -124,15 +124,15 @@ public class LoginController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
-		/*
-		String id ="176214", pass="9Jr3d";
+		String id ="546493", pass="JjmBW";
+		
 		this.id.setText(id);
 		password.setText(pass);
 		port.setText("1234");
 		ip.setText("localhost");
 		school.setItems(options);
 		school.getSelectionModel().selectFirst();
-		*/
+		
 		
 		school.setItems(options);
 		

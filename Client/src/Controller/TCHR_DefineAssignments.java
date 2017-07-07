@@ -13,6 +13,9 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.ResourceBundle;
+
+import Entity.DBAssignment;
+import Entity.DBCourse;
 import Entity.Message;
 import application.Main;
 import javafx.beans.value.ChangeListener;
@@ -40,28 +43,6 @@ public class TCHR_DefineAssignments implements Initializable {
 	
 	/**		array list contains all course objects for the connected teacher from database	*/
 	ArrayList<DBCourse> courses = new ArrayList<DBCourse>();
-	
-	/**		this class represents assignment object 	*/
-	class DBAssignment {
-		
-		String name;
-		int courseID;
-		String publishDate;
-		String deadLine;
-		String filePath;
-		int semesterID;
-		
-	}
-	
-	/**		this class represents course object 	*/
-    class DBCourse {
-    	int courseID;
-    	String courseName;
-    	public DBCourse (){};
-		public String toString() {
-			return "\t"+this.courseName;
-		}
-    }
 
 	/**		message that will be sent to the server 	*/
 	HashMap<String, String> sentMSG = new HashMap<>();	
@@ -114,14 +95,15 @@ public class TCHR_DefineAssignments implements Initializable {
 			submitBTN.setDisable(false);
 		}
     }
+    
 
     /**	submit button event handler */
     @FXML
     void submitBTNaction(ActionEvent event) {
     	
-    	int inputVal = validInput();
+    	DBAssignment ass = new DBAssignment();
     	
-    	if (inputVal == 0) {	// validate input
+    	if (validInput(ass)) {	// validate input
     		
     		Alert alert = new Alert(AlertType.CONFIRMATION);
     		alert.setTitle("Confirmation Dialog");
@@ -130,39 +112,34 @@ public class TCHR_DefineAssignments implements Initializable {
     		Optional<ButtonType> result = alert.showAndWait();
     		
     		if (result.get() == ButtonType.OK) {
-    		
-    			DBAssignment ass = new DBAssignment();	/*	create the assignment	*/
-    			ass.name = nameTF.getText();
-    			ass.courseID = getSelectedCourseFromCB().courseID;
-    			ass.publishDate = new SimpleDateFormat("YYYY-MM-dd").format(Calendar.getInstance().getTime());
-    			ass.deadLine = datePicker.getValue().toString();
+
+    			//  AUTO FILL VALUES	 //
+    			ass.courseID = getSelectedCourseFromCB().courseID;		// TODO validate courses in CB
     			ass.semesterID = getCurrentSemesterID();
     			sendFileToServer();
-    			ass.filePath = "C:/M.A.T files/assignments/"+filename;
-
-    			createNewDBassignment(ass);
-        	
-    			showInfoMSG("success", "Assignment created succussfuly!\n(Alert message has been sent to users)");
-    			alertAllStudents(ass);	//	alert all students
-    			alertAllTeachers(ass);
-      
-    			getCoursesFromDB();		/*	init	*/
-    			setCoursesInComboBox();
-    			datePicker.setValue(LocalDate.now());
-    			setItemsDisabled(true);
+    			ass.setPath("C:/M.A.T files/assignments/"+filename);
     			
-    			nameREDstar.setVisible(false);
-    			ddREDstar.setVisible(false);
+    			
+    			//	SEND ASSIGNMENT	 //
+    			if (ass.isValidAssignment())	{
+    				ass.sendToDB();
+    				// RESTROE VIEW
+    				showInfoMSG("success", "Assignment created succussfuly!\n(Alert message has been sent to users)");
+    				alertAllStudents(ass);	//	alert all students
+    				alertAllTeachers(ass);
+    				getCoursesFromDB();		//	init
+    				setCoursesInComboBox();
+    				datePicker.setValue(LocalDate.now());
+    				setItemsDisabled(true);
+    				nameREDstar.setVisible(false);
+    				ddREDstar.setVisible(false);
+    			}
+    			else
+    				showErrorMSG("error has accured", "controller error.\ncould not finish operation\ncheck file extensions");
     		}
     	}
-    	else if (inputVal == 1){		// name text field in smpty
-    		nameREDstar.setVisible(true);
-    		showErrorMSG("empty name field", "you must pick a name for the assignment");
-    	}
-    	else if (inputVal == 2) {		// date is in the past
-    		ddREDstar.setVisible(true);
-    		showErrorMSG("chosen deadline is in the past", "please choose a date within the future");
-    	}	
+    	else
+    		showErrorMSG("invalid input", "please check validation of name and deadline");
     }
     
     /** send alert to all teacher's on this course about the new assignment
@@ -244,17 +221,18 @@ public class TCHR_DefineAssignments implements Initializable {
 		datePicker.setEditable(false);
 	}
 	
-	/**	check for empty name/date fields
-	 * @return	0 for legal input, 1 if name text field is empty,
-	 *			2 if date picker holds earlier date than today
+	/**	check for valid input
+	 * @return	true - only if input is valid
 	 * */
-	private int validInput() {
+	private boolean validInput(DBAssignment ass) {
 		
-		if (nameTF.getText().isEmpty())
-			return 1;
-		if (datePicker.getValue().isBefore(LocalDate.now()))
-			return 2;
-		return 0;
+    	if (!ass.setName(nameTF.getText()))
+    		return false;
+    	if (!ass.setDeadline(datePicker.getValue().toString()))
+    		return false;
+    	
+		return true;
+		
 	}
 	
 	/**	disables items in this scene
@@ -452,27 +430,6 @@ public class TCHR_DefineAssignments implements Initializable {
 		
 		return Integer.parseInt(currentSemester.get(0));
 		
-	}
-
-	/**	send's assignment object to database
-	 * @param ass assignment object
-	 *  */
-	private void createNewDBassignment(DBAssignment ass) {
-		
-		sentMSG.put("msgType", "update");
-		sentMSG.put("query", "INSERT INTO `mat`.`assignment` (`AssignmentName`, `CourseID`,"
-				+ " `publishDate`, `deadLine`, `filePath`, `semesterId`) VALUES"
-				+ " ('"+ass.name+"', '"+ass.courseID+"', '"+ass.publishDate+"', '"+ass.deadLine+"',"
-						+ " '"+ass.filePath+"', '"+ass.semesterID+"');");
-		synchronized (Main.client) {
-			try {
-				Main.client.sendMessageToServer(sentMSG);
-				Main.client.wait();}
-			catch (InterruptedException e) {
-				e.printStackTrace();
-				System.out.println("Thrsead cant move to wait()");
-			}
-		}
 	}
 	
 	/**	courses combo box event handler*/
