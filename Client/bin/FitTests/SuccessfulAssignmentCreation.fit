@@ -1,26 +1,4 @@
-<html><head><title>Suite SuccessfulCourseCreation.fit run at: Sat Jul 08 12:59:37 IDT 2017</title>
-	<link rel="stylesheet" type="text/css" href="css/fitnesse.css" media="screen"/>
- 	<link rel="stylesheet" type="text/css" href="css/fitnesse.css" media="print"/>
-<script language="JavaScript" type="text/javascript">
-var collapsableOpenCss = "collapsable"
-var collapsableClosedCss = "hidden"
-var collapsableOpenImg = "images/collapsableOpen.gif"
-var collapsableClosedImg = "images/collapsableClosed.gif"
-function toggleCollapsable(id){
-var div = document.getElementById(id);
-var img = document.getElementById("img" + id);
-if(div.className.indexOf(collapsableClosedCss) != -1) {
-div.className = collapsableOpenCss;
-img.src = collapsableOpenImg;
-} else {
-div.className = collapsableClosedCss;
-img.src = collapsableClosedImg;
-} }
-</script>
-
-</head>
-<body>
-<div> Suite is: C:/Users/Idan/git/Academic-system-Client/Client/Tests/FitTests/SuccessfulCourseCreation.fit</div><div class="test_output_name">Name: SuccessfulCourseCreation.fit</div><div> Suite executed at: Sat Jul 08 12:59:37 IDT 2017 Elapsed time: 176 millseconds  </div><table><tr><td></td><td><a href="#14b0dc14:15d21a3eb44:-8000">SuccessfulCourseCreation.fit</a></td><td class="error">0 right, 0 wrong, 0 ignored, 1 exceptions</td></tr></table><div class="test_output_name"><a name="14b0dc14:15d21a3eb44:-8000"/><p>Test file: SuccessfulCourseCreation.fit</p></div><html xmlns:v="urn:schemas-microsoft-com:vml"
+<html xmlns:v="urn:schemas-microsoft-com:vml"
 xmlns:o="urn:schemas-microsoft-com:office:office"
 xmlns:w="urn:schemas-microsoft-com:office:word"
 xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
@@ -718,7 +696,7 @@ div.WordSection1
 <style>
  /* Style Definitions */
  table.MsoNormalTable
-	{mso-style-name:"???? ?????";
+	{mso-style-name:"טבלה רגילה";
 	mso-tstyle-rowband-size:0;
 	mso-tstyle-colband-size:0;
 	mso-style-noshow:yes;
@@ -767,7 +745,7 @@ new assignment is created.</p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span class=SpellE><span style='font-family:"Arial",sans-serif;
-  mso-fareast-font-family:"Times New Roman"'>Fixtures.NewCourseCreation</span></span><span
+  mso-fareast-font-family:"Times New Roman"'>Fixtures.NewAssignmentCreation</span></span><span
   style='font-family:"Arial",sans-serif;mso-fareast-font-family:"Times New Roman"'><o:p></o:p></span></p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
@@ -775,7 +753,20 @@ new assignment is created.</p>
   "Times New Roman"'>&nbsp;<o:p></o:p></span></p>
   </td>
  </tr>
- 
+ <tr style='mso-yfti-irow:2'>
+  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
+  "Times New Roman"'>press<o:p></o:p></span></p>
+  </td>
+  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
+  "Times New Roman"'>start assignment<o:p></o:p></span></p>
+  </td>
+  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
+  <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
+  "Times New Roman"'><o:p>&nbsp;</o:p></span></p>
+  </td>
+ </tr>
  <tr style='mso-yfti-irow:3'>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
@@ -783,11 +774,11 @@ new assignment is created.</p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>setting name<o:p></o:p></span></p>
+  "Times New Roman"'>set name<o:p></o:p></span></p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>c#<o:p></o:p></span></p>
+  "Times New Roman"'>assignment1<o:p></o:p></span></p>
   </td>
  </tr>
  <tr style='mso-yfti-irow:4'>
@@ -797,11 +788,11 @@ new assignment is created.</p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>setting id<o:p></o:p></span></p>
+  "Times New Roman"'>set deadline<o:p></o:p></span></p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>9<o:p></o:p></span></p>
+  "Times New Roman"'>2017-09-10<o:p></o:p></span></p>
   </td>
  </tr>
  <tr style='mso-yfti-irow:5'>
@@ -811,27 +802,12 @@ new assignment is created.</p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>setting tu<o:p></o:p></span></p>
+  "Times New Roman"'>set file path<o:p></o:p></span></p>
   </td>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>Software<o:p></o:p></span></p>
+  "Times New Roman"'>c:/user/file.pdf<o:p></o:p></span></p>
   </td>
- </tr>
- <tr style='mso-yfti-irow:5'>
-  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
-  <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>enter<o:p></o:p></span></p>
-  </td>
-  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
-  <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>setting hours<o:p></o:p></span></p>
-  </td>
-  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
-  <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
-  "Times New Roman"'>2<o:p></o:p></span></p>
-  </td>
-  
  </tr>
  <tr style='mso-yfti-irow:6;mso-yfti-lastrow:yes'>
   <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
@@ -842,51 +818,10 @@ new assignment is created.</p>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
   "Times New Roman"'>create<o:p></o:p></span></p>
   </td>
-  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt' class="error">
+  <td style='padding:3.0pt 3.0pt 3.0pt 3.0pt'>
   <p class=MsoNormal><span style='font-family:"Arial",sans-serif;mso-fareast-font-family:
   "Times New Roman"'>true<o:p></o:p></span></p>
-  <hr><pre><div class="fit_stacktrace">java.lang.NullPointerException
-	at Fixtures.NewCourseCreation.create(NewCourseCreation.java:43)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at fit.TypeAdapter.invoke(Unknown Source)
-	at fit.TypeAdapter.get(Unknown Source)
-	at fit.Fixture$CellComparator.compareCellToResult(Unknown Source)
-	at fit.Fixture$CellComparator.access$100(Unknown Source)
-	at fit.Fixture.compareCellToResult(Unknown Source)
-	at fit.Fixture.check(Unknown Source)
-	at fit.ActionFixture.check(Unknown Source)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at fit.ActionFixture.doCells(Unknown Source)
-	at fit.Fixture.doRow(Unknown Source)
-	at fit.Fixture.doRows(Unknown Source)
-	at fit.Fixture.doTable(Unknown Source)
-	at fit.Fixture.interpretTables(Unknown Source)
-	at fit.Fixture.doTables(Unknown Source)
-	at fitlibrary.suite.IndependentSuiteRunner.runEachStorytest(IndependentSuiteRunner.java:53)
-	at fitlibrary.suite.IndependentSuiteRunner.runFirstStorytest(IndependentSuiteRunner.java:28)
-	at fitlibrary.suite.BatchFitLibrary.doTables(BatchFitLibrary.java:39)
-	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
-	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
-	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
-	at java.lang.reflect.Method.invoke(Unknown Source)
-	at com.luxoft.fitpro.adapters.fit.FitLibraryFitProvider.doTables(FitLibraryFitProvider.java:168)
-	at com.luxoft.fitpro.adapters.fit.FitLibraryFitProvider.generateParseResult(FitLibraryFitProvider.java:96)
-	at com.luxoft.fitpro.adapters.fit.FitLibraryFitProvider.runSingleFITTest(FitLibraryFitProvider.java:78)
-	at com.luxoft.fitpro.adapters.fit.FitLibraryFitProvider.runValidTestFile(FitLibraryFitProvider.java:58)
-	at com.luxoft.fitpro.adapters.fit.FitLibraryFitProvider.runFIT(FitLibraryFitProvider.java:39)
-	at com.luxoft.fitpro.core.testcase.SequentialRunnerStrategy.run(SequentialRunnerStrategy.java:18)
-	at com.luxoft.fitpro.core.tester.RunnerVisitor.runTest(RunnerVisitor.java:59)
-	at com.luxoft.fitpro.core.tester.RunnerVisitor.visit(RunnerVisitor.java:51)
-	at com.luxoft.fitpro.core.testcase.TestFile.accept(TestFile.java:51)
-	at com.luxoft.fitpro.runner.TestCaseRunner.run(TestCaseRunner.java:100)
-	at com.luxoft.fitpro.runner.TestCaseRunner.main(TestCaseRunner.java:55)
-</div></pre></td>
+  </td>
  </tr>
 </table>
 
@@ -897,5 +832,3 @@ new assignment is created.</p>
 </body>
 
 </html>
-
-</body></html>

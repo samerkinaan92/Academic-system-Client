@@ -1,13 +1,11 @@
 package Controller;
 
 import java.io.IOException;
-
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.ResourceBundle;
-
 import Entity.Course;
 import Entity.Message;
 import Entity.Secretery;
@@ -213,7 +211,7 @@ public class SecretaryCourseToClassController implements Initializable {
 	 * @param semsterArr all semesters from DB
 	 * @return semester list (year & season)
 	 */
-	private ArrayList<String> getSemesterList(ArrayList<Semester> semsterArr){ // Get semesters year & season.
+	public static ArrayList<String> getSemesterList(ArrayList<Semester> semsterArr){ // Get semesters year & season.
 		 
 		ArrayList<String> temp = new ArrayList<String>();
 		if (semsterArr == null){
@@ -254,7 +252,7 @@ public class SecretaryCourseToClassController implements Initializable {
 	 * @param courseArr all courses from DB
 	 * @return course list (name & id)
 	 */
-	private ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
+	public static ArrayList<String> getCourseList(ArrayList<Course> courseArr){ // Get courses names & ID's for list.
 	    	
 		ArrayList<String> temp = new ArrayList<String>();
 		if (courseArr == null){
@@ -278,7 +276,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		  int sem = 0;
 		  String str = semesterChooser.getSelectionModel().getSelectedItem();
 		for (int i = 0; i < semesterArr.size(); i++){
-			if ((semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")").equals(str)){
+			if ((semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")").equals(str.substring(0, str.indexOf(')')+1))){
 				sem = semesterArr.get(i).getId();
 			}
 		}
@@ -394,13 +392,13 @@ public class SecretaryCourseToClassController implements Initializable {
 		String selected = semesterChooser.getSelectionModel().getSelectedItem();
 		int sID = 0;
 		for (int i = 0; i < semesterArr.size(); i++){
-			if (selected.equals(semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")")){
+			if (selected.substring(0, selected.indexOf(')')+1).equals(semesterArr.get(i).getYear() + " (" + semesterArr.get(i).getSeason() + ")")){
 				sID = semesterArr.get(i).getId();
 				break;
 			}
 		}
 		
-		if (!Student.attachStudentsToCourses(sID, addedStudents)){
+		if (sID == 0 || !Student.attachStudentsToCourses(sID, addedStudents)){
 			errMsg.setContentText("Can't add students to class courses");
 			errMsg.showAndWait();
 		}
@@ -418,7 +416,7 @@ public class SecretaryCourseToClassController implements Initializable {
 				}
 			}
 			
-			if (!Student.removeStudentsfromCourses(sID, removedStudents)){
+			if (sID == 0 || !Student.removeStudentsfromCourses(sID, removedStudents)){
 				infoMsg.setContentText("Could not remove students!");
 				infoMsg.showAndWait();
 			}
@@ -437,10 +435,10 @@ public class SecretaryCourseToClassController implements Initializable {
 	 * @param courseID Current course id
 	 * @return if student can be attached to course
 	 */
-	private boolean cantAdd(String studentID, String courseID){ // Check if student can be attached to course.
+	public static boolean cantAdd(String studentID, String courseID){ // Check if student can be attached to course.
 		
-		ArrayList<String> takenCourses = Student.getTakenCourses(studentID);
-		ArrayList<String> preCourses = Course.getPreCourses(courseID);
+		ArrayList<String> takenCourses = getTakenCourses(studentID);
+		ArrayList<String> preCourses = getPreCourses(courseID);
 		
 		if (preCourses == null)
 			return false;
@@ -460,6 +458,18 @@ public class SecretaryCourseToClassController implements Initializable {
 			return true;
 		return false;
 	}
+	
+	
+	public static ArrayList<String>getPreCourses(String courseID)
+	{
+		return Course.getPreCourses(courseID);
+	}
+	
+	public static ArrayList<String>getTakenCourses(String studentID)
+	{
+		return Student.getTakenCourses(studentID);
+	}
+	
  	
 	//-------------------------------------------------------------------------------------------------------------
 
@@ -799,7 +809,7 @@ public class SecretaryCourseToClassController implements Initializable {
 		}
 		
 		
-		teacherArr = Teacher.getTeachers();
+		teacherArr = Teacher.getAllTeachers();
 		
 		if (teacherArr == null){
 			infoMsg.setContentText("No Teachers defined in data base!");

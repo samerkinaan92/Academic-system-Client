@@ -26,6 +26,70 @@ public class Teacher extends User {
 		maxWorkHours = hours;
 }
 	
+	/**
+	 * Get all teachers from data base
+	 * @return List of all teachers
+	 */
+	@SuppressWarnings("unchecked")
+	public static ArrayList<Teacher> getAllTeachers(){
+		
+		HashMap <String,String> msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		msgServer.put("query", " Select users.Name, users.ID, users.phoneNum, users.email, users.address From users WHERE users.Role = 'Teacher' ;");
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				return null;
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			return null;
+		}
+		}
+		ArrayList<String> result = (ArrayList<String>)Main.client.getMessage();
+		msgServer = new HashMap <String,String>();
+		msgServer.put("msgType", "select");
+		
+		
+		msgServer.put("query", "Select teacher.TeacherID, teacher.MaxWorkHours From teacher;");
+		try{
+			Main.client.sendMessageToServer(msgServer);
+			}
+			catch(Exception exp){
+				return null;
+			}
+		synchronized (Main.client){try {
+			Main.client.wait();
+		} catch (InterruptedException e) {
+			return null;
+		}}
+		ArrayList<String> result2 = (ArrayList<String>)Main.client.getMessage();
+		boolean flag = false;
+		for (int i = 1; i < result.size(); i+=5, flag = false){
+			for (int j = 0; j < result2.size(); j+=2){
+				if (result.get(i).equals(result2.get(j))){
+					result.add(i+4, result2.get(j+1));
+					i++;
+					flag = true;
+					break;
+				}
+			}
+			if (!flag){
+				result.add(i+4, "0");
+				i++;
+			}
+		}
+		ArrayList<Teacher> DBteachers = new ArrayList<Teacher>();
+		
+		for (int i = 0; i < result.size(); i+=6)//3
+			DBteachers.add(new Teacher(result.get(i), result.get(i+1), result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,Integer.parseInt(result.get(i+5))));
+		//, result.get(i+2) ,result.get(i+3) ,result.get(i+4) ,
+		return DBteachers;
+		
+}
+	
 	/*-------------------------------------  Get Teachers  --------------------------------------*/
 	@SuppressWarnings("unchecked")
 	public static String getTeachersByID(String ID){
