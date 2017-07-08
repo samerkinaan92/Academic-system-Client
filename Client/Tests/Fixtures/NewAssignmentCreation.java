@@ -31,15 +31,11 @@ public class NewAssignmentCreation extends ActionFixture {
 		ass.setPath(filepath);
 	}
 	
-	
 	public boolean create() {
 		
 		if (ass.isValidAssignment())
 			return true;
-		
-		return false;
-		
+		return false;	
 	}
 	
-
 }

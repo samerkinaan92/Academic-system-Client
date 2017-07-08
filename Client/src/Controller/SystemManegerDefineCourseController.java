@@ -95,7 +95,7 @@ public class SystemManegerDefineCourseController implements Initializable {
 	Alert errMsg = new Alert(AlertType.ERROR);
     
     //------------------------------------------------------------------------------------------------------------------------
-    
+	
 	/**
 	 * Send message to all relevant users.
 	 */
