@@ -1,5 +1,10 @@
 /Controller/
 /Entity/
 /Fixtures/
+/SecretaryCourseToClassControllerTest.class
+/StudentSubmitAssignmentControllerTest.class
 /application/
 /ocsf/
+/SecretaryCourseToClassControllerTest2.class
+/StudentSubmitAssignmentControllerTest2.class
+/unittests/
